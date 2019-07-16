@@ -170,13 +170,14 @@ class Display(WBits):
     
     def get_button_state(self):
         """
-        获取翻页按钮状态:rtype: int
+        获取翻页按钮状态
+        :rtype: int
         """
 
         command = 'display{}.get_button_state()'.format(self.index)
-        return self._get_command(command)
-
-    
+        value = self._get_command(command)
+        return eval(value) 
+        
     def set_direction_reverse(self):
         """
         设置显示方向为翻转显示方向，使用该函数后显示内容将会进行180°翻转

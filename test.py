@@ -10,7 +10,7 @@ for i in range(20):
     d.print(1,1,i)
     v = c.get_sw4()
     l.set_rgb(random.randint(0,255),random.randint(0,255),random.randint(0,255))
-    print(v)
+    print(v, c.is_sw1_pressed() == False)
 
 
 # from wonderbits import Display
