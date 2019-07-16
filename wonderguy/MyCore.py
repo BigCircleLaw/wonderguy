@@ -21,6 +21,8 @@ class MyCore(object):
 
     can_send_data = False
 
+    # current_time = None
+
     def __init_property(self):
         '''
         init MyCore property
@@ -80,11 +82,15 @@ class MyCore(object):
             bps = 115200
             timex = 1
             self._ser = serial.Serial(portx, bps, timeout=timex)
-            # interrupt current running run_loop.py.
-            self._ser.write(b'\x03')
             # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
-            self._ser.write(b'\x04')
+            # self._ser.write(b'\x04')
+            # MyCore.current_time = time.time()
             threading.Thread(target=self._prepare_communication, args=('handle_serial_port_target',), daemon=True).start()
+            
+            # assume reboot board successfully in 2 second;
+            time.sleep(2)
+            # first step: enter raw repl mode
+            self._start_raw_repl()
         except serial.serialutil.SerialException as e:
             MyUtil.wb_error_log('串口异常{}',format(e))
             self.__init_property()
@@ -128,10 +134,11 @@ class MyCore(object):
                             self._ser.write(b'\x04')
                             buffer = ''
                     if oneChar == '>' and buffer[-3:] == '>>>':
+                        # MyUtil.wb_log(time.time() - MyCore.current_time)
                         MyUtil.wb_log(buffer)
                         buffer = ''
-                        # first step: enter raw repl mode
-                        self._start_raw_repl()
+                        # # first step: enter raw repl mode
+                        # self._start_raw_repl()
         except OSError as e:
             MyUtil.wb_error_log('连接异常')
             os._exit(0)

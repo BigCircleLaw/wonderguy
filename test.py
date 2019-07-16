@@ -6,7 +6,7 @@ d = Display()
 c = Control()
 l = Led()
 
-for i in range(20):
+for i in range(1):
     d.print(1,1,i)
     v = c.get_sw4()
     l.set_rgb(random.randint(0,255),random.randint(0,255),random.randint(0,255))

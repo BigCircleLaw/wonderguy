@@ -1,5 +1,7 @@
 from wonderbits import Display
 import time
 d = Display()
-for i in range(400):
-    d.print(1,1,'hello {}'.format(i))
+count = 0;
+while True:
+    d.print(1,1,'hello {}'.format(count))
+    count = count + 1
