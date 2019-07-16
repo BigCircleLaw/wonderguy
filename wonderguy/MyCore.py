@@ -80,6 +80,8 @@ class MyCore(object):
             bps = 115200
             timex = 1
             self._ser = serial.Serial(portx, bps, timeout=timex)
+            # interrupt current running run_loop.py.
+            self._ser.write(b'\x03')
             # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
             self._ser.write(b'\x04')
             threading.Thread(target=self._prepare_communication, args=('handle_serial_port_target',), daemon=True).start()
