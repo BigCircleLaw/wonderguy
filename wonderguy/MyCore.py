@@ -80,12 +80,14 @@ class MyCore(object):
             bps = 115200
             timex = 1
             self._ser = serial.Serial(portx, bps, timeout=timex)
-            cmd = MyUtil.wb_encode('{}\r\n'.format("reset()"))
-            self._ser.write(cmd)
-            # self._start_raw_repl()
+            # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
+            self._ser.write(b'\x04')
             threading.Thread(target=self._prepare_communication, args=('handle_serial_port_target',), daemon=True).start()
         except serial.serialutil.SerialException as e:
             MyUtil.wb_error_log('串口异常{}',format(e))
+            self.__init_property()
+        except Exception as e:
+            MyUtil.wb_error_log("通用异常：{}".format(e))
             self.__init_property()
         
 
