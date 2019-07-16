@@ -1,6 +1,6 @@
 from wonderguy import Display, wb_tool, Control, Led
 import random
-# wb_tool.show_console()
+wb_tool.show_console()
 
 d = Display()
 c = Control()
@@ -11,3 +11,17 @@ for i in range(20):
     v = c.get_sw4()
     l.set_rgb(random.randint(0,255),random.randint(0,255),random.randint(0,255))
     print(v)
+
+
+# from wonderbits import Display
+# from wonderguy import Display
+
+# d1= Display()
+
+# import time
+
+# t = time.time()
+# for i in range(1000):
+#     d1.print(1,1,'hello:{}'.format(i))
+
+# print(time.time() - t)

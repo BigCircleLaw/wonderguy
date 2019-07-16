@@ -32,7 +32,7 @@ class MyCore(object):
         if not MyCore.__init_flag:
             MyCore.__init_flag = True
             self.__init_property()
-            threading.Thread(target=self._try_connect_serial_thread, args=('connect_serial_thread',)).start()
+            threading.Thread(target=self._try_connect_serial_thread, args=('connect_serial_thread',), daemon=True).start()
 
     def _try_connect_serial_thread(self, thread_name):
         '''
@@ -83,7 +83,7 @@ class MyCore(object):
             cmd = MyUtil.wb_encode('{}\r\n'.format("reset()"))
             self._ser.write(cmd)
             # self._start_raw_repl()
-            threading.Thread(target=self._prepare_communication, args=('handle_serial_port_target',)).start()
+            threading.Thread(target=self._prepare_communication, args=('handle_serial_port_target',), daemon=True).start()
         except serial.serialutil.SerialException as e:
             MyUtil.wb_error_log('串口异常{}',format(e))
             self.__init_property()
@@ -111,12 +111,12 @@ class MyCore(object):
                         MyUtil.wb_log(buffer)
                         if 'raw REPL; CTRL-B to exit\r\n' == buffer:
                             # second step: delete run py
-                            if not self.__delete_run_py_flag:
+                            if not MyCore.__delete_run_py_flag:
                                 self._delete_run_py_repl()
                             else:
                                 MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!', '\r\n')
                                 MyCore.can_send_data = True
-                                threading.Thread(target=self._normal_communication, args=('normal_communication_thread',)).start()
+                                threading.Thread(target=self._normal_communication, args=('normal_communication_thread',), daemon=True).start()
                                 break
                         if buffer.startswith('>OK'):
                             # third step(last step): soft reboot enter raw repl
@@ -135,10 +135,10 @@ class MyCore(object):
         '''
         start enter raw repl mode
         '''
-        if not self.__start_raw_repl_flag:
+        if not MyCore.__start_raw_repl_flag:
             MyUtil.wb_log('开始进入raw repl mode')
-            self.__start_raw_repl_flag = True
-            first_command_list = [b'\n\x03\x03', b'\n\x01']
+            MyCore.__start_raw_repl_flag = True
+            first_command_list = [b'\r\x03\x03', b'\r\x01']
             for command in first_command_list:
                 self._ser.write(command)
     
@@ -146,9 +146,9 @@ class MyCore(object):
         '''
         delete run_loop.py
         '''
-        if not self.__delete_run_py_flag:
+        if not MyCore.__delete_run_py_flag:
             MyUtil.wb_log('开始删除run_loop.py')
-            self.__delete_run_py_flag = True
+            MyCore.__delete_run_py_flag = True
             # note: empty_char must be (leng=1) char;
             empty_char = ' '
             delete_run_py_command = "try:\r\n" + empty_char * 4 + "import os\r\nexcept ImportError:\r\n" + empty_char * 4 + "import uos as os\r\nos.remove('run_loop.py')\r\n"
