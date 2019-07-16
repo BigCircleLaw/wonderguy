@@ -1,32 +1,37 @@
-from .WBits import WBits
+import serial
+import serial.tools.list_ports
+import os
+from .MyUtil import MyUtil as util
+import shutil
 
-class WBUpload(WBits):
-    def __init__(self, index = 1):
-        WBits.__init__(self)
-        self.index = index
+class WBUpload(object):
 
-    
-    def upload_with_file_path(self, file_path):
+    def put(self, file_path):
         if not self._is_empty(file_path):
             try:
-                code = ''
-                with open(file_path,'r') as f:
-                    code = ''.join(f.readlines())
-                if not self._is_empty(code):
-                    self._set_raw_command(b'\x05')
-                    self._set_command(code)
-                    self._set_raw_command(b'\x04')
+                port_list = list(serial.tools.list_ports.comports())
+                for i in range(len(port_list)):
+                    port = port_list[i]
+                    valid_port_flag = False
+                    if port.pid == 29987 or port.pid == 60000:
+                        valid_port_flag = True
+                        currentDir = os.getcwd()
+                        source_file_path = file_path
+                        if os.path.exists(source_file_path):
+                            source_file_path = os.path.join(currentDir, source_file_path)
+                        run_loop_path = os.path.join(currentDir, 'run_loop.py')
+                        target_file_path = shutil.copy(source_file_path, run_loop_path)
+                        util.wb_log(file_path, source_file_path, target_file_path)
+                        os.system('ampy -d 2 -p {}  put {}'.format(port.device, target_file_path))
+                        print('upload done！')
+                        os.remove(target_file_path)
+                        break
+                if not valid_port_flag:
+                    util.wb_error_log('未发现可用串口！')
+            except OSError as e:
+                util.wb_error_log(e)
             except Exception as e:
-                print(file_path, '文件不存在！')
-                print(e)
-
-
-
-    def upload_with_file_content(self, file_content):
-        if not self._is_empty(file_content):
-            self._set_raw_command(b'\x05')
-            self._set_command(file_content)
-            self._set_raw_command(b'\x04')
+                util.wb_error_log(e)
     
     
     def _is_empty(self, arg):

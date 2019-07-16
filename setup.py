@@ -25,7 +25,8 @@ REQUIRED = [
     # 'requests', 'maya', 'records',
     'requests',
     'pyserial',
-    'Click'
+    'Click',
+    'adafruit-ampy'
 ]
 
 # What packages are optional?
