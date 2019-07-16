@@ -7,6 +7,9 @@ import shutil
 class WBUpload(object):
 
     def put(self, file_path):
+        '''
+        param:file_path:: receive absolute or relative file path
+        '''
         if not self._is_empty(file_path):
             try:
                 port_list = list(serial.tools.list_ports.comports())
@@ -25,6 +28,9 @@ class WBUpload(object):
                         os.system('ampy -d 2 -p {}  put {}'.format(port.device, target_file_path))
                         print('upload done！')
                         os.remove(target_file_path)
+                        ser = serial.Serial(port.device, 115200, timeout=1)
+                        # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
+                        ser.write(b'\x04')
                         break
                 if not valid_port_flag:
                     util.wb_error_log('未发现可用串口！')

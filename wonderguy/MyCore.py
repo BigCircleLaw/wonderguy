@@ -120,10 +120,11 @@ class MyCore(object):
                                 MyCore.can_send_data = True
                                 threading.Thread(target=self._normal_communication, args=('normal_communication_thread',), daemon=True).start()
                                 break
-                        if buffer.startswith('>OK'):
+                        buffer = ''
+                    if buffer.startswith('>OK'):
                             # third step(last step): soft reboot enter raw repl
                             self._ser.write(b'\x04')
-                        buffer = ''
+                            buffer = ''
                     if oneChar == '>' and buffer[-3:] == '>>>':
                         MyUtil.wb_log(buffer)
                         buffer = ''
@@ -157,6 +158,7 @@ class MyCore(object):
             delete_run_py_end_command = b'\x04'
             self._ser.write(MyUtil.wb_encode(delete_run_py_command))
             self._ser.write(delete_run_py_end_command)
+            MyUtil.wb_log(delete_run_py_command, delete_run_py_end_command)
 
     def _normal_communication(self, target_name):
         '''
