@@ -14,4 +14,5 @@ from .WBSignal import Signal
 from .WBUltrasonic import Ultrasonic
 from .WBAcceleration import Acceleration
 from .WBBuggy import Buggy
+from .WBDistance import Distance
 from .Tool import wb_tool
