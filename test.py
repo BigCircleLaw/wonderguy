@@ -1,4 +1,4 @@
-from wonderguy import Display, wb_tool, Control, Led
+from wonderbits import Display, wb_tool, Control, Led
 import random
 wb_tool.show_console()
 
@@ -14,7 +14,7 @@ for i in range(1):
 
 
 # from wonderbits import Display
-# from wonderguy import Display
+# from wonderbits import Display
 
 # d1= Display()
 

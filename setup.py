@@ -12,9 +12,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'wonderguy'
+NAME = 'wonderbits'
 DESCRIPTION = 'wonderbits by mfeducation.'
-URL = 'https://github.com/me/myproject'
+URL = 'https://github.com/daejong123/wonderguy.git'
 EMAIL = 'daejong2014@163.com'
 AUTHOR = 'dottie'
 REQUIRES_PYTHON = '>=3.0.0'
@@ -112,7 +112,7 @@ setup(
     # py_modules=['wonderbits'],
 
     entry_points={
-        'console_scripts': ['wonderguy=wonderguy:upload'],
+        'console_scripts': ['wonderbits=wonderbits:upload'],
     },
     install_requires=REQUIRED,
     extras_require=EXTRAS,

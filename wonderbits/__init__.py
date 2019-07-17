@@ -1,7 +1,7 @@
 from .core import *
 
 import click
-from wonderguy import wb_tool
+from wonderbits import wb_tool
 
 @click.command()
 @click.option('--file', default='', help='file path')

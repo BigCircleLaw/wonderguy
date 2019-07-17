@@ -3,7 +3,7 @@
 
 
 ```python
-from wonderguy import Display, wb_tool, Control, Led
+from wonderbits import Display, wb_tool, Control, Led
 import random
 # wb_tool.show_console()
 
