@@ -6,6 +6,17 @@ import shutil
 
 class WBUpload(object):
 
+    def direct_command(self, command):
+        '''
+        direct append to last of the ampy
+        '''
+        port_list = list(serial.tools.list_ports.comports())
+        for i in range(len(port_list)):
+            port = port_list[i]
+            if port.pid == 29987 or port.pid == 60000:
+                os.system('ampy -d 2 -p {} {}'.format(port.device, command))
+                break
+
     def put(self, file_path):
         '''
         param:file_path:: receive absolute or relative file path
