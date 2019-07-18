@@ -10,12 +10,12 @@ def ls(ctx, param, value):
     ctx.exit()
 
 @click.command()
-@click.option('--ls', is_flag=True, callback=ls,
-              expose_value=False, is_eager=True)
-@click.option('--file','-f', help='file path')
-@click.option('--get',help='get file')
-@click.option('--rm', help='rm file')
-def upload(file, get, rm):
+@click.option('--ls', is_flag=True, callback=ls, expose_value=False, is_eager=True, help='list files')
+@click.option('--file','-f', help='download file to board')
+@click.option('--get',help='get file content')
+@click.option('--rm', help='delete file')
+@click.option('--put', help='download file to board')
+def upload(file, get, rm, put):
     if file:
         wb_tool.upload.put(file)
         click.echo("Hello {}!".format(file))
@@ -25,4 +25,7 @@ def upload(file, get, rm):
     elif rm:
         wb_tool.upload.direct_command('rm {}'.format(rm))
         click.echo("Hello {}!".format(rm))
+    elif put:
+        wb_tool.upload.put(put)
+        click.echo("Hello {}!".format(put))
 
