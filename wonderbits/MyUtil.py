@@ -23,15 +23,21 @@ class MyUtil(object):
         '''
         接受不定个数的参数, 并print出来
         '''
-        print('\033[1;31;40m')      #下一目标输出背景为黑色，颜色红色高亮显示
+        # print('\033[1;31;40m')      #下一目标输出背景为黑色，颜色红色高亮显示
+        # print('*' * 50)
+        # print('\033[7;31m{}\033[1;31;40m'.format('###wb-error-log: '))  #字体颜色红色反白处理
+        # print('', end="")
+        # for param in params:
+        #     print('\033[7;31m{}\033[1;31;40m'.format(param), end="")  #字体颜色红色反白处理
+        # print()
+        # print('*' * 50)
+        # print('\033[0m')
         print('*' * 50)
-        print('\033[7;31m{}\033[1;31;40m'.format('###wb-error-log: '))  #字体颜色红色反白处理
-        print('', end="")
+        print('###wb-error-log: ')
         for param in params:
-            print('\033[7;31m{}\033[1;31;40m'.format(param), end="")  #字体颜色红色反白处理
+            print(param, end="")
         print()
         print('*' * 50)
-        print('\033[0m')
 
     @staticmethod
     def wb_decode(raw_byte = b''):

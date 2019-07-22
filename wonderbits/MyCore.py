@@ -161,7 +161,7 @@ class MyCore(object):
         if not MyCore.__delete_run_py_flag:
             MyUtil.wb_log('开始删除run_loop.py')
             MyCore.__delete_run_py_flag = True
-            # note: empty_char must be (leng=1) char;
+            # note: empty_char must be (lenth=1) empty char;
             empty_char = ' '
             delete_run_py_command = "try:\r\n" + empty_char * 4 + "import os\r\nexcept ImportError:\r\n" + empty_char * 4 + "import uos as os\r\nos.remove('run_loop.py')\r\n"
             delete_run_py_end_command = b'\x04'
