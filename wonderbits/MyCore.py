@@ -5,6 +5,7 @@ import os
 import time
 from .MyUtil import MyUtil
 
+
 class MyCore(object):
     '''
     wonderbits mainly handle serial operation（detech, connect, handle_data...）
@@ -34,7 +35,10 @@ class MyCore(object):
         if not MyCore.__init_flag:
             MyCore.__init_flag = True
             self.__init_property()
-            threading.Thread(target=self._try_connect_serial_thread, args=('connect_serial_thread',), daemon=True).start()
+            threading.Thread(
+                target=self._try_connect_serial_thread,
+                args=('connect_serial_thread', ),
+                daemon=True).start()
 
     def _try_connect_serial_thread(self, thread_name):
         '''
@@ -57,7 +61,6 @@ class MyCore(object):
         except OSError as e:
             MyUtil.wb_error_log('连接异常')
             os._exit(0)
-        
 
     def _init_connect(self):
         '''
@@ -71,7 +74,7 @@ class MyCore(object):
             port = port_list[i]
             if port.pid == 29987 or port.pid == 60000:
                 self._can_used_serial_port.append(port)
-                MyUtil.wb_log(port, port.pid)
+                MyUtil.wb_log(port, port.pid, '\r\n')
 
     def _connect_serial(self):
         '''
@@ -85,19 +88,21 @@ class MyCore(object):
             # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
             # self._ser.write(b'\x04')
             # MyCore.current_time = time.time()
-            threading.Thread(target=self._prepare_communication, args=('handle_serial_port_target',), daemon=True).start()
-            
+            threading.Thread(
+                target=self._prepare_communication,
+                args=('handle_serial_port_target', ),
+                daemon=True).start()
+
             # assume reboot board successfully in 2 second;
             time.sleep(2)
             # first step: enter raw repl mode
             self._start_raw_repl()
         except serial.serialutil.SerialException as e:
-            MyUtil.wb_error_log('串口异常{}',format(e))
+            MyUtil.wb_error_log('串口异常{}', format(e))
             self.__init_property()
         except Exception as e:
             MyUtil.wb_error_log("通用异常：{}".format(e))
             self.__init_property()
-        
 
     def _prepare_communication(self, target_name):
         '''
@@ -117,28 +122,24 @@ class MyCore(object):
                     continue
                 if oneChar:
                     buffer += oneChar
-                    if oneByte == b'\n':
-                        MyUtil.wb_log(buffer)
-                        if 'raw REPL; CTRL-B to exit\r\n' == buffer:
+                    MyUtil.wb_log(oneChar)
+                    if buffer[-2:] == '\x04>':
+                        self._ser.write(b'\x04')
+                    if oneByte == b'>':
+                        if 'raw REPL; CTRL-B to exit\r\n>' == buffer[-27:]:
                             # second step: delete run py
                             if not MyCore.__delete_run_py_flag:
                                 self._delete_run_py_repl()
                             else:
-                                MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!', '\r\n')
+                                MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!',
+                                              '\r\n')
                                 MyCore.can_send_data = True
-                                threading.Thread(target=self._normal_communication, args=('normal_communication_thread',), daemon=True).start()
+                                threading.Thread(
+                                    target=self._normal_communication,
+                                    args=('normal_communication_thread', ),
+                                    daemon=True).start()
                                 break
                         buffer = ''
-                    if buffer.startswith('>OK'):
-                            # third step(last step): soft reboot enter raw repl
-                            self._ser.write(b'\x04')
-                            buffer = ''
-                    if oneChar == '>' and buffer[-3:] == '>>>':
-                        # MyUtil.wb_log(time.time() - MyCore.current_time)
-                        MyUtil.wb_log(buffer)
-                        buffer = ''
-                        # # first step: enter raw repl mode
-                        # self._start_raw_repl()
         except OSError as e:
             MyUtil.wb_error_log('连接异常')
             os._exit(0)
@@ -148,18 +149,18 @@ class MyCore(object):
         start enter raw repl mode
         '''
         if not MyCore.__start_raw_repl_flag:
-            MyUtil.wb_log('开始进入raw repl mode')
+            MyUtil.wb_log('开始进入raw repl mode', '\r\n')
             MyCore.__start_raw_repl_flag = True
             first_command_list = [b'\r\x03\x03', b'\r\x01']
             for command in first_command_list:
                 self._ser.write(command)
-    
+
     def _delete_run_py_repl(self):
         '''
         delete run_loop.py
         '''
         if not MyCore.__delete_run_py_flag:
-            MyUtil.wb_log('开始删除run_loop.py')
+            MyUtil.wb_log('开始删除run_loop.py', '\r\n')
             MyCore.__delete_run_py_flag = True
             # note: empty_char must be (lenth=1) empty char;
             empty_char = ' '
@@ -187,9 +188,12 @@ class MyCore(object):
                     continue
                 if oneByte:
                     byte_buffer += oneByte
-                    if (byte_buffer.startswith(b'OK') or byte_buffer.startswith(b'>OK')) and byte_buffer.endswith(b'\x04>'):
+                    if (byte_buffer.startswith(b'OK')
+                            or byte_buffer.startswith(b'>OK')
+                        ) and byte_buffer.endswith(b'\x04>'):
                         # parse get_command_return_value
-                        get_command_return_value = MyUtil.parse_data_from_raw_repl(buffer)
+                        get_command_return_value = MyUtil.parse_data_from_raw_repl(
+                            buffer)
                         MyCore.return_value = get_command_return_value
                         # output error msg
                         if not byte_buffer.endswith(b'\x04\x04>'):
@@ -217,11 +221,9 @@ class MyCore(object):
             os._exit(0)
 
 
-
 # if __name__ == "__main__":
 
 #     wbits = WBits()
 #     for i in range(10):
 #         wbits._send_command('display1.print(1,1,{})'.format(i))
 #         value = wbits._get_command('control1.get_sw4()')
-
