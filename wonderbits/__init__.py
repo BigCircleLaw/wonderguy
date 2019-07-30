@@ -1,7 +1,8 @@
 from .core import *
 
 import click
-from wonderbits import wb_tool
+
+# from wonderbits import wb_tool
 
 
 def ls(ctx, param, value):

@@ -34,11 +34,11 @@ class WBUpload(object):
                         if os.path.exists(source_file_path):
                             source_file_path = os.path.join(
                                 currentDir, source_file_path)
-                        run_loop_path = os.path.join(currentDir, 'run_loop.py')
+                        run_loop_path = os.path.join(currentDir, 'main.py')
                         target_file_path = shutil.copy(source_file_path,
                                                        run_loop_path)
-                        util.wb_error_log(file_path, ', ', source_file_path,
-                                          ', ', target_file_path)
+                        # util.wb_error_log(file_path, ', ', source_file_path,
+                        #                   ', ', target_file_path)
                         print('正在下载 {} ...'.format(source_file_path))
                         os.system('ampy -d 2 -p {}  put {}'.format(
                             port.device, target_file_path))

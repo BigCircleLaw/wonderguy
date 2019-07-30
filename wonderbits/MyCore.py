@@ -108,7 +108,7 @@ class MyCore(object):
         '''
         brefore communication
         do enter raw repl
-        and delete run_loop.py
+        and delete main.py
         and soft reboot
         '''
         try:
@@ -157,14 +157,14 @@ class MyCore(object):
 
     def _delete_run_py_repl(self):
         '''
-        delete run_loop.py
+        delete main.py
         '''
         if not MyCore.__delete_run_py_flag:
             MyUtil.wb_log('开始删除run_loop.py', '\r\n')
             MyCore.__delete_run_py_flag = True
             # note: empty_char must be (lenth=1) empty char;
             empty_char = ' '
-            delete_run_py_command = "try:\r\n" + empty_char * 4 + "import os\r\nexcept ImportError:\r\n" + empty_char * 4 + "import uos as os\r\nos.remove('run_loop.py')\r\n"
+            delete_run_py_command = "try:\r\n" + empty_char * 4 + "import os\r\nexcept ImportError:\r\n" + empty_char * 4 + "import uos as os\r\nos.remove('main.py')\r\n"
             delete_run_py_end_command = b'\x04'
             self._ser.write(MyUtil.wb_encode(delete_run_py_command))
             self._ser.write(delete_run_py_end_command)
