@@ -86,14 +86,16 @@ class MyCore(object):
         '''
         try:
             if len(self._can_used_serial_port) > 1:
-                print('有多个可选串口：', end='')
-                for port in self._can_used_serial_port:
-                    print(port.device, end=' ')
-                print()
-                portx = input('请输入你要选择的串口：')
+                print('有多个可选串口：')
+                for i in range(len(self._can_used_serial_port)):
+                    print(
+                        '[' + str(i) + ']',
+                        self._can_used_serial_port[i].device,
+                    )
+                portx = self._can_used_serial_port[int(
+                    input('请输入你要选择的串口序号：'))].device
             else:
                 portx = self._can_used_serial_port[0].device
-                print(portx)
             bps = 115200
             timex = 1
             self._ser = serial.Serial(portx, bps, timeout=timex)
