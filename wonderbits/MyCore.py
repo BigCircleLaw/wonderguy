@@ -72,8 +72,12 @@ class MyCore(object):
         port_list = list(serial.tools.list_ports.comports())
         for i in range(len(port_list)):
             port = port_list[i]
-            if port.pid == 29987 or port.pid == 60000:
+            if (port.pid == 29987
+                    and port.vid == 0x1A86) or (port.pid == 60000
+                                                and port.vid == 0x10C4):
                 self._can_used_serial_port.append(port)
+                # print(port.hwid)
+                # print(port.pid, port.vid)
                 MyUtil.wb_log(port, port.pid, '\r\n')
 
     def _connect_serial(self):
@@ -81,7 +85,15 @@ class MyCore(object):
         connect serial
         '''
         try:
-            portx = self._can_used_serial_port[0].device
+            if len(self._can_used_serial_port) > 1:
+                print('有多个可选串口：', end='')
+                for port in self._can_used_serial_port:
+                    print(port.device, end=' ')
+                print()
+                portx = input('请输入你要选择的串口：')
+            else:
+                portx = self._can_used_serial_port[0].device
+                print(portx)
             bps = 115200
             timex = 1
             self._ser = serial.Serial(portx, bps, timeout=timex)
@@ -194,12 +206,13 @@ class MyCore(object):
                         # parse get_command_return_value
                         get_command_return_value = MyUtil.parse_data_from_raw_repl(
                             buffer)
-                        MyCore.return_value = get_command_return_value
                         # output error msg
                         if not byte_buffer.endswith(b'\x04\x04>'):
                             MyUtil.wb_error_log(get_command_return_value)
                         else:
-                            MyUtil.wb_log(byte_buffer)
+                            MyUtil.wb_log(byte_buffer, '\r\n')
+
+                        MyCore.return_value = get_command_return_value
                         byte_buffer = b''
                         buffer = ''
                         MyCore.can_send_data = True
@@ -213,7 +226,7 @@ class MyCore(object):
             while not MyCore.can_send_data:
                 time.sleep(.001)
             if MyCore.can_send_data:
-                MyUtil.wb_log(cmd)
+                MyUtil.wb_log(cmd, '\r\n')
                 self._ser.write(cmd)
                 MyCore.can_send_data = False
         except KeyboardInterrupt as e:

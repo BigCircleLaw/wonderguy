@@ -17,7 +17,7 @@ class MyUtil(object):
             MyUtil._buffer = MyUtil._buffer + str(param)
             if MyUtil._buffer.endswith('\n'):
                 print('###wb-log: ', end="")
-                print(MyUtil._buffer)  #, end="")
+                print(MyUtil._buffer, end="")
                 MyUtil._buffer = ''
         # print()
 
