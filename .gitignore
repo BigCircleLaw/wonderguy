@@ -89,3 +89,8 @@ ENV/
 .ropeproject
 *.npy
 *.pkl
+
+.vscode/
+test.py
+
+try/

@@ -1,10 +1,10 @@
-
 class MyUtil(object):
     '''
     wonderbits util set
     '''
     # decide if show console
     is_show_console = False
+    _buffer = ''
 
     @staticmethod
     def wb_log(*params):
@@ -13,10 +13,13 @@ class MyUtil(object):
         '''
         if not MyUtil.is_show_console:
             return
-        print('###wb-log: ', end="")
         for param in params:
-            print(param, end=" ")
-        print()
+            MyUtil._buffer = MyUtil._buffer + str(param)
+            if MyUtil._buffer.endswith('\n'):
+                print('###wb-log: ', end="")
+                print(MyUtil._buffer, end="")
+                MyUtil._buffer = ''
+        # print()
 
     @staticmethod
     def wb_error_log(*params):
@@ -40,11 +43,11 @@ class MyUtil(object):
         print('*' * 50)
 
     @staticmethod
-    def wb_decode(raw_byte = b''):
+    def wb_decode(raw_byte=b''):
         return raw_byte.decode('gbk')
 
     @staticmethod
-    def wb_encode(raw_str = ''):
+    def wb_encode(raw_str=''):
         return raw_str.encode('gbk')
 
     @staticmethod
@@ -58,4 +61,4 @@ class MyUtil(object):
         # set_command failed
         # get_command finished successfully
         # get_command failed
-        return buffer[beginIndex: endIndex]
+        return buffer[beginIndex:endIndex]

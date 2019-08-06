@@ -1,6 +1,6 @@
-
 from .WBUpload import WBUpload
 from .MyUtil import MyUtil
+
 
 class wb_tool(object):
     '''

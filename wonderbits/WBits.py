@@ -15,10 +15,9 @@ class WBits(object):
 
     def __init__(self):
         if not WBits.__init_flag:
-            MyUtil.wb_log('wonderbits初始化')
+            MyUtil.wb_log('wonderbits初始化', '\r\n')
             WBits.__init_flag = True
             WBits._wb_serial = MyCore()
-
 
     def _set_command(self, command):
         '''
@@ -43,7 +42,7 @@ class WBits(object):
         MyUtil.wb_log(MyCore.return_value, '\r\n')
         return MyCore.return_value
 
-    def __timeout_get_command(self, timeout = 3):
+    def __timeout_get_command(self, timeout=3):
         '''
         max time when execute command,
         if exceed max time, ignore current command.

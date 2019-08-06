@@ -26,7 +26,9 @@ REQUIRED = [
     'requests',
     'pyserial',
     'Click',
-    'adafruit-ampy'
+    'adafruit-ampy',
+    'esptool',
+    'urllib'
 ]
 
 # What packages are optional?
@@ -92,7 +94,7 @@ class UploadCommand(Command):
         # self.status('Pushing git tags…')
         # os.system('git tag v{0}'.format(about['__version__']))
         # os.system('git push --tags')
-        
+
         sys.exit()
 
 
@@ -112,7 +114,7 @@ setup(
     # py_modules=['wonderbits'],
 
     entry_points={
-        'console_scripts': ['wonderbits=wonderbits:upload'],
+        'console_scripts': ['wonderbits=wonderbits:cli'],
     },
     install_requires=REQUIRED,
     extras_require=EXTRAS,
