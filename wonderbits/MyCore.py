@@ -23,13 +23,41 @@ class MyCore(object):
     can_send_data = False
 
     # current_time = None
+    @staticmethod
+    def choose_serial():
+        portx = None
+        can_used_serial_port = list()
+        port_list = list(serial.tools.list_ports.comports())
+        for i in range(len(port_list)):
+            port = port_list[i]
+            if (port.pid == 29987
+                    and port.vid == 0x1A86) or (port.pid == 60000
+                                                and port.vid == 0x10C4):
+                can_used_serial_port.append(port)
+                # print(port.hwid)
+                # print(port.pid, port.vid)
+                MyUtil.wb_log(port.device, ' ', port.vid, ' ', port.pid,
+                              '\r\n')
+        if len(can_used_serial_port) > 1:
+            print('有多个可选串口：')
+            for i in range(len(can_used_serial_port)):
+                print(
+                    '[' + str(i) + ']',
+                    can_used_serial_port[i].device,
+                )
+            portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
+        elif len(can_used_serial_port) == 1:
+            portx = can_used_serial_port[0].device
+        else:
+            print('未发现可用串口！')
+        return portx
 
     def __init_property(self):
         '''
         init MyCore property
         '''
         self._ser = None
-        self._can_used_serial_port = []
+        self.portx = None
 
     def __init__(self):
         if not MyCore.__init_flag:
@@ -47,19 +75,18 @@ class MyCore(object):
         try:
             while True:
                 self._init_connect()
-                can_used_serial_count = len(self._can_used_serial_port)
-                if not can_used_serial_count:
+                if self.portx == None:
                     MyUtil.wb_error_log('无可用串口')
                     os._exit(0)
                 else:
-                    if self._ser == None and can_used_serial_count != 0:
+                    if self._ser == None and self.portx != None:
                         self._connect_serial()
                     time.sleep(.5)
         except KeyboardInterrupt as e:
-            MyUtil.wb_error_log('退出豌豆拼')
+            MyUtil.wb_error_log('退出豌豆拼', e)
             os._exit(0)
         except OSError as e:
-            MyUtil.wb_error_log('连接异常')
+            MyUtil.wb_error_log('连接异常', e)
             os._exit(0)
 
     def _init_connect(self):
@@ -69,36 +96,16 @@ class MyCore(object):
         if self._ser != None:
             return
         self.__init_property()
-        port_list = list(serial.tools.list_ports.comports())
-        for i in range(len(port_list)):
-            port = port_list[i]
-            if (port.pid == 29987
-                    and port.vid == 0x1A86) or (port.pid == 60000
-                                                and port.vid == 0x10C4):
-                self._can_used_serial_port.append(port)
-                # print(port.hwid)
-                # print(port.pid, port.vid)
-                MyUtil.wb_log(port, port.pid, '\r\n')
+        self.portx = MyCore.choose_serial()
 
     def _connect_serial(self):
         '''
         connect serial
         '''
         try:
-            if len(self._can_used_serial_port) > 1:
-                print('有多个可选串口：')
-                for i in range(len(self._can_used_serial_port)):
-                    print(
-                        '[' + str(i) + ']',
-                        self._can_used_serial_port[i].device,
-                    )
-                portx = self._can_used_serial_port[int(
-                    input('请输入你要选择的串口序号：'))].device
-            else:
-                portx = self._can_used_serial_port[0].device
             bps = 115200
             timex = 1
-            self._ser = serial.Serial(portx, bps, timeout=timex)
+            self._ser = serial.Serial(self.portx, bps, timeout=timex)
             # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
             # self._ser.write(b'\x04')
             # MyCore.current_time = time.time()
@@ -155,7 +162,7 @@ class MyCore(object):
                                 break
                         buffer = ''
         except OSError as e:
-            MyUtil.wb_error_log('连接异常')
+            MyUtil.wb_error_log('连接异常', e)
             os._exit(0)
 
     def _start_raw_repl(self):
@@ -174,7 +181,7 @@ class MyCore(object):
         delete main.py
         '''
         if not MyCore.__delete_run_py_flag:
-            MyUtil.wb_log('开始删除run_loop.py', '\r\n')
+            MyUtil.wb_log('开始删除main.py', '\r\n')
             MyCore.__delete_run_py_flag = True
             # note: empty_char must be (lenth=1) empty char;
             empty_char = ' '
@@ -219,7 +226,7 @@ class MyCore(object):
                         buffer = ''
                         MyCore.can_send_data = True
         except OSError as e:
-            MyUtil.wb_error_log('连接异常')
+            MyUtil.wb_error_log('连接异常', e)
             os._exit(0)
 
     def write_command(self, command):
@@ -232,7 +239,7 @@ class MyCore(object):
                 self._ser.write(cmd)
                 MyCore.can_send_data = False
         except KeyboardInterrupt as e:
-            MyUtil.wb_error_log('exit-wb')
+            MyUtil.wb_error_log('exit-wb', e)
             os._exit(0)
 
 
