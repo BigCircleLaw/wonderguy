@@ -15,7 +15,7 @@ class WBUpload(object):
         if port != None:
             os.system('ampy -d 2 -p {} {}'.format(port, command))
 
-    def put(self, file_path):
+    def upload(self, file_path):
         '''
         param:file_path:: receive absolute or relative file path
         '''
@@ -37,6 +37,36 @@ class WBUpload(object):
                     os.system('ampy -d 2 -p {}  put {}'.format(
                         port, target_file_path))
                     os.remove(target_file_path)
+                    ser = serial.Serial(port, 115200, timeout=1)
+                    # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
+                    ser.write(b'\x04')
+                    print('下载结束')
+                    ser.close()
+
+            except OSError as e:
+                print('下载失败', e)
+            except Exception as e:
+                print('下载失败', e)
+
+    def put(self, source_file_path, designation_file_path):
+        if not self._is_empty(source_file_path):
+            try:
+                port = MyCore.choose_serial()
+                if port != None:
+                    currentDir = os.getcwd()
+                    # source_file_path = file_path
+                    if os.path.exists(source_file_path):
+                        source_file_path = os.path.join(
+                            currentDir, source_file_path)
+                    if designation_file_path == None:
+                        print('正在下载 {} ...'.format(source_file_path))
+                        os.system('ampy -d 2 -p {}  put {}'.format(
+                            port, source_file_path))
+                    else:
+                        print('正在下载 {} to {}...'.format(
+                            source_file_path, designation_file_path))
+                        os.system('ampy -d 2 -p {}  put {} {}'.format(
+                            port, source_file_path, designation_file_path))
                     ser = serial.Serial(port, 115200, timeout=1)
                     # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
                     ser.write(b'\x04')

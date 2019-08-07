@@ -22,8 +22,16 @@ def cli(port):
 
 @cli.command()
 @click.argument('file', required=True)  #, help='put file to board')
-def put(file):
-    wb_tool.upload.put(file)
+def upload(file):
+    wb_tool.upload.upload(file)
+
+
+@cli.command()
+@click.argument("local", type=click.Path(exists=True))
+@click.argument("remote", required=False)
+def put(local, remote):
+    print(local, remote)
+    wb_tool.upload.put(local, remote)
 
 
 @cli.command()
