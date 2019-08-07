@@ -38,15 +38,16 @@ class MyCore(object):
                 # print(port.pid, port.vid)
                 MyUtil.wb_log(port.device, ' ', port.vid, ' ', port.pid,
                               '\r\n')
-        if len(can_used_serial_port) > 1:
-            print('有多个可选串口：')
-            for i in range(len(can_used_serial_port)):
-                print(
-                    '[' + str(i) + ']',
-                    can_used_serial_port[i].device,
-                )
-            portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
-        elif len(can_used_serial_port) == 1:
+        # if len(can_used_serial_port) > 1:
+        #     print('有多个可选串口：')
+        #     for i in range(len(can_used_serial_port)):
+        #         print(
+        #             '[' + str(i) + ']',
+        #             can_used_serial_port[i].device,
+        #         )
+        #     portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
+        # elif len(can_used_serial_port) == 1:
+        if len(can_used_serial_port) != 1:
             portx = can_used_serial_port[0].device
         else:
             print('未发现可用串口！')
