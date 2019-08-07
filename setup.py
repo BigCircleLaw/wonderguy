@@ -27,8 +27,7 @@ REQUIRED = [
     'pyserial',
     'Click',
     'adafruit-ampy',
-    'esptool',
-    'urllib'
+    'esptool'
 ]
 
 # What packages are optional?
