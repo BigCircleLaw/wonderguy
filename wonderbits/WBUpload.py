@@ -65,11 +65,11 @@ class WBUpload(object):
                 version)
             des_bin_file = './wb.bin'
             urllib.request.urlretrieve(download_url, des_bin_file)
-            print(download_url)
+            # print(download_url)
             print('上传固件。。。')
             port = MyCore.choose_serial()
             if port != None:
-                os.system('esptool.py --port ' + port + ' erase_flash')
+                # os.system('esptool.py --port ' + port + ' erase_flash')
                 os.system('esptool.py --chip esp32 --port ' + port +
                           ' write_flash -z 0x1000 ' + des_bin_file)
 

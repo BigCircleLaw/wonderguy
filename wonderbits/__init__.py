@@ -2,12 +2,22 @@ from .core import *
 
 import click
 
-# from wonderbits import wb_tool
+from .MyCore import MyCore
 
 
 @click.group()
-def cli():
-    pass
+@click.option(
+    "--port",
+    "-p",
+    envvar="AMPY_PORT",
+    required=False,
+    type=click.STRING,
+    help=
+    "Name of serial port for connected board.  Can optionally specify with AMPY_PORT environment variable.",
+    metavar="PORT",
+)
+def cli(port):
+    MyCore.designation_serial_port = port
 
 
 @cli.command()
@@ -41,6 +51,8 @@ def update(version):
 def ls():  # list files
     wb_tool.upload.direct_command('ls')
 
+
+# del MyCore
 
 if __name__ == "__main__":
     cli()
