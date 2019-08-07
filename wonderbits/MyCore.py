@@ -47,7 +47,7 @@ class MyCore(object):
         #         )
         #     portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
         # elif len(can_used_serial_port) == 1:
-        if len(can_used_serial_port) != 1:
+        if len(can_used_serial_port) > 0:
             portx = can_used_serial_port[0].device
         else:
             print('未发现可用串口！')
