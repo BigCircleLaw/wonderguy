@@ -2,18 +2,36 @@ from .core import *
 
 import click
 
-# from wonderbits import wb_tool
+from .MyCore import MyCore
 
 
 @click.group()
-def cli():
-    pass
+@click.option(
+    "--port",
+    "-p",
+    envvar="AMPY_PORT",
+    required=False,
+    type=click.STRING,
+    help=
+    "Name of serial port for connected board.  Can optionally specify with AMPY_PORT environment variable.",
+    metavar="PORT",
+)
+def cli(port):
+    MyCore.designation_serial_port = port
 
 
 @cli.command()
 @click.argument('file', required=True)  #, help='put file to board')
-def put(file):
-    wb_tool.upload.put(file)
+def upload(file):
+    wb_tool.upload.upload(file)
+
+
+@cli.command()
+@click.argument("local", type=click.Path(exists=True))
+@click.argument("remote", required=False)
+def put(local, remote):
+    print(local, remote)
+    wb_tool.upload.put(local, remote)
 
 
 @cli.command()
@@ -41,6 +59,8 @@ def update(version):
 def ls():  # list files
     wb_tool.upload.direct_command('ls')
 
+
+# del MyCore
 
 if __name__ == "__main__":
     cli()

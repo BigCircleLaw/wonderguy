@@ -22,36 +22,39 @@ class MyCore(object):
 
     can_send_data = False
 
+    designation_serial_port = None
     # current_time = None
     @staticmethod
     def choose_serial():
-        portx = None
-        can_used_serial_port = list()
-        port_list = list(serial.tools.list_ports.comports())
-        for i in range(len(port_list)):
-            port = port_list[i]
-            if (port.pid == 29987
-                    and port.vid == 0x1A86) or (port.pid == 60000
-                                                and port.vid == 0x10C4):
-                can_used_serial_port.append(port)
-                # print(port.hwid)
-                # print(port.pid, port.vid)
-                MyUtil.wb_log(port.device, ' ', port.vid, ' ', port.pid,
-                              '\r\n')
-        # if len(can_used_serial_port) > 1:
-        #     print('有多个可选串口：')
-        #     for i in range(len(can_used_serial_port)):
-        #         print(
-        #             '[' + str(i) + ']',
-        #             can_used_serial_port[i].device,
-        #         )
-        #     portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
-        # elif len(can_used_serial_port) == 1:
-        if len(can_used_serial_port) != 0:
-            portx = can_used_serial_port[0].device
-        else:
-            print('未发现可用串口！')
-        return portx
+        if MyCore.designation_serial_port == None:
+            portx = None
+            can_used_serial_port = list()
+            port_list = list(serial.tools.list_ports.comports())
+            for i in range(len(port_list)):
+                port = port_list[i]
+                if (port.pid == 29987
+                        and port.vid == 0x1A86) or (port.pid == 60000
+                                                    and port.vid == 0x10C4):
+                    can_used_serial_port.append(port)
+                    # print(port.hwid)
+                    # print(port.pid, port.vid)
+                    MyUtil.wb_log(port.device, ' ', port.vid, ' ', port.pid,
+                                  '\r\n')
+            # if len(can_used_serial_port) > 1:
+            #     print('有多个可选串口：')
+            #     for i in range(len(can_used_serial_port)):
+            #         print(
+            #             '[' + str(i) + ']',
+            #             can_used_serial_port[i].device,
+            #         )
+            #     portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
+            # elif len(can_used_serial_port) == 1:
+            if len(can_used_serial_port) > 0:
+                portx = can_used_serial_port[0].device
+            else:
+                print('未发现可用串口！')
+            return portx
+        return MyCore.designation_serial_port
 
     def __init_property(self):
         '''
