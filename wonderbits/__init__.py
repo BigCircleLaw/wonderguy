@@ -5,7 +5,8 @@ import click
 from .MyCore import MyCore
 
 
-@click.group()
+@click.group(invoke_without_command=True)
+# @click.argument('file', required=False)
 @click.option(
     "--port",
     "-p",
@@ -16,8 +17,17 @@ from .MyCore import MyCore
     "Name of serial port for connected board.  Can optionally specify with AMPY_PORT environment variable.",
     metavar="PORT",
 )
-def cli(port):
+@click.pass_context
+# def cli(ctx, file, port):
+def cli(ctx, port):
+    # print(ctx.invoked_subcommand)
     MyCore.designation_serial_port = port
+    if ctx.invoked_subcommand is None:
+        # if not file is None:
+        #     wb_tool.upload.upload(file)
+        # else:
+        from .__version__ import VERSION
+        print(__version__.VERSION)
 
 
 @cli.command()
@@ -41,12 +51,17 @@ def put(local, remote):
 
 
 @cli.command()
-@click.argument('file', required=True)
-def get(file):
-    """get file content
+@click.argument("remote_file")
+@click.argument("local_file", required=False)
+def get(remote_file, local_file):
+    """Retrieve a file from the board.
 
     """
-    wb_tool.upload.direct_command('get {}'.format(file))
+    if local_file == None:
+        wb_tool.upload.direct_command('get {}'.format(remote_file))
+    else:
+        wb_tool.upload.direct_command('get {} {}'.format(
+            remote_file, local_file))
 
 
 @cli.command()
@@ -60,7 +75,7 @@ def rm(file):
 
 @cli.command()
 @click.argument('version', required=False)
-def update(version):
+def upgrade(version):
     """Write a binary blob to flash
     
     """
