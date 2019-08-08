@@ -21,8 +21,11 @@ def cli(port):
 
 
 @cli.command()
-@click.argument('file', required=True)  #, help='put file to board')
+@click.argument('file', required=True)
 def upload(file):
+    """ put file to board as main.py
+
+    """
     wb_tool.upload.upload(file)
 
 
@@ -30,25 +33,37 @@ def upload(file):
 @click.argument("local", type=click.Path(exists=True))
 @click.argument("remote", required=False)
 def put(local, remote):
+    """Put a file or folder and its contents on the board.
+
+    """
     print(local, remote)
     wb_tool.upload.put(local, remote)
 
 
 @cli.command()
-@click.argument('file', required=True)  #, help='get file content')
+@click.argument('file', required=True)
 def get(file):
+    """get file content
+
+    """
     wb_tool.upload.direct_command('get {}'.format(file))
 
 
 @cli.command()
-@click.argument('file', required=True)  #, help='delete file')
+@click.argument('file', required=True)
 def rm(file):
+    """Remove a file from the board.
+
+    """
     wb_tool.upload.direct_command('rm {}'.format(file))
 
 
 @cli.command()
 @click.argument('version', required=False)
 def update(version):
+    """Write a binary blob to flash
+    
+    """
     if version == None:
         wb_tool.upload.update_bin()
     else:
@@ -56,7 +71,10 @@ def update(version):
 
 
 @cli.command()
-def ls():  # list files
+def ls():
+    """List contents of a directory on the board.
+
+    """
     wb_tool.upload.direct_command('ls')
 
 
