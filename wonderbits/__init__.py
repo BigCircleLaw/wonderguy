@@ -5,8 +5,9 @@ import click
 from .MyCore import MyCore
 
 
-@click.group(invoke_without_command=True)
+# @click.group(invoke_without_command=True)
 # @click.argument('file', required=False)
+@click.group()
 @click.option(
     "--port",
     "-p",
@@ -17,23 +18,21 @@ from .MyCore import MyCore
     "Name of serial port for connected board.  Can optionally specify with AMPY_PORT environment variable.",
     metavar="PORT",
 )
-@click.pass_context
+# @click.pass_context
 # def cli(ctx, file, port):
-def cli(ctx, port):
+# def cli(ctx, port):
+def cli(port):
     # print(ctx.invoked_subcommand)
     MyCore.designation_serial_port = port
-    if ctx.invoked_subcommand is None:
-        # if not file is None:
-        #     wb_tool.upload.upload(file)
-        # else:
-        from .__version__ import VERSION
-        print(__version__.VERSION)
+    # if ctx.invoked_subcommand is None:
+    #     from .__version__ import VERSION
+    #     print(__version__.VERSION)
 
 
 @cli.command()
 @click.argument('file', required=True)
 def upload(file):
-    """ put file to board as main.py
+    """ Put file to board as main.py
 
     """
     wb_tool.upload.upload(file)
