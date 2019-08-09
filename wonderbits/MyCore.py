@@ -32,7 +32,7 @@ class MyCore(object):
             port_list = list(serial.tools.list_ports.comports())
             for i in range(len(port_list)):
                 port = port_list[i]
-                if (port.pid == 29987
+                if (port.pid == 0x7523
                         and port.vid == 0x1A86) or (port.pid == 60000
                                                     and port.vid == 0x10C4):
                     can_used_serial_port.append(port)
