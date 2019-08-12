@@ -1,3 +1,10 @@
+'''
+@Description: In User Settings Edit
+@Author: your name
+@Date: 2019-07-26 11:28:22
+@LastEditTime: 2019-08-12 14:04:53
+@LastEditors: Please set LastEditors
+'''
 import os
 import serial
 from .MyUtil import MyUtil as util
@@ -108,3 +115,34 @@ class WBUpload(object):
             print('更新固件出错：', error)
         except Exception as error:
             print('更新固件出错：', error)
+
+    def version_ls(self):
+        def bytes_to_list(bytes_list):
+            transform_flag = False
+            # record = ''
+            version_list = list()
+            for val in bytes_list:
+                if chr(val) == '"' and transform_flag:
+                    transform_flag = False
+                    version_list.append(record)
+                else:
+                    if transform_flag:
+                        record += chr(val)
+
+                    if chr(val) == '"' and not transform_flag:
+                        transform_flag = True
+                        record = ''
+
+            return version_list
+
+        with urllib.request.urlopen('http://wonderbits.cn:3939/versions') as f:
+            text = f.read()
+            # print(text)
+            # print(bytes_to_list(text))
+            version_list = bytes_to_list(text)
+            if len(version_list) > 0:
+                print('以下版本固件可更新：')
+                for val in version_list:
+                    print(val)
+            else:
+                print('没有可更新固件版本！！！')
