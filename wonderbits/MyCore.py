@@ -208,6 +208,7 @@ class MyCore(object):
                     oneChar = MyUtil.wb_decode(oneByte)
                     if oneChar:
                         buffer += oneChar
+                        MyUtil.wb_log(oneChar)
                 except:
                     MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
                     continue
@@ -222,13 +223,23 @@ class MyCore(object):
                         # output error msg
                         if not byte_buffer.endswith(b'\x04\x04>'):
                             MyUtil.wb_error_log(get_command_return_value)
-                        else:
-                            MyUtil.wb_log(byte_buffer, '\r\n')
+                        # else:
+                        #     MyUtil.wb_log(byte_buffer, '\r\n')
 
                         MyCore.return_value = get_command_return_value
                         byte_buffer = b''
                         buffer = ''
                         MyCore.can_send_data = True
+                    if byte_buffer.endswith(b'\n'):
+                        _start = byte_buffer.find(b'{')
+                        _end = byte_buffer.find(b'}')
+                        if (_start != -1) and (_end != -1) and (_end > _start):
+                            # print(byte_buffer)
+                            print(byte_buffer[_start:_end + 1])
+                            _bytes_buf = byte_buffer[:_start] + byte_buffer[
+                                _end + 3:]
+                            byte_buffer = _bytes_buf
+
         except OSError as e:
             MyUtil.wb_error_log('连接异常', e)
             os._exit(0)

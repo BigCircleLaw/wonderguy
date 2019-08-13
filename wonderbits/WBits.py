@@ -28,7 +28,7 @@ class WBits(object):
         self._wb_serial.write_command(command)
         self.__timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
-        return MyCore.return_value
+        # return MyCore.return_value
 
     def _get_command(self, command):
         '''
@@ -60,3 +60,7 @@ class WBits(object):
         except KeyboardInterrupt as e:
             MyUtil.wb_log('exit-wb')
             os._exit(0)
+
+    def _register_event(self, mod, func, cb):
+        self._wb_serial.write_command(mod + '.register.' + func + '()')
+        MyUtil.wb_log(cb)

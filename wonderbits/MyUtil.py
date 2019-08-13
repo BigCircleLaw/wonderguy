@@ -19,6 +19,11 @@ class MyUtil(object):
                 print('###wb-log: ', end="")
                 print(MyUtil._buffer, end="")
                 MyUtil._buffer = ''
+            if MyUtil._buffer.endswith('>'):
+                print('###wb-log: ', end="")
+                print(MyUtil._buffer)
+                MyUtil._buffer = ''
+
         # print()
 
     @staticmethod
