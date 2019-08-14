@@ -4,6 +4,7 @@ import threading
 import os
 import time
 from .MyUtil import MyUtil
+from .event_handle import parse_buffer
 
 
 class MyCore(object):
@@ -188,8 +189,14 @@ class MyCore(object):
             MyUtil.wb_log('开始删除main.py', '\r\n')
             MyCore.__delete_run_py_flag = True
             # note: empty_char must be (lenth=1) empty char;
-            empty_char = ' '
-            delete_run_py_command = "try:\r\n" + empty_char * 4 + "import os\r\nexcept ImportError:\r\n" + empty_char * 4 + "import uos as os\r\nos.remove('main.py')\r\n"
+            delete_run_py_command = \
+                """
+                try:
+                    import os
+                except ImportError:
+                    import uos as os
+                os.remove('main.py')
+                """
             delete_run_py_end_command = b'\x04'
             self._ser.write(MyUtil.wb_encode(delete_run_py_command))
             self._ser.write(delete_run_py_end_command)
@@ -235,7 +242,10 @@ class MyCore(object):
                         _end = byte_buffer.find(b'}')
                         if (_start != -1) and (_end != -1) and (_end > _start):
                             # print(byte_buffer)
-                            print(byte_buffer[_start:_end + 1])
+                            str_buffer = byte_buffer[_start:_end +
+                                                     1].decode('gbk')
+                            # print(str_buffer)
+                            parse_buffer(str_buffer)
                             _bytes_buf = byte_buffer[:_start] + byte_buffer[
                                 _end + 3:]
                             byte_buffer = _bytes_buf

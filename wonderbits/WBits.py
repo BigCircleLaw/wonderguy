@@ -1,5 +1,6 @@
 from .MyCore import MyCore
 from .MyUtil import MyUtil
+from .event_handle import _return_event_start
 import time
 import os
 
@@ -58,7 +59,7 @@ class WBits(object):
                 count = count - 1
                 MyCore.can_send_data = True
         except KeyboardInterrupt as e:
-            MyUtil.wb_log('exit-wb')
+            MyUtil.wb_log('exit-wb', e)
             os._exit(0)
 
     def _register_event(self, mod, func, cb):
