@@ -3,6 +3,9 @@ from .MyUtil import MyUtil
 from .event_handle import _return_event_start
 import time
 import os
+import threading
+
+_lock = threading.Lock()
 
 
 class WBits(object):
@@ -26,9 +29,11 @@ class WBits(object):
         param: command
         return: return 'done' if send command successfully, else return error_msg
         '''
+        _lock.acquire()
         self._wb_serial.write_command(command)
         self.__timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
+        _lock.release()
         # return MyCore.return_value
 
     def _get_command(self, command):
@@ -37,10 +42,12 @@ class WBits(object):
         params: command
         return: return value if send command successfully, else return error_msg
         '''
+        _lock.acquire()
         cmd = 'print({})'.format(command)
         self._wb_serial.write_command(cmd)
         self.__timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
+        _lock.release()
         return MyCore.return_value
 
     def __timeout_get_command(self, timeout=3):
@@ -62,6 +69,9 @@ class WBits(object):
             MyUtil.wb_log('exit-wb', e)
             os._exit(0)
 
-    def _register_event(self, mod, func, cb):
-        self._wb_serial.write_command(mod + '.register.' + func + '()')
-        MyUtil.wb_log(cb)
+
+def _register_event(module, soucre, valueType, actionType, delta, interval):
+    WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
+    # MyUtil.wb_log(cb)
+    e = _return_event_start(module, soucre, valueType)
+    return e._compare(actionType, delta, interval)

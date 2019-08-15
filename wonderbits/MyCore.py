@@ -210,45 +210,49 @@ class MyCore(object):
             byte_buffer = b''
             buffer = ''
             while True:
-                oneByte = self._ser.read(1)
-                try:
-                    oneChar = MyUtil.wb_decode(oneByte)
-                    if oneChar:
-                        buffer += oneChar
-                        MyUtil.wb_log(oneChar)
-                except:
-                    MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
-                    continue
-                if oneByte:
-                    byte_buffer += oneByte
-                    if (byte_buffer.startswith(b'OK')
-                            or byte_buffer.startswith(b'>OK')
-                        ) and byte_buffer.endswith(b'\x04>'):
-                        # parse get_command_return_value
-                        get_command_return_value = MyUtil.parse_data_from_raw_repl(
-                            buffer)
-                        # output error msg
-                        if not byte_buffer.endswith(b'\x04\x04>'):
-                            MyUtil.wb_error_log(get_command_return_value)
-                        # else:
-                        #     MyUtil.wb_log(byte_buffer, '\r\n')
+                read_len = self._ser.inWaiting()
+                if read_len > 0:
+                    bufferByte = self._ser.read(read_len)
+                    for oneByte in bufferByte:
+                        try:
+                            oneChar = chr(oneByte)
+                            if oneChar:
+                                buffer += oneChar
+                                MyUtil.wb_log(oneChar)
+                        except:
+                            MyUtil.wb_log('解析数据失败 {}'.format(oneByte), '\n')
+                            continue
+                        if oneByte > 0:
+                            # byte_buffer.append(oneByte)
+                            if (buffer.startswith('OK')
+                                    or buffer.startswith('>OK')
+                                ) and buffer.endswith('\x04>'):
+                                # parse get_command_return_value
+                                get_command_return_value = MyUtil.parse_data_from_raw_repl(
+                                    buffer)
+                                # output error msg
+                                if not buffer.endswith('\x04\x04>'):
+                                    MyUtil.wb_error_log(
+                                        get_command_return_value)
+                                # else:
+                                #     MyUtil.wb_log(buffer, '\r\n')
 
-                        MyCore.return_value = get_command_return_value
-                        byte_buffer = b''
-                        buffer = ''
-                        MyCore.can_send_data = True
-                    if byte_buffer.endswith(b'\n'):
-                        _start = byte_buffer.find(b'{')
-                        _end = byte_buffer.find(b'}')
-                        if (_start != -1) and (_end != -1) and (_end > _start):
-                            # print(byte_buffer)
-                            str_buffer = byte_buffer[_start:_end +
-                                                     1].decode('gbk')
-                            # print(str_buffer)
-                            parse_buffer(str_buffer)
-                            _bytes_buf = byte_buffer[:_start] + byte_buffer[
-                                _end + 3:]
-                            byte_buffer = _bytes_buf
+                                MyCore.return_value = get_command_return_value
+                                buffer = b''
+                                buffer = ''
+                                MyCore.can_send_data = True
+                            if buffer.endswith('}'):
+                                _start = buffer.find('{')
+                                _end = buffer.find('}')
+                                if (_start != -1) and (_end !=
+                                                       -1) and (_end > _start):
+                                    # print(buffer)
+                                    str_buffer = buffer[_start:_end + 1]
+                                    # print(str_buffer)
+                                    parse_buffer(str_buffer)
+                                    _bytes_buf = buffer[:_start] + buffer[
+                                        _end + 1:]
+                                    buffer = _bytes_buf
 
         except OSError as e:
             MyUtil.wb_error_log('连接异常', e)
@@ -267,6 +271,8 @@ class MyCore(object):
             MyUtil.wb_error_log('exit-wb', e)
             os._exit(0)
 
+
+# _wb_serial = MyCore()
 
 # if __name__ == "__main__":
 

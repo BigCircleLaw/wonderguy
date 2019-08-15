@@ -52,7 +52,7 @@ class Event:
                 return ((self.originalValue == True)
                         and (compareValue == False), self.originalValue)
             elif actionType == self._TRUE_TO_FALSE_ACTION:
-                return ((self.originalValue == False) == 0
+                return ((self.originalValue == False)
                         and (compareValue == True), self.originalValue)
             elif actionType == self._CHANGED_ACTION:
                 return ((self.originalValue != compareValue) != 0,
@@ -81,7 +81,10 @@ class Event:
                     return False, self.originalValue
 
     def _set_originalValue(self, value):
-        self.originalValue = value[self.originalValueNum]
+        if self.originalValueNum == None:
+            self.originalValue = value
+        else:
+            self.originalValue = value[self.originalValueNum]
         if self.actionType == self._UPDATE_ACTION:
             self.updateFlag = True
 
@@ -91,6 +94,8 @@ class Event:
             self.updateFlag = False
 
         def event_add_task(func):
+            # print(func)
+
             def event_task_run():
                 try:
                     ownData = self.originalValue
@@ -100,11 +105,11 @@ class Event:
                         if bool_value:
                             func()
                         time.sleep(interval)
-                except:
+                except OSError:
                     os._exit(0)
 
             # _thread.stack_size(_THREAD_STACK_SIZE)
             # _thread.start_new_thread(event_task_run, ())
-            threading.Thread(event_task_run, ()).start()
+            threading.Thread(target=event_task_run, daemon=True).start()
 
         return event_add_task

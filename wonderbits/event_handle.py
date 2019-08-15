@@ -1,22 +1,35 @@
 import json
 from .event import Event
-
 _event_info = dict()
+
+_wb_serial = None
 
 
 def parse_buffer(json_str):
     d = json.loads(json_str)
+    # print(d)
     # print(d['type'])
     # print(d['module'])
     # print(d['source'])
     # print(d['value'])
-    _event_info[d['module']][d['source']]._set_originalValue(d['value'])
+    if 'valuetype' in d:
+        pass
+    else:
+        if 'True' == d['value']:
+            val = True
+        elif 'False' == d['value']:
+            val = False
+        elif '.' in d['value']:
+            val = float(d['value'])
+        else:
+            val = int(d['value'])
+    _event_info[d['module']][d['source']]._set_originalValue(val)
 
 
 def _return_event_start(modulue_name,
                         source_name,
                         valueType,
-                        originalValueNum=0):
+                        originalValueNum=None):
     global _event_info
     if modulue_name not in _event_info:
         _event_info[modulue_name] = dict()
