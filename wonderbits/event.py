@@ -104,7 +104,29 @@ class Event:
                             actionType, ownData, delta)
                         if bool_value:
                             func()
-                        time.sleep(interval)
+                            time.sleep(interval)
+                        time.sleep(0.01)
+                except OSError:
+                    os._exit(0)
+
+            # _thread.stack_size(_THREAD_STACK_SIZE)
+            # _thread.start_new_thread(event_task_run, ())
+            threading.Thread(target=event_task_run, daemon=True).start()
+
+        return event_add_task
+
+    def _creat_event(self, triggerDecide, interval):
+        def event_add_task(func):
+            # print(func)
+
+            def event_task_run():
+                try:
+                    while True:
+                        bool_value = triggerDecide(self.originalValue)
+                        if bool_value:
+                            func()
+                            time.sleep(interval)
+                        time.sleep(0.01)
                 except OSError:
                     os._exit(0)
 

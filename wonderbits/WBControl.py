@@ -10,6 +10,8 @@ def _format_str_type(x):
 
 
 class Control(WBits):
+    _module_list = list()
+
     class _Event(object):
         def __init__(self, index):
             self.index = index
@@ -33,6 +35,7 @@ class Control(WBits):
         WBits.__init__(self)
         self.index = index
         self.event = Control._Event(index)
+        Control._module_list.append(self)
 
     def is_sw1_pressed(self):
         """
