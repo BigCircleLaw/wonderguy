@@ -1,6 +1,5 @@
 from .MyCore import MyCore
 from .MyUtil import MyUtil
-from .event_handle import _return_event_start
 import time
 import os
 import threading
@@ -70,32 +69,31 @@ class WBits(object):
             MyUtil.wb_log('exit-wb', e)
             os._exit(0)
 
-    @classmethod
-    def creat_event(cls, soucre):
-        module_name = cls.__name__[0].lower() + cls.__name__[1:]
+    # @classmethod
+    # def creat_event(cls, soucre):
+    #     module_name = cls.__name__[0].lower() + cls.__name__[1:]
 
-        def get_trigger(func):
-            def event_decorator(self, interval=0.1):
-                return _register_creat_event(module_name + str(self.index),
-                                             soucre, func, interval)
+    #     def get_trigger(func):
+    #         def event_decorator(self, interval=0.1):
+    #             return _register_creat_event(module_name + str(self.index),
+    #                                          soucre, func, interval)
 
-            setattr(cls._Event, func.__name__, event_decorator)
-            for module in cls._module_list:
-                setattr(module.event, func.__name__,
-                        types.MethodType(event_decorator, module.event))
+    #         setattr(cls._Event, func.__name__, event_decorator)
+    #         for module in cls._module_list:
+    #             setattr(module.event, func.__name__,
+    #                     types.MethodType(event_decorator, module.event))
 
-        return get_trigger
-
-
-def _register_event(module, soucre, valueType, actionType, delta, interval):
-    WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
-    # MyUtil.wb_log(cb)
-    e = _return_event_start(module, soucre, valueType)
-    return e._compare(actionType, delta, interval)
+    #     return get_trigger
 
 
-def _register_creat_event(module, soucre, trigger, interval):
-    WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
-    # MyUtil.wb_log(cb)
-    e = _return_event_start(module, soucre, None)
-    return e._creat_event(trigger, interval)
+# def _register_event(module, soucre, valueType, actionType, delta, interval):
+#     WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
+#     # MyUtil.wb_log(cb)
+#     e = _return_event_start(module, soucre, valueType)
+#     return e._compare(actionType, delta, interval)
+
+# def _register_creat_event(module, soucre, trigger, interval):
+#     WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
+#     # MyUtil.wb_log(cb)
+#     e = _return_event_start(module, soucre, None)
+#     return e._creat_event(trigger, interval)
