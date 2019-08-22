@@ -57,6 +57,7 @@ class Event:
                 index, trigger_type, value, interval)
         MyUtil.wb_log(send_info, '\r\n')
         WBits._wb_serial.write_command(send_info)
+        WBits._timeout_get_command()
         # print(send_info)
 
     def _triggerDecide(self, actionType, compareValue, delta):

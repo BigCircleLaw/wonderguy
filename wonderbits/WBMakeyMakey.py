@@ -18,15 +18,6 @@ class MakeyMakey(WBits):
         command = 'makeymakey{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
 
-    def register_touch(self, cb):
-        self._register_event('makeymakey{}'.format(self.index), 'touch', cb)
-
-    def register_mouse(self, cb):
-        self._register_event('makeymakey{}'.format(self.index), 'mouse', cb)
-
-    def register_keyboard(self, cb):
-        self._register_event('makeymakey{}'.format(self.index), 'keyboard', cb)
-
     def is_touching(self, channel):
         """
         获取触摸组的某通道是否被触摸
@@ -69,3 +60,11 @@ class MakeyMakey(WBits):
     @property
     def event_touch(self):
         return self, 'touch', Event._LIST_VALUE_TYPE
+
+    @property
+    def event_mouse(self):
+        return self, 'mouse', Event._LIST_VALUE_TYPE
+
+    @property
+    def event_keyboard(self):
+        return self, 'keyboard', Event._LIST_VALUE_TYPE

@@ -50,7 +50,8 @@ class WBits(object):
         _lock.release()
         return MyCore.return_value
 
-    def __timeout_get_command(self, timeout=3):
+    @staticmethod
+    def _timeout_get_command(timeout=3):
         '''
         max time when execute command,
         if exceed max time, ignore current command.
