@@ -6,24 +6,28 @@ _event_info = list()
 _wb_serial = None
 
 
+def parse_value(str_val):
+    if 'True' == str_val:
+        return True
+    elif 'False' == str_val:
+        return False
+    elif '.' in str_val:
+        return float(str_val)
+    else:
+        return int(str_val)
+
+
 def parse_buffer(json_str):
     d = json.loads(json_str)
     # print(d)
-    # print(d['type'])
-    # print(d['module'])
-    # print(d['source'])
-    # print(d['value'])
     if 'valuetype' in d:
-        pass
+        if d['valuetype'] == 'list':
+            str_list = d['value'].split(',')
+            val = list()
+            for v in str_list:
+                val.append(parse_value(v))
     else:
-        if 'True' == d['value']:
-            val = True
-        elif 'False' == d['value']:
-            val = False
-        elif '.' in d['value']:
-            val = float(d['value'])
-        else:
-            val = int(d['value'])
+        val = parse_value(d['value'])
     _event_info[d['target']]._set_originalValue(val)
 
 
