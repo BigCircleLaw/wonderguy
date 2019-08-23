@@ -27,17 +27,21 @@
 # print(time.time() - t)
 
 
-from wonderbits import Distance, wb_tool
-wb_tool.show_console()
+# from wonderbits import Distance, wb_tool
+# wb_tool.show_console()
 
 
-dis = Distance()
+# dis = Distance()
 
-while True:
-    print(dis.get_distance())
+# while True:
+#     print(dis.get_distance())
 
 
 
-l = ('1','2','3')
-print(' '.join(list(l)))
+# l = ('1','2','3')
+# print(' '.join(list(l)))
     
+
+from wonderbits import Display
+
+d = Display()
