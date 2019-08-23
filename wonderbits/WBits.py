@@ -2,6 +2,10 @@ from .MyCore import MyCore
 from .MyUtil import MyUtil
 import time
 import os
+import threading
+import types
+
+_lock = threading.Lock()
 
 
 class WBits(object):
@@ -25,10 +29,12 @@ class WBits(object):
         param: command
         return: return 'done' if send command successfully, else return error_msg
         '''
+        _lock.acquire()
         self._wb_serial.write_command(command)
         self.__timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
-        return MyCore.return_value
+        _lock.release()
+        # return MyCore.return_value
 
     def _get_command(self, command):
         '''
@@ -36,13 +42,16 @@ class WBits(object):
         params: command
         return: return value if send command successfully, else return error_msg
         '''
+        _lock.acquire()
         cmd = 'print({})'.format(command)
         self._wb_serial.write_command(cmd)
         self.__timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
+        _lock.release()
         return MyCore.return_value
 
-    def __timeout_get_command(self, timeout=3):
+    @staticmethod
+    def _timeout_get_command(timeout=3):
         '''
         max time when execute command,
         if exceed max time, ignore current command.
@@ -58,5 +67,34 @@ class WBits(object):
                 count = count - 1
                 MyCore.can_send_data = True
         except KeyboardInterrupt as e:
-            MyUtil.wb_log('exit-wb')
+            MyUtil.wb_log('exit-wb', e)
             os._exit(0)
+
+    # @classmethod
+    # def creat_event(cls, soucre):
+    #     module_name = cls.__name__[0].lower() + cls.__name__[1:]
+
+    #     def get_trigger(func):
+    #         def event_decorator(self, interval=0.1):
+    #             return _register_creat_event(module_name + str(self.index),
+    #                                          soucre, func, interval)
+
+    #         setattr(cls._Event, func.__name__, event_decorator)
+    #         for module in cls._module_list:
+    #             setattr(module.event, func.__name__,
+    #                     types.MethodType(event_decorator, module.event))
+
+    #     return get_trigger
+
+
+# def _register_event(module, soucre, valueType, actionType, delta, interval):
+#     WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
+#     # MyUtil.wb_log(cb)
+#     e = _return_event_start(module, soucre, valueType)
+#     return e._compare(actionType, delta, interval)
+
+# def _register_creat_event(module, soucre, trigger, interval):
+#     WBits._wb_serial.write_command(module + '.register.' + soucre + '()')
+#     # MyUtil.wb_log(cb)
+#     e = _return_event_start(module, soucre, None)
+#     return e._creat_event(trigger, interval)
