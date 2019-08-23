@@ -31,7 +31,7 @@ class WBits(object):
         '''
         _lock.acquire()
         self._wb_serial.write_command(command)
-        self.__timeout_get_command()
+        self._timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
         _lock.release()
         # return MyCore.return_value
@@ -45,7 +45,7 @@ class WBits(object):
         _lock.acquire()
         cmd = 'print({})'.format(command)
         self._wb_serial.write_command(cmd)
-        self.__timeout_get_command()
+        self._timeout_get_command()
         MyUtil.wb_log(MyCore.return_value, '\r\n')
         _lock.release()
         return MyCore.return_value
