@@ -60,40 +60,6 @@ class Event:
         WBits._timeout_get_command()
         # print(send_info)
 
-    def _triggerDecide(self, actionType, compareValue, delta):
-        if self.valueType == self._BOOL_VALUE_TYPE:
-            if actionType == self.TRIGGER_FALSE_TO_TRUE:
-                return ((self.originalValue == True)
-                        and (compareValue == False), self.originalValue)
-            elif actionType == self.TRIGGER_TRUE_TO_FALSE:
-                return ((self.originalValue == False)
-                        and (compareValue == True), self.originalValue)
-            elif actionType == self.TRIGGER_CHANGED:
-                return ((self.originalValue != compareValue) != 0,
-                        self.originalValue)
-        elif self.valueType == self._NUMBER_VALUE_TYPE:
-            if actionType == self.TRIGGER_CHANGED:
-                return _value_comparison(self.originalValue, compareValue,
-                                         delta)
-            elif actionType == self.TRIGGER_UPDATE:
-                if self.updateFlag:
-                    self.updateFlag = False
-                    return True, self.originalValue
-                else:
-                    return False, self.originalValue
-        elif self.valueType == self._STR_VALUE_TYPE:
-            pass
-        elif self.valueType == self._LIST_VALUE_TYPE:
-            if actionType == self.TRIGGER_CHANGED:
-                return _value_comparison(self.originalValue, compareValue,
-                                         delta)
-            elif actionType == self.TRIGGER_UPDATE:
-                if self.updateFlag:
-                    self.updateFlag = False
-                    return True, self.originalValue
-                else:
-                    return False, self.originalValue
-
     def __call__(self, func):
         self.updateFlag = False
 
@@ -112,49 +78,3 @@ class Event:
         else:
             self.originalValue = value[self.originalValueNum]
         self.updateFlag = True
-
-    # def _compare(self, actionType, delta, interval):
-    #     if actionType == self.TRIGGER_UPDATE:
-    #         self.trigger_type = actionType
-    #         self.updateFlag = False
-
-    #     def event_add_task(func):
-    #         # print(func)
-
-    #         def event_task_run():
-    #             try:
-    #                 ownData = self.originalValue
-    #                 while True:
-    #                     bool_value, ownData = self._triggerDecide(
-    #                         actionType, ownData, delta)
-    #                     if bool_value:
-    #                         func()
-    #                         time.sleep(interval)
-    #                     time.sleep(0.01)
-    #             except OSError:
-    #                 os._exit(0)
-
-    #         threading.Thread(target=event_task_run, daemon=True).start()
-
-    #     return event_add_task
-
-    # def _creat_event(self, triggerDecide, interval):
-    #     def event_add_task(func):
-    #         # print(func)
-
-    #         def event_task_run():
-    #             try:
-    #                 while True:
-    #                     bool_value = triggerDecide(self.originalValue)
-    #                     if bool_value:
-    #                         func()
-    #                         time.sleep(interval)
-    #                     time.sleep(0.01)
-    #             except OSError:
-    #                 os._exit(0)
-
-    #         # _thread.stack_size(_THREAD_STACK_SIZE)
-    #         # _thread.start_new_thread(event_task_run, ())
-    #         threading.Thread(target=event_task_run, daemon=True).start()
-
-    #     return event_add_task
