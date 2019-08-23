@@ -1,4 +1,4 @@
-# Insert your code here. 
+# Insert your code here.
 
 from .WBControl import Control
 from .WBDisplay import Display
@@ -15,4 +15,6 @@ from .WBUltrasonic import Ultrasonic
 from .WBAcceleration import Acceleration
 from .WBBuggy import Buggy
 from .WBDistance import Distance
+from .WBMakeyMakey import MakeyMakey
 from .Tool import wb_tool
+from .event import Event
