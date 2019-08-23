@@ -58,13 +58,13 @@ class MakeyMakey(WBits):
         return eval(value)
 
     @property
-    def event_touch(self):
+    def source_touch(self):
         return self, 'touch', Event._LIST_VALUE_TYPE
 
     @property
-    def event_mouse(self):
+    def source_mouse(self):
         return self, 'mouse', Event._LIST_VALUE_TYPE
 
     @property
-    def event_keyboard(self):
+    def source_keyboard(self):
         return self, 'keyboard', Event._LIST_VALUE_TYPE

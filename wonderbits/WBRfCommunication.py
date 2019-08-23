@@ -93,9 +93,9 @@ class RfCommunication(WBits):
         return eval(value)
 
     @property
-    def event_button(self):
+    def source_button(self):
         return self, 'button', Event._BOOL_VALUE_TYPE
 
     @property
-    def event_msg(self):
+    def source_msg(self):
         return self, 'msg', Event._NUMBER_VALUE_TYPE

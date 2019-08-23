@@ -131,33 +131,33 @@ class Control(WBits):
         return eval(value)
 
     @property
-    def event_sw1(self):
+    def source_sw1(self):
         return self, 'sw1', Event._BOOL_VALUE_TYPE
 
     @property
-    def event_sw2(self):
+    def source_sw2(self):
         return self, 'sw2', Event._BOOL_VALUE_TYPE
 
     @property
-    def event_sw3(self):
+    def source_sw3(self):
         return self, 'sw3', Event._BOOL_VALUE_TYPE
 
     @property
-    def event_sw4(self):
+    def source_sw4(self):
         return self, 'sw4', Event._NUMBER_VALUE_TYPE
 
     @property
-    def event_m1(self):
+    def source_m1(self):
         return self, 'm1', Event._BOOL_VALUE_TYPE
 
     @property
-    def event_m2(self):
+    def source_m2(self):
         return self, 'm2', Event._BOOL_VALUE_TYPE
 
     @property
-    def event_m1_value(self):
+    def source_m1_value(self):
         return self, 'm1_value', Event._NUMBER_VALUE_TYPE
 
     @property
-    def event_m2_value(self):
+    def source_m2_value(self):
         return self, 'm2_value', Event._NUMBER_VALUE_TYPE
