@@ -43,9 +43,9 @@ class Event:
 
         self.originalValueNum = originalValueNum
         self.originalValue = 0
-        self.valueType = source[2]
-        self.trigger_type = trigger_type
 
+        if type(trigger_type) is str:
+            trigger_type = '\'' + trigger_type + '\''
         index = _add_event(self)
 
         self.updateFlag = False
