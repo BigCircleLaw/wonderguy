@@ -189,14 +189,13 @@ class MyCore(object):
             MyUtil.wb_log('开始删除main.py', '\r\n')
             MyCore.__delete_run_py_flag = True
             # note: empty_char must be (lenth=1) empty char;
-            delete_run_py_command = \
-                """
-                try:
-                    import os
-                except ImportError:
-                    import uos as os
-                os.remove('main.py')
-                """
+            delete_run_py_command = """
+try:
+    import os
+except ImportError:
+    import uos as os
+os.remove('main.py')
+"""
             delete_run_py_end_command = b'\x04'
             self._ser.write(MyUtil.wb_encode(delete_run_py_command))
             self._ser.write(delete_run_py_end_command)
