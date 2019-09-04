@@ -1,4 +1,5 @@
 from .WBits import WBits
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
@@ -10,6 +11,10 @@ class Signal(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
+    
+    def set_onboard_rgb(self, rgb):
+        command = 'signal{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
 
     
     def set_rgb(self, r, g, b):
@@ -46,7 +51,7 @@ class Signal(WBits):
     
     def set_vibration(self, strength):
         """
-        设置震动马达的震动幅度值越大表示震动幅度越大，设置为0时停止震动
+        设置震动马达的震动强度值越大表示震动幅度越大，设置为0时停止震动
 
         :param strength: 振动幅度：0~100
         """
@@ -75,5 +80,7 @@ class Signal(WBits):
             args.append(str(block))
         command = 'signal{}.play_a_note({})'.format(self.index, ",".join(args))
         self._set_command(command)
+
+    
 
     

@@ -1,4 +1,5 @@
 from .WBits import WBits
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
@@ -10,6 +11,10 @@ class Driver(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
+    
+    def set_onboard_rgb(self, rgb):
+        command = 'driver{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
 
     
     def set_motor_a(self, speed, time = None, block = None):
@@ -47,7 +52,7 @@ class Driver(WBits):
         设置电机B转动
 
         :param speed: 转速：-100~100  符号表示转动方向，绝对值为转动速度
-        :param time: 变速时间，从当前转速转变到设置转速用到的时间，单位 s  默认值为10
+        :param time: 变速时间，从当前转速转变到设置转速用到的时间，单位 s  默认值为0.01
         :param block: 阻塞参数：  False: 不阻塞 True: 阻塞
         """
 
@@ -88,7 +93,7 @@ class Driver(WBits):
     
     def stop_servo1(self):
         """
-        关闭舵机1使用此函数后舵机1将失去维持角度的扭矩，施加外力可以轻松改变舵机1的角度
+        使用此函数后舵机1将失去维持角度的扭矩，施加外力可以轻松改变舵机1的角度
 
         """
 
@@ -112,11 +117,13 @@ class Driver(WBits):
     
     def stop_servo2(self):
         """
-        关闭舵机2使用此函数后舵机2将失去维持角度的扭矩，施加外力可以轻松改变舵机2的角度
+        使用此函数后舵机2将失去维持角度的扭矩，施加外力可以轻松改变舵机2的角度
 
         """
 
         command = 'driver{}.stop_servo2()'.format(self.index)
         self._set_command(command)
+
+    
 
     

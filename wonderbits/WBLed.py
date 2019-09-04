@@ -1,18 +1,22 @@
 from .WBits import WBits
-
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
-        x = str(x).replace('"', '\\"')
-        x = "\"" + x + "\""
+       x = str(x).replace('"', '\\"')
+       x = "\"" + x + "\""
     return x
 
-
 class Led(WBits):
-    def __init__(self, index=1):
+    def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
+    
+    def set_onboard_rgb(self, rgb):
+        command = 'led{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
 
+    
     def set_rgb(self, r, g, b):
         """
         设置彩灯颜色（r,g,b参数都设置为0时，关闭LED）
@@ -22,14 +26,16 @@ class Led(WBits):
         :param b: 蓝色：0~255
         """
 
-        args = []
+        
+        args = []    
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
         command = 'led{}.set_rgb({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    def fade_to_rgb(self, r, g, b, time, block=None, step=None):
+    
+    def fade_to_rgb(self, r, g, b, time, block = None, step = None):
         """
         控制彩灯由当前颜色在指定时间渐变到目标颜色
 
@@ -41,7 +47,8 @@ class Led(WBits):
         :param step: 变化次数：  在渐变时间内经过多少次变化达到目标颜色
         """
 
-        args = []
+        
+        args = []    
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
@@ -52,3 +59,7 @@ class Led(WBits):
             args.append(str(step))
         command = 'led{}.fade_to_rgb({})'.format(self.index, ",".join(args))
         self._set_command(command)
+
+    
+
+    
