@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-07-26 11:28:22
-@LastEditTime: 2019-08-12 17:24:52
+@LastEditTime: 2019-09-04 10:46:31
 @LastEditors: Please set LastEditors
 '''
 from .core import *
@@ -146,7 +146,7 @@ def rm(file):
 @click.argument('version', required=False)
 def upgrade(ls, version):
     """Write a binary blob to flash.
-    
+
     """
     if ls:
         wb_tool.upload.version_ls()

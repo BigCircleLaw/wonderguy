@@ -20,10 +20,25 @@ class Distance(WBits):
     def get_distance(self):
         """
         获取检测的距离值（cm）
-
+        :rtype: float
         """
 
         command = 'distance{}.get_distance()'.format(self.index)
+        value = self._get_command(command)
+        return eval(value) 
+        
+    def when_something_detected(self, dis = None):
+        """
+        当检测到障碍物时，执行被修饰的函数
+
+        :param dis: 障碍物距离小于dis才会触发事件。范围：10~100
+        """
+
+        
+        args = []    
+        if dis != None:
+            args.append(str(dis))
+        command = 'distance{}.when_something_detected({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
