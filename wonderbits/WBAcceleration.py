@@ -1,4 +1,5 @@
 from .WBits import WBits
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
@@ -10,28 +11,46 @@ class Acceleration(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
+    
+    def set_onboard_rgb(self, rgb):
+        command = 'acceleration{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
 
     
-    def register_x_acceleration(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'x_acceleration', cb)
-    
-    def register_y_acceleration(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'y_acceleration', cb)
-    
-    def register_z_acceleration(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'z_acceleration', cb)
-    
-    def register_acceleration(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'acceleration', cb)
-    
-    def register_x_angular_velocity(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'x_angular_velocity', cb)
-    
-    def register_y_angular_velocity(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'y_angular_velocity', cb)
-    
-    def register_z_angular_velocity(self, cb):
-        self._register_event('acceleration{}'.format(self.index), 'z_angular_velocity', cb)
+    def get_x_angle(self):
+        """
+        获取x轴倾斜角，单位°
+        :rtype: float
+        """
+
+        command = 'acceleration{}.get_x_angle()'.format(self.index)
+        value = self._get_command(command)
+        return eval(value) 
+        
+    def get_y_angle(self):
+        """
+        获取x轴倾斜角，单位°
+        :rtype: float
+        """
+
+        command = 'acceleration{}.get_y_angle()'.format(self.index)
+        value = self._get_command(command)
+        return eval(value) 
+        
+    def calibrate(self, block = None):
+        """
+        注意：校准过程中需确保加速度模块且保持静止不动，有汉字的一面朝上。校准时，模块指示灯会变为黄色，等待指示灯变蓝说明校准完成了。
+
+        :param block: 阻塞参数：  False表示不阻塞 True表示阻塞
+        """
+
+        
+        args = []    
+        if block != None:
+            args.append(str(block))
+        command = 'acceleration{}.calibrate({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
     
     def get_x_acceleration(self):
         """
@@ -103,18 +122,52 @@ class Acceleration(WBits):
         value = self._get_command(command)
         return eval(value) 
         
-    def calibrate(self, block = None):
+    def when_x_tilted(self):
         """
-        校准加速度传感器注意：校准过程中需确保加速度模块且保持静止不动，有汉字的一面朝上。校准时，模块指示灯会变为黄色，等待指示灯变蓝说明校准完成了。
+        当X轴倾斜时，执行被修饰的函数
 
-        :param block: 阻塞参数：  False表示不阻塞 True表示阻塞
         """
 
-        
-        args = []    
-        if block != None:
-            args.append(str(block))
-        command = 'acceleration{}.calibrate({})'.format(self.index, ",".join(args))
+        command = 'acceleration{}.when_x_tilted()'.format(self.index)
         self._set_command(command)
 
+    
+    def when_y_tilted(self):
+        """
+        当Y轴倾斜时，执行被修饰的函数
+
+        """
+
+        command = 'acceleration{}.when_y_tilted()'.format(self.index)
+        self._set_command(command)
+
+    
+
+    @property
+    def source_x_acceleration(self):
+        return self, 'x_acceleration'
+    @property
+    def source_y_acceleration(self):
+        return self, 'y_acceleration'
+    @property
+    def source_z_acceleration(self):
+        return self, 'z_acceleration'
+    @property
+    def source_x_angular_velocity(self):
+        return self, 'x_angular_velocity'
+    @property
+    def source_y_angular_velocity(self):
+        return self, 'y_angular_velocity'
+    @property
+    def source_z_angular_velocity(self):
+        return self, 'z_angular_velocity'
+    @property
+    def source_x_angle(self):
+        return self, 'x_angle'
+    @property
+    def source_y_angle(self):
+        return self, 'y_angle'
+    @property
+    def source_acceleration(self):
+        return self, 'acceleration'
     

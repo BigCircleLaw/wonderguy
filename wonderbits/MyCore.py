@@ -6,6 +6,8 @@ import time
 from .MyUtil import MyUtil
 from .event_handle import parse_buffer
 
+import textwrap
+
 
 class MyCore(object):
     '''
@@ -190,12 +192,13 @@ class MyCore(object):
             MyCore.__delete_run_py_flag = True
             # note: empty_char must be (lenth=1) empty char;
             delete_run_py_command = """
-try:
-    import os
-except ImportError:
-    import uos as os
-os.remove('main.py')
-"""
+            try:
+                import os
+            except ImportError:
+                import uos as os
+            os.remove('main.py')
+            """
+            delete_run_py_command = textwrap.dedent(delete_run_py_command)
             delete_run_py_end_command = b'\x04'
             self._ser.write(MyUtil.wb_encode(delete_run_py_command))
             self._ser.write(delete_run_py_end_command)

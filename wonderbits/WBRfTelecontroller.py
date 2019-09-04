@@ -1,4 +1,5 @@
 from .WBits import WBits
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
@@ -10,10 +11,41 @@ class RfTelecontroller(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
+    
+    def set_onboard_rgb(self, rgb):
+        command = 'rfTelecontroller{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
 
     
-    def register_msg_received(self, cb):
-        self._register_event('rfTelecontroller{}'.format(self.index), 'msg_received', cb)
+    def init(self, name = None):
+        """
+        初始化模块通信名字，只有通信名字相同的模块之间才可以互相通信，不想互相通信的模块需要设置不同的通信名字
+
+        :param name: 通信名字
+        """
+
+        name = _format_str_type(name)
+        
+        args = []    
+        if name != None:
+            args.append(str(name))
+        command = 'rfTelecontroller{}.init({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def send(self, number):
+        """
+        调用此函数后，与本模块通信名字相同的模块将会受到发送的内容
+
+        :param number: 发送的数值
+        """
+
+        
+        args = []    
+        args.append(str(number))
+        command = 'rfTelecontroller{}.send({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
     
     def get_msg(self):
         """
@@ -55,33 +87,18 @@ class RfTelecontroller(WBits):
         value = self._get_command(command)
         return eval(value) 
         
-    def send(self, number):
+    def when_received(self):
         """
-        发送数据。调用此函数后，与本模块通信名字相同的模块将会受到发送的内容
+        当收到新消息时，执行被修饰的函数
 
-        :param number: 发送的数值
         """
 
-        
-        args = []    
-        args.append(str(number))
-        command = 'rfTelecontroller{}.send({})'.format(self.index, ",".join(args))
+        command = 'rfTelecontroller{}.when_received()'.format(self.index)
         self._set_command(command)
 
     
-    def init(self, name = None):
-        """
-        设置模块通信名字。只有通信名字相同的模块之间才可以互相通信，不想互相通信的模块需要设置不同的通信名字
 
-        :param name: 通信名字
-        """
-
-        name = _format_str_type(name)
-        
-        args = []    
-        if name != None:
-            args.append(str(name))
-        command = 'rfTelecontroller{}.init({})'.format(self.index, ",".join(args))
-        self._set_command(command)
-
+    @property
+    def source_msg(self):
+        return self, 'msg'
     

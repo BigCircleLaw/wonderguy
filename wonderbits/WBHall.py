@@ -1,4 +1,5 @@
 from .WBits import WBits
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
@@ -10,14 +11,15 @@ class Hall(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-
     
-    def register_magnetic(self, cb):
-        self._register_event('hall{}'.format(self.index), 'magnetic', cb)
+    def set_onboard_rgb(self, rgb):
+        command = 'hall{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
+
     
     def get_magnetic(self):
         """
-        获取磁场强度值
+        
         :rtype: float
         """
 
@@ -39,4 +41,24 @@ class Hall(WBits):
         command = 'hall{}.calibrate({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
+    
+    def when_magnet_detected(self, val = None):
+        """
+        当检测到磁铁时，执行被修饰的函数
+
+        :param val: 磁感强度大于val被认为检测到磁铁，才会触发事件。范围：0~10
+        """
+
+        
+        args = []    
+        if val != None:
+            args.append(str(val))
+        command = 'hall{}.when_magnet_detected({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+
+    @property
+    def source_magnetic(self):
+        return self, 'magnetic'
     

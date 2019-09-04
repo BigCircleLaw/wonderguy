@@ -1,4 +1,5 @@
 from .WBits import WBits
+from .event import Event
 
 def _format_str_type(x):
     if isinstance(x, str):
@@ -10,23 +11,15 @@ class Buggy(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
+    
+    def set_onboard_rgb(self, rgb):
+        command = 'buggy{}.set_onboard_rgb({})'.format(self.index, rgb)
+        self._set_command(command)
 
-    
-    def register_battery_value(self, cb):
-        self._register_event('buggy{}'.format(self.index), 'battery_value', cb)
-    
-    def register_s1(self, cb):
-        self._register_event('buggy{}'.format(self.index), 's1', cb)
-    
-    def register_s2(self, cb):
-        self._register_event('buggy{}'.format(self.index), 's2', cb)
-    
-    def register_tracer_state(self, cb):
-        self._register_event('buggy{}'.format(self.index), 'tracer_state', cb)
     
     def get_battery_value(self):
         """
-        获取电池电量值
+        
         :rtype: int
         """
 
@@ -36,7 +29,7 @@ class Buggy(WBits):
         
     def set_buzzer(self, frequency):
         """
-        设置蜂鸣器声音频率（Hz）设置频率为0表示关闭蜂鸣器
+        设置频率为0表示关闭蜂鸣器
 
         :param frequency: 频率：0~20000 Hz
         """
@@ -50,7 +43,7 @@ class Buggy(WBits):
     
     def set_led1(self, r, g, b):
         """
-        设置led1灯颜色（r,g,b参数都设置为0时，关闭LED）
+        
 
         :param r: 红色：0~255
         :param g: 绿色：0~255
@@ -68,7 +61,7 @@ class Buggy(WBits):
     
     def set_led2(self, r, g, b):
         """
-        设置led1灯颜色（r,g,b参数都设置为0时，关闭LED）
+        
 
         :param r: 红色：0~255
         :param g: 绿色：0~255
@@ -86,7 +79,7 @@ class Buggy(WBits):
     
     def set_motors(self, speed_left, speed_right):
         """
-        设置电机A转动
+        符号表示转动方向，绝对值为转动速度
 
         :param speed_left: 转速：-100~100  符号表示转动方向，绝对值为转动速度
         :param speed_right: 转速：-100~100  符号表示转动方向，绝对值为转动速度
@@ -102,7 +95,7 @@ class Buggy(WBits):
     
     def get_s1(self):
         """
-        获取s1检测的亮度值亮度值代表相对强度，值越大代表亮度越强
+        亮度值代表相对强度，值越大代表亮度越强
         :rtype: float
         """
 
@@ -112,7 +105,7 @@ class Buggy(WBits):
         
     def get_s2(self):
         """
-        获取s2检测的亮度值亮度值代表相对强度，值越大代表亮度越强
+        亮度值代表相对强度，值越大代表亮度越强
         :rtype: float
         """
 
@@ -122,7 +115,7 @@ class Buggy(WBits):
         
     def get_tracer_all_black_state(self):
         """
-        判断循迹传感器是否全部检测为黑
+        True：循迹传感器全部检测为黑False：循迹传感器任意一个检测到白
         :rtype: bool
         """
 
@@ -132,7 +125,7 @@ class Buggy(WBits):
         
     def get_tracer_all_white_state(self):
         """
-        判断循迹传感器是否全部检测为白
+        True：循迹传感器全部检测为白False：循迹传感器任意一个检测到黑
         :rtype: bool
         """
 
@@ -142,7 +135,7 @@ class Buggy(WBits):
         
     def is_tracer_check_black(self, channel):
         """
-        判断某个循迹传感器是否检测为黑
+        表示t1~t5
         :rtype: bool
         """
 
@@ -155,7 +148,7 @@ class Buggy(WBits):
         
     def get_tracer_value(self, channel):
         """
-        获取某个循迹传感器的检测值
+        表示t1~τ5
         :rtype: float
         """
 
@@ -168,7 +161,7 @@ class Buggy(WBits):
         
     def is_t6_check_unobstructed(self):
         """
-        判断t6是否无遮挡
+        True：t6无遮挡False：t6被遮挡
         :rtype: bool
         """
 
@@ -178,7 +171,7 @@ class Buggy(WBits):
         
     def is_t7_check_unobstructed(self):
         """
-        判断t7是否无遮挡
+        True：t7无遮挡False：t7被遮挡
         :rtype: bool
         """
 
@@ -188,7 +181,7 @@ class Buggy(WBits):
         
     def set_calibration_percentage(self, value):
         """
-        设置循迹传感器的阈值百分比为value阈值=循迹传感器检测的黑色值*value%+循迹传感器检测的白色值*（1-value%）
+        阈值=循迹传感器检测的黑色值*value%+循迹传感器检测的白色值*（1-value%）
 
         :param value: 值：0~100
         """
@@ -202,7 +195,7 @@ class Buggy(WBits):
     
     def calibration_black(self):
         """
-        校准循迹传感器的黑色值
+        
 
         """
 
@@ -212,11 +205,13 @@ class Buggy(WBits):
     
     def calibration_white(self):
         """
-        校准循迹传感器的白色值
+        
 
         """
 
         command = 'buggy{}.calibration_white()'.format(self.index)
         self._set_command(command)
+
+    
 
     
