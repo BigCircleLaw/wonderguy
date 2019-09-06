@@ -16,5 +16,9 @@ from .WBAcceleration import Acceleration
 from .WBBuggy import Buggy
 from .WBDistance import Distance
 from .WBMakeyMakey import MakeyMakey
+from .WBAudioPlayer import AudioPlayer
+from .WBClimate import Climate
+from .WBDisplaymini import Displaymini
+from .WBIoExtension import IoExtension
 from .Tool import wb_tool
 from .event import Event

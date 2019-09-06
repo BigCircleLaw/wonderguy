@@ -11,7 +11,7 @@ class Driver(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'driver{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -27,7 +27,7 @@ class Driver(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(speed))
         if time != None:
             args.append(str(time))
@@ -57,7 +57,7 @@ class Driver(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(speed))
         if time != None:
             args.append(str(time))
@@ -85,7 +85,7 @@ class Driver(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(angle))
         command = 'driver{}.set_servo1({})'.format(self.index, ",".join(args))
         self._set_command(command)
@@ -109,7 +109,7 @@ class Driver(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(angle))
         command = 'driver{}.set_servo2({})'.format(self.index, ",".join(args))
         self._set_command(command)
@@ -123,6 +123,8 @@ class Driver(WBits):
 
         command = 'driver{}.stop_servo2()'.format(self.index)
         self._set_command(command)
+
+    
 
     
 

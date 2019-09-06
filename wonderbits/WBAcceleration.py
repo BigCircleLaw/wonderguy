@@ -11,7 +11,7 @@ class Acceleration(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'acceleration{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -25,7 +25,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_x_angle()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_y_angle(self):
         """
@@ -35,7 +35,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_y_angle()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def calibrate(self, block = None):
         """
@@ -45,7 +45,7 @@ class Acceleration(WBits):
         """
 
         
-        args = []    
+        args = []
         if block != None:
             args.append(str(block))
         command = 'acceleration{}.calibrate({})'.format(self.index, ",".join(args))
@@ -60,7 +60,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_x_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_y_acceleration(self):
         """
@@ -70,7 +70,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_y_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_z_acceleration(self):
         """
@@ -80,7 +80,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_z_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_acceleration(self):
         """
@@ -90,7 +90,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_x_angular_velocity(self):
         """
@@ -100,7 +100,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_x_angular_velocity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_y_angular_velocity(self):
         """
@@ -110,7 +110,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_y_angular_velocity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_z_angular_velocity(self):
         """
@@ -120,54 +120,51 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_z_angular_velocity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def when_x_tilted(self):
-        """
-        当X轴倾斜时，执行被修饰的函数
-
-        """
-
-        command = 'acceleration{}.when_x_tilted()'.format(self.index)
-        self._set_command(command)
 
     
-    def when_y_tilted(self):
-        """
-        当Y轴倾斜时，执行被修饰的函数
-
-        """
-
-        command = 'acceleration{}.when_y_tilted()'.format(self.index)
-        self._set_command(command)
-
-    
-
     @property
     def source_x_acceleration(self):
-        return self, 'x_acceleration'
+        return self, 'x_acceleration', []
+    
     @property
     def source_y_acceleration(self):
-        return self, 'y_acceleration'
+        return self, 'y_acceleration', []
+    
     @property
     def source_z_acceleration(self):
-        return self, 'z_acceleration'
+        return self, 'z_acceleration', []
+    
     @property
     def source_x_angular_velocity(self):
-        return self, 'x_angular_velocity'
+        return self, 'x_angular_velocity', []
+    
     @property
     def source_y_angular_velocity(self):
-        return self, 'y_angular_velocity'
+        return self, 'y_angular_velocity', []
+    
     @property
     def source_z_angular_velocity(self):
-        return self, 'z_angular_velocity'
+        return self, 'z_angular_velocity', []
+    
     @property
     def source_x_angle(self):
-        return self, 'x_angle'
+        return self, 'x_angle', []
+    
     @property
     def source_y_angle(self):
-        return self, 'y_angle'
+        return self, 'y_angle', []
+    
     @property
     def source_acceleration(self):
-        return self, 'acceleration'
+        return self, 'acceleration', []
+    
+
+    def when_x_tilted(self):
+        return Event(self.source_x_angle, 'abs(x)>10')
+
+    def when_y_tilted(self):
+        return Event(self.source_y_angle, 'abs(x)>10')
+
     

@@ -11,7 +11,7 @@ class Led(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'led{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -27,7 +27,7 @@ class Led(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
@@ -48,7 +48,7 @@ class Led(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
@@ -59,6 +59,8 @@ class Led(WBits):
             args.append(str(step))
         command = 'led{}.fade_to_rgb({})'.format(self.index, ",".join(args))
         self._set_command(command)
+
+    
 
     
 

@@ -11,7 +11,7 @@ class RfTelecontroller(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'rfTelecontroller{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -26,7 +26,7 @@ class RfTelecontroller(WBits):
 
         name = _format_str_type(name)
         
-        args = []    
+        args = []
         if name != None:
             args.append(str(name))
         command = 'rfTelecontroller{}.init({})'.format(self.index, ",".join(args))
@@ -41,7 +41,7 @@ class RfTelecontroller(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(number))
         command = 'rfTelecontroller{}.send({})'.format(self.index, ",".join(args))
         self._set_command(command)
@@ -55,7 +55,7 @@ class RfTelecontroller(WBits):
 
         command = 'rfTelecontroller{}.get_msg()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def clear_msg(self):
         """
@@ -75,7 +75,7 @@ class RfTelecontroller(WBits):
 
         command = 'rfTelecontroller{}.get_unread_msg_count()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def read(self):
         """
@@ -85,20 +85,16 @@ class RfTelecontroller(WBits):
 
         command = 'rfTelecontroller{}.read()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def when_received(self):
-        """
-        当收到新消息时，执行被修饰的函数
-
-        """
-
-        command = 'rfTelecontroller{}.when_received()'.format(self.index)
-        self._set_command(command)
 
     
-
     @property
     def source_msg(self):
-        return self, 'msg'
+        return self, 'msg', []
+    
+
+    def when_received(self):
+        return Event(self.source_msg, Event.TRIGGER_UPDATE)
+
     
