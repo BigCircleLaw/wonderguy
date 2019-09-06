@@ -49,7 +49,8 @@ class Hall(WBits):
         return self, 'magnetic', []
     
 
-    def when_magnet_detected(self, val = None):
+    def when_magnet_detected(self, val = 2):
+        trigger = 'abs(x)>' + str(val)
         return Event(self.source_magnetic, trigger, val)
 
     

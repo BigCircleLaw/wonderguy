@@ -76,7 +76,8 @@ class Observer(WBits):
         return self, 'volume', []
     
 
-    def when_sound_detected(self, val = None):
-        return Event(self.source_distance, trigger, dis)
+    def when_sound_detected(self, val = 10):
+        trigger = 'x>' + str(val)
+        return Event(self.source_volume, trigger, val)
 
     
