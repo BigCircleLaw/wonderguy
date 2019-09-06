@@ -11,7 +11,7 @@ class Distance(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'distance{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -25,25 +25,17 @@ class Distance(WBits):
 
         command = 'distance{}.get_distance()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def when_something_detected(self, dis = None):
-        """
-        当检测到障碍物时，执行被修饰的函数
-
-        :param dis: 障碍物距离小于dis才会触发事件。范围：10~100
-        """
-
-        
-        args = []    
-        if dis != None:
-            args.append(str(dis))
-        command = 'distance{}.when_something_detected({})'.format(self.index, ",".join(args))
-        self._set_command(command)
 
     
-
     @property
     def source_distance(self):
-        return self, 'distance'
+        return self, 'distance', []
+    
+
+    def when_something_detected(self, dis = 30):
+        trigger = 'x<' + str(dis)
+        return Event(self.source_distance, trigger, dis)
+
     

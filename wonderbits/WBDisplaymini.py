@@ -7,17 +7,16 @@ def _format_str_type(x):
        x = "\"" + x + "\""
     return x
 
-class Display(WBits):
-    BUTTON_NONE = 0x01
-    BUTTON_L = 0x02
-    BUTTON_R = 0x04
-    BUTTON_M = 0x08
+class Displaymini(WBits):
+    BUTTON_NONE = 0x00
+    BUTTON_L = 0x01
+    BUTTON_R = 0x02
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
 
     def set_onboard_rgb(self, rgb):
-        command = 'display{}.set_onboard_rgb({})'.format(self.index, rgb)
+        command = 'displaymini{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
 
     
@@ -36,7 +35,7 @@ class Display(WBits):
         args.append(str(row))
         args.append(str(column))
         args.append(str(text))
-        command = 'display{}.print({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.print({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -51,7 +50,7 @@ class Display(WBits):
         args = []
         if page != None:
             args.append(str(page))
-        command = 'display{}.clear_page({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.clear_page({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -70,11 +69,11 @@ class Display(WBits):
         args.append(str(y))
         if page != None:
             args.append(str(page))
-        command = 'display{}.draw_chart({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.draw_chart({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
-    def set_direction(self, dir):
+    def set_direction(self, dir = None):
         """
         True:设置显示方向为系统默认显示方向False:设置显示方向为翻转显示方向，使用该函数后显示内容将会进行180°翻转
 
@@ -83,12 +82,13 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(dir))
-        command = 'display{}.set_direction({})'.format(self.index, ",".join(args))
+        if dir != None:
+            args.append(str(dir))
+        command = 'displaymini{}.set_direction({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
-    def turn_to_page(self, page):
+    def turn_to_page(self, page = None):
         """
         转到某页
 
@@ -97,22 +97,23 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(page))
-        command = 'display{}.turn_to_page({})'.format(self.index, ",".join(args))
+        if page != None:
+            args.append(str(page))
+        command = 'displaymini{}.turn_to_page({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
     def get_button_state(self):
         """
-        翻页按钮状态BUTTON_NONE：没有按键按下，值为1BUTTON_L：左键按下，值为2BUTTON_R：右键按下，值为4BUTTON_M：中键按下，值为8
+        翻页按钮状态BUTTON_NONE：没有按键按下，值为0BUTTON_L：左键按下，值为1BUTTON_R：右键按下，值为2
         :rtype: int
         """
 
-        command = 'display{}.get_button_state()'.format(self.index)
+        command = 'displaymini{}.get_button_state()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
         
-    def set_page_turning(self, state):
+    def set_page_turning(self, state = None):
         """
         True:开启翻页按键功能False:禁止翻页按键功能禁止翻页按键功能后将不能通过翻页按键来切换不同页码的显示内容系统默认开启翻页按键功能
 
@@ -121,12 +122,13 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(state))
-        command = 'display{}.set_page_turning({})'.format(self.index, ",".join(args))
+        if state != None:
+            args.append(str(state))
+        command = 'displaymini{}.set_page_turning({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
-    def set_scrollbar(self, state):
+    def set_scrollbar(self, state = None):
         """
         True:显示页码滚动指示条False:隐藏页码滚动指示条（屏幕右边的白色小点，用于指示当前页码）系统默认显示页码滚动指示条隐藏后每行最大显示字符数由15变为16
 
@@ -135,8 +137,9 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(state))
-        command = 'display{}.set_scrollbar({})'.format(self.index, ",".join(args))
+        if state != None:
+            args.append(str(state))
+        command = 'displaymini{}.set_scrollbar({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -151,7 +154,7 @@ class Display(WBits):
         args = []
         if block != None:
             args.append(str(block))
-        command = 'display{}.clear_all_pages({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.clear_all_pages({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -170,7 +173,7 @@ class Display(WBits):
         args.append(str(y))
         if page != None:
             args.append(str(page))
-        command = 'display{}.draw_dot({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.draw_dot({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -193,7 +196,7 @@ class Display(WBits):
         args.append(str(tail_y))
         if page != None:
             args.append(str(page))
-        command = 'display{}.draw_line({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.draw_line({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -203,7 +206,7 @@ class Display(WBits):
 
         """
 
-        command = 'display{}.disable_auto_refresh()'.format(self.index)
+        command = 'displaymini{}.disable_auto_refresh()'.format(self.index)
         self._set_command(command)
 
     
@@ -213,7 +216,7 @@ class Display(WBits):
 
         """
 
-        command = 'display{}.enable_auto_refresh()'.format(self.index)
+        command = 'displaymini{}.enable_auto_refresh()'.format(self.index)
         self._set_command(command)
 
     
@@ -223,7 +226,7 @@ class Display(WBits):
 
         """
 
-        command = 'display{}.refresh()'.format(self.index)
+        command = 'displaymini{}.refresh()'.format(self.index)
         self._set_command(command)
 
     
@@ -242,7 +245,7 @@ class Display(WBits):
         args.append(str(y))
         if page != None:
             args.append(str(page))
-        command = 'display{}.draw_save_dot({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.draw_save_dot({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -265,7 +268,7 @@ class Display(WBits):
         args.append(str(tail_y))
         if page != None:
             args.append(str(page))
-        command = 'display{}.draw_save_line({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.draw_save_line({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -284,7 +287,7 @@ class Display(WBits):
         args.append(str(y))
         if page != None:
             args.append(str(page))
-        command = 'display{}.draw_save_chart({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.draw_save_chart({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
@@ -303,15 +306,11 @@ class Display(WBits):
         args.append(str(row))
         args.append(str(column))
         args.append(str(text))
-        command = 'display{}.print_big_font({})'.format(self.index, ",".join(args))
+        command = 'displaymini{}.print_big_font({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
 
-    
-    @property
-    def source_button(self):
-        return self, 'button', []
     
 
     

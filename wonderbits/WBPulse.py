@@ -11,7 +11,7 @@ class Pulse(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'pulse{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -25,7 +25,7 @@ class Pulse(WBits):
 
         command = 'pulse{}.get_heart_rate()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_value(self):
         """
@@ -35,7 +35,7 @@ class Pulse(WBits):
 
         command = 'pulse{}.get_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_value_count(self):
         """
@@ -45,23 +45,20 @@ class Pulse(WBits):
 
         command = 'pulse{}.get_value_count()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def when_values_received(self):
-        """
-        当接收到心电图时，执行被修饰的函数
-
-        """
-
-        command = 'pulse{}.when_values_received()'.format(self.index)
-        self._set_command(command)
 
     
-
     @property
     def source_heart_rate(self):
-        return self, 'heart_rate'
+        return self, 'heart_rate', []
+    
     @property
     def source_values(self):
-        return self, 'values'
+        return self, 'values', []
+    
+
+    def when_values_received(self):
+        return Event(self.source_values, Event.TRIGGER_UPDATE, None)
+
     

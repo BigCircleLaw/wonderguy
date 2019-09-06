@@ -11,7 +11,7 @@ class Buggy(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'buggy{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -26,7 +26,7 @@ class Buggy(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(left))
         args.append(str(right))
         command = 'buggy{}.run({})'.format(self.index, ",".join(args))
@@ -53,7 +53,7 @@ class Buggy(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
@@ -71,7 +71,7 @@ class Buggy(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
@@ -87,7 +87,7 @@ class Buggy(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(frequency))
         command = 'buggy{}.set_buzzer({})'.format(self.index, ",".join(args))
         self._set_command(command)
@@ -101,7 +101,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_distance()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def is_line_detected(self, t = None):
         """
@@ -110,12 +110,12 @@ class Buggy(WBits):
         """
 
         
-        args = []    
+        args = []
         if t != None:
             args.append(str(t))
         command = 'buggy{}.is_line_detected({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_light_s1(self):
         """
@@ -125,7 +125,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_light_s1()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_light_s2(self):
         """
@@ -135,7 +135,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_light_s2()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def set_servo(self, angle):
         """
@@ -145,7 +145,7 @@ class Buggy(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(angle))
         command = 'buggy{}.set_servo({})'.format(self.index, ",".join(args))
         self._set_command(command)
@@ -173,60 +173,93 @@ class Buggy(WBits):
     
     def get_battery_value(self):
         """
-        
+        获取电池电量值
         :rtype: int
         """
 
         command = 'buggy{}.get_battery_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def get_tracer_all_black_state(self):
+    def get_tracking_status(self):
         """
-        True：循迹传感器全部检测为黑False：循迹传感器任意一个检测到白
-        :rtype: bool
+        
+        :rtype: list
         """
 
-        command = 'buggy{}.get_tracer_all_black_state()'.format(self.index)
+        command = 'buggy{}.get_tracking_status()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def get_tracer_all_white_state(self):
+    def get_tracking_values(self):
         """
-        True：循迹传感器全部检测为白False：循迹传感器任意一个检测到黑
-        :rtype: bool
+        
+        :rtype: list
         """
 
-        command = 'buggy{}.get_tracer_all_white_state()'.format(self.index)
+        command = 'buggy{}.get_tracking_values()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def set_calibration_percentage(self, value):
+    def set_tracking_rate(self, value):
         """
-        阈值=循迹传感器检测的黑色值*value%+循迹传感器检测的白色值*（1-value%）
+        设置循迹传感器的黑白阈值百分比为value阈值=循迹传感器检测的黑色值*value%+循迹传感器检测的白色值*（1-value%）
 
         :param value: 值：0~100
         """
 
         
-        args = []    
+        args = []
         args.append(str(value))
-        command = 'buggy{}.set_calibration_percentage({})'.format(self.index, ",".join(args))
+        command = 'buggy{}.set_tracking_rate({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
-    def get_tracer_value(self, channel):
-        """
-        表示t1~τ5
-        :rtype: float
-        """
 
-        
-        args = []    
-        args.append(str(channel))
-        command = 'buggy{}.get_tracer_value({})'.format(self.index, ",".join(args))
-        value = self._get_command(command)
-        return eval(value) 
-        
+    
+    @property
+    def source_battery_value(self):
+        return self, 'battery_value', []
+    
+    @property
+    def source_s1(self):
+        return self, 's1', []
+    
+    @property
+    def source_s2(self):
+        return self, 's2', []
+    
+    @property
+    def source_distance(self):
+        return self, 'distance', []
+    
+    @property
+    def source_tracer_state(self):
+        return self, 'tracer_state', []
+    
+    @property
+    def source_tracer_states(self):
+        return self, 'tracer_states', []
+    
+    @property
+    def source_tracer_values(self):
+        return self, 'tracer_values', []
+    
+
+    def when_blocked(self, dis = 30):
+        trigger = 'x<' + str(dis)
+        return Event(self.source_distance, trigger, dis)
+
+    def when_line_detected_left(self):
+        trigger = 'x<0x04 and x>0x00'
+        return Event(self.source_tracer_state, trigger)
+
+    def when_line_detected_right(self):
+        trigger = 'x>0x04'
+        return Event(self.when_line_detected_left, trigger)
+
+    def when_any_black_detected(self):
+        trigger = 'x!=[False, False, False, False, False]'
+        return Event(self.source_tracer_states, trigger)
 
     

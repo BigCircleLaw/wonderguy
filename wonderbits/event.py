@@ -53,8 +53,11 @@ class Event:
         module_name = source[0].__class__.__name__
         send_info = module_name[0].lower(
         ) + module_name[1:] + '{}._register.'.format(
-            source[0].index) + source[1] + '({},{},{},{})'.format(
-                index, trigger_type, value, interval)
+            source[0].index) + source[1] + '('
+        if source[2]:
+            send_info += ','.join(map(str, source[2])) + ','
+        send_info += '{},{},{},{})'.format(index, trigger_type, value,
+                                           interval)
         MyUtil.wb_log(send_info, '\r\n')
         WBits._wb_serial.write_command(send_info)
         WBits._timeout_get_command()

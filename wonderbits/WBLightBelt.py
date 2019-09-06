@@ -11,7 +11,7 @@ class LightBelt(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'lightBelt{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -29,7 +29,7 @@ class LightBelt(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(start))
         args.append(str(end))
         args.append(str(r))
@@ -50,13 +50,15 @@ class LightBelt(WBits):
         """
 
         
-        args = []    
+        args = []
         args.append(str(num))
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
         command = 'lightBelt{}.set_single_led_rgb({})'.format(self.index, ",".join(args))
         self._set_command(command)
+
+    
 
     
 

@@ -11,7 +11,7 @@ class Control(WBits):
     def __init__(self, index = 1):
         WBits.__init__(self)
         self.index = index
-    
+
     def set_onboard_rgb(self, rgb):
         command = 'control{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
@@ -25,7 +25,7 @@ class Control(WBits):
 
         command = 'control{}.is_sw1_pressed()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def is_sw2_pressed(self):
         """
@@ -35,7 +35,7 @@ class Control(WBits):
 
         command = 'control{}.is_sw2_pressed()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def is_sw3_at_1(self):
         """
@@ -45,7 +45,7 @@ class Control(WBits):
 
         command = 'control{}.is_sw3_at_1()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_sw4(self):
         """
@@ -55,7 +55,7 @@ class Control(WBits):
 
         command = 'control{}.get_sw4()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def is_m1_touched(self):
         """
@@ -65,7 +65,7 @@ class Control(WBits):
 
         command = 'control{}.is_m1_touched()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def is_m2_touched(self):
         """
@@ -75,7 +75,7 @@ class Control(WBits):
 
         command = 'control{}.is_m2_touched()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def set_m1_m2_sensitivity(self, limit = None):
         """
@@ -85,7 +85,7 @@ class Control(WBits):
         """
 
         
-        args = []    
+        args = []
         if limit != None:
             args.append(str(limit))
         command = 'control{}.set_m1_m2_sensitivity({})'.format(self.index, ",".join(args))
@@ -100,7 +100,7 @@ class Control(WBits):
 
         command = 'control{}.get_m1_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
     def get_m2_value(self):
         """
@@ -110,96 +110,61 @@ class Control(WBits):
 
         command = 'control{}.get_m2_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value) 
+        return eval(value)
         
-    def when_sw1_pressed(self):
-        """
-        当SW1按下时，执行被修饰的函数
-
-        """
-
-        command = 'control{}.when_sw1_pressed()'.format(self.index)
-        self._set_command(command)
 
     
-    def when_sw2_pressed(self):
-        """
-        当SW2按下时，执行被修饰的函数
-
-        """
-
-        command = 'control{}.when_sw2_pressed()'.format(self.index)
-        self._set_command(command)
-
-    
-    def when_sw3_set_to_1(self):
-        """
-        当SW3从‘0’位置拨到‘1’位置时，执行被修饰的函数
-
-        """
-
-        command = 'control{}.when_sw3_set_to_1()'.format(self.index)
-        self._set_command(command)
-
-    
-    def when_sw4_changed(self, val = None):
-        """
-        当SW4的值改变时，执行被修饰的函数
-
-        :param val: 改变值的触发条件，改变值不小于val才会触发事件。范围：0~100
-        """
-
-        
-        args = []    
-        if val != None:
-            args.append(str(val))
-        command = 'control{}.when_sw4_changed({})'.format(self.index, ",".join(args))
-        self._set_command(command)
-
-    
-    def when_m1_pressed(self):
-        """
-        当M1被触摸时，执行被修饰的函数
-
-        """
-
-        command = 'control{}.when_m1_pressed()'.format(self.index)
-        self._set_command(command)
-
-    
-    def when_m2_pressed(self):
-        """
-        当M2被触摸时，执行被修饰的函数
-
-        """
-
-        command = 'control{}.when_m2_pressed()'.format(self.index)
-        self._set_command(command)
-
-    
-
     @property
     def source_sw1(self):
-        return self, 'sw1'
+        return self, 'sw1', []
+    
     @property
     def source_sw2(self):
-        return self, 'sw2'
+        return self, 'sw2', []
+    
     @property
     def source_sw3(self):
-        return self, 'sw3'
+        return self, 'sw3', []
+    
     @property
     def source_sw4(self):
-        return self, 'sw4'
+        return self, 'sw4', []
+    
     @property
     def source_m1(self):
-        return self, 'm1'
+        return self, 'm1', []
+    
     @property
     def source_m2(self):
-        return self, 'm2'
+        return self, 'm2', []
+    
     @property
     def source_m1_value(self):
-        return self, 'm1_value'
+        return self, 'm1_value', []
+    
     @property
     def source_m2_value(self):
-        return self, 'm2_value'
+        return self, 'm2_value', []
+    
+
+    def when_sw1_pressed(self):
+        return Event(self.source_sw1, Event.TRIGGER_FALSE_TO_TRUE)
+
+    def when_sw2_pressed(self):
+        return Event(self.source_sw2, Event.TRIGGER_FALSE_TO_TRUE)
+
+    def when_sw3_set_to_1(self):
+        return Event(self.source_sw3, Event.TRIGGER_FALSE_TO_TRUE)
+
+    def when_sw4_changed(self, val = 1):
+        return Event(self.source_sw4, Event.TRIGGER_CHANGED, val)
+
+    def when_m1_pressed(self):
+        return Event(self.source_m1, Event.TRIGGER_FALSE_TO_TRUE)
+
+
+    def when_m2_pressed(self):
+        return Event(self.source_m2, Event.TRIGGER_FALSE_TO_TRUE)
+
+
     
