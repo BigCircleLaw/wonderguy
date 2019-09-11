@@ -26,6 +26,8 @@ def parse_buffer(json_str):
             val = list()
             for v in str_list:
                 val.append(parse_value(v))
+        elif d['valuetype'] == 'string':
+            val = d['value']
     else:
         val = parse_value(d['value'])
     _event_info[d['target']]._set_originalValue(val)

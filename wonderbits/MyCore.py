@@ -255,7 +255,7 @@ class MyCore(object):
                                     _bytes_buf = buffer[:_start] + buffer[
                                         _end + 1:]
                                     buffer = _bytes_buf
-
+                time.sleep(0.01)
         except OSError as e:
             MyUtil.wb_error_log('连接异常', e)
             os._exit(0)
