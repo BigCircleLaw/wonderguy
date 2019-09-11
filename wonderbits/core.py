@@ -25,5 +25,9 @@ from .WBLedMatrix import LedMatrix
 from .WBLight import Light
 from .WBNebulier import Nebulier
 from .WBNfc import Nfc
+from .WBPressure import Pressure
+from .WBRtc import Rtc
+from .WBSlider import Slider
+from .WBTransmitter import Transmitter
 from .Tool import wb_tool
 from .event import Event

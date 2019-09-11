@@ -74,7 +74,7 @@ class Display(WBits):
         self._set_command(command)
 
     
-    def set_direction(self, dir):
+    def set_direction(self, dir = None):
         """
         True:设置显示方向为系统默认显示方向False:设置显示方向为翻转显示方向，使用该函数后显示内容将会进行180°翻转
 
@@ -83,7 +83,8 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(dir))
+        if dir != None:
+            args.append(str(dir))
         command = 'display{}.set_direction({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
@@ -112,7 +113,7 @@ class Display(WBits):
         value = self._get_command(command)
         return eval(value)
         
-    def set_page_turning(self, state):
+    def set_page_turning(self, state = None):
         """
         True:开启翻页按键功能False:禁止翻页按键功能禁止翻页按键功能后将不能通过翻页按键来切换不同页码的显示内容系统默认开启翻页按键功能
 
@@ -121,12 +122,13 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(state))
+        if state != None:
+            args.append(str(state))
         command = 'display{}.set_page_turning({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     
-    def set_scrollbar(self, state):
+    def set_scrollbar(self, state = None):
         """
         True:显示页码滚动指示条False:隐藏页码滚动指示条（屏幕右边的白色小点，用于指示当前页码）系统默认显示页码滚动指示条隐藏后每行最大显示字符数由15变为16
 
@@ -135,7 +137,8 @@ class Display(WBits):
 
         
         args = []
-        args.append(str(state))
+        if state != None:
+            args.append(str(state))
         command = 'display{}.set_scrollbar({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
