@@ -1,10 +1,3 @@
-'''
-@Description: In User Settings Edit
-@Author: your name
-@Date: 2019-07-26 11:28:22
-@LastEditTime: 2019-09-04 10:46:31
-@LastEditors: Please set LastEditors
-'''
 from .core import *
 
 import click
@@ -35,8 +28,8 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 def cli(port, version):
     # print(ctx.invoked_subcommand)
     if version:
-        from .__version__ import VERSION
-        click.echo(VERSION)
+        from .__version__ import __version__
+        click.echo(__version__)
 
     MyCore.designation_serial_port = port
     # if ctx.invoked_subcommand is None:
