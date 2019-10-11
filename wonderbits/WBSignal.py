@@ -69,7 +69,7 @@ class Signal(WBits):
 
         :param frequency: 频率：20~20000 Hz
         :param time: 时间: 0.05~60 s
-        :param block: 阻塞参数：  False: 不阻塞 True: 阻塞
+        :param block: 阻塞参数：  False: 不阻塞 True: 阻塞 默认为True
         """
 
         
