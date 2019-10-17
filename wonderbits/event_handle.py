@@ -28,6 +28,8 @@ def parse_buffer(json_str):
                 val.append(parse_value(v))
         elif d['valuetype'] == 'string':
             val = d['value']
+        elif d['valuetype'] == 'bool':
+            val = ((d['value'] == 'True') or (d['value'] == 'true'))
         else:
             val = parse_value(d['value'])
     else:
