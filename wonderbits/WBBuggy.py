@@ -256,7 +256,7 @@ class Buggy(WBits):
 
     def when_line_detected_right(self):
         trigger = 'x>0x04'
-        return Event(self.when_line_detected_left, trigger)
+        return Event(self.source_tracer_state, trigger)
 
     def when_any_black_detected(self):
         trigger = 'x!=[False, False, False, False, False]'

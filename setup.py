@@ -14,9 +14,9 @@ from setuptools import find_packages, setup, Command
 # Package meta-data.
 NAME = 'wonderbits'
 DESCRIPTION = 'wonderbits by mfeducation.'
-URL = 'https://github.com/daejong123/wonderguy.git'
-EMAIL = 'daejong2014@163.com'
-AUTHOR = 'dottie'
+URL = 'https://github.com/BigCircleLaw/wonderguy.git'
+EMAIL = '794557226@qq.com'
+AUTHOR = 'mfe'
 REQUIRES_PYTHON = '>=3.0.0'
 VERSION = None
 
@@ -26,7 +26,7 @@ REQUIRED = [
     'requests',
     'pyserial',
     'Click',
-    'adafruit-ampy',
+    'wonderbits-ampy',
     'esptool'
 ]
 
