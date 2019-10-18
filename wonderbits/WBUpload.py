@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-07-26 11:28:22
-@LastEditTime: 2019-08-12 14:04:53
+@LastEditTime: 2019-10-18 10:48:33
 @LastEditors: Please set LastEditors
 '''
 import os
@@ -16,11 +16,11 @@ import urllib.request
 class WBUpload(object):
     def direct_command(self, command):
         '''
-        direct append to last of the ampy
+        direct append to last of the wb_ampy
         '''
         port = MyCore.choose_serial()
         if port != None:
-            os.system('ampy -d 2 -p {} {}'.format(port, command))
+            os.system('wb_ampy -d 2 -p {} {}'.format(port, command))
 
     def upload(self, file_path):
         '''
@@ -41,7 +41,9 @@ class WBUpload(object):
                     # util.wb_error_log(file_path, ', ', source_file_path,
                     #                   ', ', target_file_path)
                     print('正在下载 {} ...'.format(source_file_path))
-                    os.system('ampy -d 2 -p {}  put {}'.format(
+                    print('wb_ampy -d 2 -p {}  put {}'.format(
+                        port, target_file_path))
+                    os.system('wb_ampy -d 2 -p {}  put {}'.format(
                         port, target_file_path))
                     os.remove(target_file_path)
                     ser = serial.Serial(port, 115200, timeout=1)
@@ -67,12 +69,12 @@ class WBUpload(object):
                             currentDir, source_file_path)
                     if designation_file_path == None:
                         print('正在下载 {} ...'.format(source_file_path))
-                        os.system('ampy -d 2 -p {}  put {}'.format(
+                        os.system('wb_ampy -d 2 -p {}  put {}'.format(
                             port, source_file_path))
                     else:
                         print('正在下载 {} to {}...'.format(
                             source_file_path, designation_file_path))
-                        os.system('ampy -d 2 -p {}  put {} {}'.format(
+                        os.system('wb_ampy -d 2 -p {}  put {} {}'.format(
                             port, source_file_path, designation_file_path))
                     ser = serial.Serial(port, 115200, timeout=1)
                     # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
