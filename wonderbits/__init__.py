@@ -29,7 +29,8 @@ def cli(port, version):
     # print(ctx.invoked_subcommand)
     if version:
         from .__version__ import __version__
-        click.echo(__version__)
+        print('Python SDK version is', __version__)
+        wb_tool.upload.direct_command('version')
 
     MyCore.designation_serial_port = port
     # if ctx.invoked_subcommand is None:
