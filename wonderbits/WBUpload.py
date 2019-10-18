@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-07-26 11:28:22
-@LastEditTime: 2019-10-18 10:48:33
+@LastEditTime: 2019-10-18 13:24:22
 @LastEditors: Please set LastEditors
 '''
 import os
@@ -32,20 +32,12 @@ class WBUpload(object):
                 if port != None:
                     currentDir = os.getcwd()
                     source_file_path = file_path
-                    if os.path.exists(source_file_path):
-                        source_file_path = os.path.join(
-                            currentDir, source_file_path)
-                    run_loop_path = os.path.join(currentDir, 'main.py')
-                    target_file_path = shutil.copy(source_file_path,
-                                                   run_loop_path)
-                    # util.wb_error_log(file_path, ', ', source_file_path,
-                    #                   ', ', target_file_path)
+
                     print('正在下载 {} ...'.format(source_file_path))
-                    print('wb_ampy -d 2 -p {}  put {}'.format(
-                        port, target_file_path))
+                    # print('wb_ampy -d 2 -p {}  put {} main.py'.format(
+                    #     port, source_file_path))
                     os.system('wb_ampy -d 2 -p {}  put {}'.format(
-                        port, target_file_path))
-                    os.remove(target_file_path)
+                        port, source_file_path))
                     ser = serial.Serial(port, 115200, timeout=1)
                     # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
                     ser.write(b'\x04')
