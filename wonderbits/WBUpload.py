@@ -2,7 +2,7 @@
 @Description: In User Settings Edit
 @Author: your name
 @Date: 2019-07-26 11:28:22
-@LastEditTime: 2019-10-18 13:40:29
+@LastEditTime: 2019-10-22 09:39:01
 @LastEditors: Please set LastEditors
 '''
 import os
@@ -105,6 +105,8 @@ class WBUpload(object):
                           ' write_flash -z 0x1000 ' + des_bin_file)
 
             print('更新固件结束！')
+            os.system('wb_ampy -d 2 -p {} version'.format(port))
+
         except OSError as error:
             print('更新固件出错：', error)
         except Exception as error:
