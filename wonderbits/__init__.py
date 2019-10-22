@@ -27,12 +27,12 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 # def cli(ctx, port):
 def cli(port, version):
     # print(ctx.invoked_subcommand)
+    MyCore.designation_serial_port = port
+
     if version:
         from .__version__ import __version__
         print('Python SDK version is', __version__)
         wb_tool.upload.direct_command('version')
-
-    MyCore.designation_serial_port = port
     # if ctx.invoked_subcommand is None:
     #     from .__version__ import VERSION
     #     print(__version__.VERSION)
