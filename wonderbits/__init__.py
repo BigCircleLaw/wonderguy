@@ -250,5 +250,7 @@ def reset():
 
 if __name__ == "__main__":
     cli()
+else:
+    pass
 
 # del MyCore

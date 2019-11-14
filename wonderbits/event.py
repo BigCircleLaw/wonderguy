@@ -1,6 +1,5 @@
 # from .event_handle import _value_comparison
 import threading
-import os
 import time
 from .event_handle import _add_event
 from .WBits import WBits

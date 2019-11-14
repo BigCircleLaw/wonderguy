@@ -1,3 +1,6 @@
+import serial
+
+
 class MyUtil(object):
     '''
     wonderbits util set
@@ -5,6 +8,9 @@ class MyUtil(object):
     # decide if show console
     is_show_console = False
     _buffer = ''
+
+    _is_serial_error = False
+    _serial_error_content = ''
 
     @staticmethod
     def wb_log(*params):
@@ -71,3 +77,18 @@ class MyUtil(object):
         # get_command finished successfully
         # get_command failed
         return buffer[beginIndex:endIndex]
+
+    @staticmethod
+    def set_serial_error(*params):
+        MyUtil._is_serial_error = True
+        for err in params:
+            MyUtil._serial_error_content += '\n'
+            if type(err) is str:
+                MyUtil._serial_error_content += err
+            else:
+                MyUtil._serial_error_content += repr(err)
+
+    @staticmethod
+    def serial_error_check():
+        if MyUtil._is_serial_error:
+            raise serial.SerialException(MyUtil._serial_error_content)

@@ -2,6 +2,7 @@ import serial
 import serial.tools.list_ports
 import threading
 import os
+import sys
 import time
 from .MyUtil import MyUtil
 from .event_handle import parse_buffer
@@ -55,7 +56,8 @@ class MyCore(object):
             if len(can_used_serial_port) > 0:
                 portx = can_used_serial_port[0].device
             else:
-                print('未发现可用串口！')
+                MyUtil.set_serial_error('未发现可用串口！')
+                sys.exit()
             return portx
         return MyCore.designation_serial_port
 
@@ -82,19 +84,12 @@ class MyCore(object):
         try:
             while True:
                 self._init_connect()
-                if self.portx == None:
-                    MyUtil.wb_error_log('无可用串口')
-                    os._exit(0)
-                else:
-                    if self._ser == None and self.portx != None:
-                        self._connect_serial()
-                    time.sleep(.5)
-        except KeyboardInterrupt as e:
-            MyUtil.wb_error_log('退出豌豆拼', e)
-            os._exit(0)
+                if self._ser == None:
+                    self._connect_serial()
+                time.sleep(.5)
         except OSError as e:
-            MyUtil.wb_error_log('连接异常', e)
-            os._exit(0)
+            MyUtil.set_serial_error('连接异常', e)
+            sys.exit()
 
     def _init_connect(self):
         '''
@@ -169,8 +164,8 @@ class MyCore(object):
                                 break
                         buffer = ''
         except OSError as e:
-            MyUtil.wb_error_log('连接异常', e)
-            os._exit(0)
+            MyUtil.set_serial_error('连接异常', e)
+            sys.exit()
 
     def _start_raw_repl(self):
         '''
@@ -258,21 +253,22 @@ class MyCore(object):
                                     buffer = _bytes_buf
                 time.sleep(0.003)
         except OSError as e:
-            MyUtil.wb_error_log('连接异常', e)
-            os._exit(0)
+            MyUtil.set_serial_error('连接异常', e)
+            sys.exit()
+        except serial.SerialException as e:
+            MyUtil.set_serial_error('连接异常', e)
+            sys.exit()
 
     def write_command(self, command):
-        try:
-            cmd = MyUtil.wb_encode(command) + b'\x04'
-            while not MyCore.can_send_data:
-                time.sleep(.001)
-            if MyCore.can_send_data:
-                MyUtil.wb_log(cmd, '\r\n')
-                self._ser.write(cmd)
-                MyCore.can_send_data = False
-        except KeyboardInterrupt as e:
-            MyUtil.wb_error_log('exit-wb', e)
-            os._exit(0)
+        MyUtil.serial_error_check()
+        cmd = MyUtil.wb_encode(command) + b'\x04'
+        while not MyCore.can_send_data:
+            MyUtil.serial_error_check()
+            time.sleep(.001)
+        if MyCore.can_send_data:
+            MyUtil.wb_log(cmd, '\r\n')
+            self._ser.write(cmd)
+            MyCore.can_send_data = False
 
 
 # _wb_serial = MyCore()
