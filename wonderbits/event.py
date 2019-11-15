@@ -44,7 +44,7 @@ class Event:
         self.originalValue = 0
 
         if type(trigger_type) is str:
-            trigger_type = '\'' + trigger_type + '\''
+            trigger_type = repr(trigger_type)
         index = _add_event(self)
 
         self.updateFlag = False

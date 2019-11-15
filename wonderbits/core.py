@@ -29,5 +29,6 @@ from .WBPressure import Pressure
 from .WBRtc import Rtc
 from .WBSlider import Slider
 from .WBTransmitter import Transmitter
+from .WBVoice import Voice
 from .Tool import wb_tool
 from .event import Event
