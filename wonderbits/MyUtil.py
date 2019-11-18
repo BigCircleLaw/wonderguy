@@ -89,6 +89,10 @@ class MyUtil(object):
                 MyUtil._serial_error_content += repr(err)
 
     @staticmethod
+    def serial_error_clear():
+        MyUtil._is_serial_error = False
+
+    @staticmethod
     def serial_error_check():
         if MyUtil._is_serial_error:
             raise serial.SerialException(MyUtil._serial_error_content)

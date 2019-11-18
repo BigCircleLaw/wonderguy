@@ -17,10 +17,11 @@ class WBits(object):
     _wb_serial = None
 
     def __init__(self):
-        if not WBits.__init_flag:
+        if WBits._wb_serial is None:
             MyUtil.wb_log('wonderbits初始化', '\r\n')
-            WBits.__init_flag = True
             WBits._wb_serial = MyCore()
+        else:
+            WBits._wb_serial.serial_init()
 
     def _set_command(self, command):
         '''

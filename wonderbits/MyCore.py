@@ -27,40 +27,8 @@ class MyCore(object):
     can_send_data = False
 
     designation_serial_port = None
-    # current_time = None
-    @staticmethod
-    def choose_serial():
-        if MyCore.designation_serial_port == None:
-            portx = None
-            can_used_serial_port = list()
-            port_list = list(serial.tools.list_ports.comports())
-            for i in range(len(port_list)):
-                port = port_list[i]
-                if (port.pid == 0x7523
-                        and port.vid == 0x1A86) or (port.pid == 60000
-                                                    and port.vid == 0x10C4):
-                    can_used_serial_port.append(port)
-                    # print(port.hwid)
-                    # print(port.pid, port.vid)
-                    MyUtil.wb_log(port.device, ' ', port.vid, ' ', port.pid,
-                                  '\r\n')
-            # if len(can_used_serial_port) > 1:
-            #     print('有多个可选串口：')
-            #     for i in range(len(can_used_serial_port)):
-            #         print(
-            #             '[' + str(i) + ']',
-            #             can_used_serial_port[i].device,
-            #         )
-            #     portx = can_used_serial_port[int(input('请输入你要选择的串口序号：'))].device
-            # elif len(can_used_serial_port) == 1:
-            if len(can_used_serial_port) > 0:
-                portx = can_used_serial_port[0].device
-            else:
-                MyUtil.set_serial_error('未发现可用串口！')
-                sys.exit()
-            return portx
-        return MyCore.designation_serial_port
 
+    # current_time = None
     def __init_property(self):
         '''
         init MyCore property
@@ -69,12 +37,18 @@ class MyCore(object):
         self.portx = None
 
     def __init__(self):
+        self.serial_init()
+
+    def serial_init(self):
         if not MyCore.__init_flag:
             MyCore.__init_flag = True
+            MyCore.can_send_data = False
+            MyCore.__start_raw_repl_flag = False
+            MyUtil.serial_error_clear()
             self.__init_property()
             threading.Thread(
                 target=self._try_connect_serial_thread,
-                args=('connect_serial_thread', ),
+                args=('_try_connect_serial_thread', ),
                 daemon=True).start()
 
     def _try_connect_serial_thread(self, thread_name):
@@ -86,10 +60,13 @@ class MyCore(object):
                 self._init_connect()
                 if self._ser == None:
                     self._connect_serial()
+                else:
+                    return
                 time.sleep(.5)
         except OSError as e:
-            MyUtil.set_serial_error('连接异常', e)
-            sys.exit()
+            # MyUtil.set_serial_error('连接异常', e)
+            # sys.exit()
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
 
     def _init_connect(self):
         '''
@@ -113,7 +90,7 @@ class MyCore(object):
             # MyCore.current_time = time.time()
             threading.Thread(
                 target=self._prepare_communication,
-                args=('handle_serial_port_target', ),
+                args=('_prepare_communication', ),
                 daemon=True).start()
 
             # assume reboot board successfully in 2 second;
@@ -127,7 +104,7 @@ class MyCore(object):
             MyUtil.wb_error_log("通用异常：{}".format(e))
             self.__init_property()
 
-    def _prepare_communication(self, target_name):
+    def _prepare_communication(self, thread_name):
         '''
         brefore communication
         do enter raw repl
@@ -159,13 +136,14 @@ class MyCore(object):
                                 MyCore.can_send_data = True
                                 threading.Thread(
                                     target=self._normal_communication,
-                                    args=('normal_communication_thread', ),
+                                    args=('_normal_communication_thread', ),
                                     daemon=True).start()
                                 break
                         buffer = ''
         except OSError as e:
-            MyUtil.set_serial_error('连接异常', e)
-            sys.exit()
+            # MyUtil.set_serial_error('连接异常', e)
+            # sys.exit()
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
 
     def _start_raw_repl(self):
         '''
@@ -200,7 +178,7 @@ class MyCore(object):
             self._ser.write(delete_run_py_end_command)
             MyUtil.wb_log(delete_run_py_command, delete_run_py_end_command)
 
-    def _normal_communication(self, target_name):
+    def _normal_communication(self, thread_name):
         '''
         handle communication data
         '''
@@ -253,11 +231,13 @@ class MyCore(object):
                                     buffer = _bytes_buf
                 time.sleep(0.003)
         except OSError as e:
-            MyUtil.set_serial_error('连接异常', e)
-            sys.exit()
+            # MyUtil.set_serial_error('连接异常', e)
+            # sys.exit()
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
         except serial.SerialException as e:
-            MyUtil.set_serial_error('连接异常', e)
-            sys.exit()
+            # MyUtil.set_serial_error('连接异常', e)
+            # sys.exit()
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
 
     def write_command(self, command):
         MyUtil.serial_error_check()
@@ -269,6 +249,40 @@ class MyCore(object):
             MyUtil.wb_log(cmd, '\r\n')
             self._ser.write(cmd)
             MyCore.can_send_data = False
+
+    @staticmethod
+    def choose_serial():
+        if MyCore.designation_serial_port == None:
+            portx = None
+            can_used_serial_port = list()
+            port_list = list(serial.tools.list_ports.comports())
+            for i in range(len(port_list)):
+                port = port_list[i]
+                if (port.pid == 0x7523
+                        and port.vid == 0x1A86) or (port.pid == 60000
+                                                    and port.vid == 0x10C4):
+                    can_used_serial_port.append(port)
+                    # print(port.hwid)
+                    # print(port.pid, port.vid)
+                    MyUtil.wb_log(port.device, ' ', port.vid, ' ', port.pid,
+                                  '\r\n')
+            if len(can_used_serial_port) > 0:
+                portx = can_used_serial_port[0].device
+            else:
+                # MyUtil.wb_log("choose_serial")
+                # MyUtil.set_serial_error('未发现可用串口！')
+                # sys.exit()
+                MyCore._serial_thread_error_collection_exit(
+                    "choose_serial", '未发现可用串口！')
+            return portx
+        return MyCore.designation_serial_port
+
+    @staticmethod
+    def _serial_thread_error_collection_exit(thread_name, *err_params):
+        MyCore.__init_flag = False
+        MyUtil.wb_log(thread_name, '\r\n')
+        MyUtil.set_serial_error(*err_params)
+        sys.exit()
 
 
 # _wb_serial = MyCore()
