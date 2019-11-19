@@ -44,6 +44,7 @@ class MyCore(object):
             MyCore.__init_flag = True
             MyCore.can_send_data = False
             MyCore.__start_raw_repl_flag = False
+            MyCore.__delete_run_py_flag = False
             MyUtil.serial_error_clear()
             self.__init_property()
             threading.Thread(
@@ -134,6 +135,9 @@ class MyCore(object):
                                 MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!',
                                               '\r\n')
                                 MyCore.can_send_data = True
+                                MyUtil.wb_log(
+                                    thread_name,
+                                    'MyCore.can_send_data = True\r\n')
                                 threading.Thread(
                                     target=self._normal_communication,
                                     args=('_normal_communication_thread', ),
@@ -217,6 +221,9 @@ class MyCore(object):
                                 buffer = b''
                                 buffer = ''
                                 MyCore.can_send_data = True
+                                MyUtil.wb_log(
+                                    thread_name,
+                                    'MyCore.can_send_data = True\r\n')
                             if buffer.endswith('}'):
                                 _start = buffer.find('{')
                                 _end = buffer.find('}')
@@ -243,6 +250,7 @@ class MyCore(object):
         MyUtil.serial_error_check()
         cmd = MyUtil.wb_encode(command) + b'\x04'
         while not MyCore.can_send_data:
+            # MyUtil.wb_log('MyCore.write_command\r\n')
             MyUtil.serial_error_check()
             time.sleep(.001)
         if MyCore.can_send_data:

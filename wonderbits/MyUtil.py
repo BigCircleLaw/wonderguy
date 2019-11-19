@@ -1,4 +1,4 @@
-import serial
+from .WBError import wonderbitsError
 
 
 class MyUtil(object):
@@ -91,8 +91,9 @@ class MyUtil(object):
     @staticmethod
     def serial_error_clear():
         MyUtil._is_serial_error = False
+        MyUtil._serial_error_content = ''
 
     @staticmethod
     def serial_error_check():
         if MyUtil._is_serial_error:
-            raise serial.SerialException(MyUtil._serial_error_content)
+            raise wonderbitsError(MyUtil._serial_error_content)

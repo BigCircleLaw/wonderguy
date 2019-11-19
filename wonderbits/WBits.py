@@ -2,7 +2,7 @@ from .MyCore import MyCore
 from .MyUtil import MyUtil
 import time
 import threading
-import types
+from .WBError import wonderbitsError
 
 _lock = threading.Lock()
 
@@ -30,10 +30,13 @@ class WBits(object):
         return: return 'done' if send command successfully, else return error_msg
         '''
         _lock.acquire()
-        self._wb_serial.write_command(command)
-        self._timeout_get_command()
-        MyUtil.wb_log(MyCore.return_value, '\r\n')
-        _lock.release()
+        try:
+            self._wb_serial.write_command(command)
+            self._timeout_get_command()
+            MyUtil.wb_log(MyCore.return_value, '\r\n')
+        finally:
+            _lock.release()
+
         # return MyCore.return_value
 
     def _get_command(self, command):
@@ -43,12 +46,18 @@ class WBits(object):
         return: return value if send command successfully, else return error_msg
         '''
         _lock.acquire()
-        cmd = 'print({})'.format(command)
-        self._wb_serial.write_command(cmd)
-        self._timeout_get_command()
-        MyUtil.wb_log(MyCore.return_value, '\r\n')
-        _lock.release()
-        return MyCore.return_value
+        try:
+            cmd = 'print({})'.format(command)
+            self._wb_serial.write_command(cmd)
+            self._timeout_get_command()
+            MyUtil.wb_log(MyCore.return_value, '\r\n')
+            # _lock.release()
+            return MyCore.return_value
+        # except wonderbitsError as err:
+        #     _lock.release()
+        #     raise err
+        finally:
+            _lock.release()
 
     @staticmethod
     def _timeout_get_command(timeout=3):
