@@ -135,9 +135,9 @@ class MyCore(object):
                                 MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!',
                                               '\r\n')
                                 MyCore.can_send_data = True
-                                MyUtil.wb_log(
-                                    thread_name,
-                                    'MyCore.can_send_data = True\r\n')
+                                # MyUtil.wb_log(
+                                #     thread_name,
+                                #     'MyCore.can_send_data = True\r\n')
                                 threading.Thread(
                                     target=self._normal_communication,
                                     args=('_normal_communication_thread', ),
@@ -221,9 +221,9 @@ class MyCore(object):
                                 buffer = b''
                                 buffer = ''
                                 MyCore.can_send_data = True
-                                MyUtil.wb_log(
-                                    thread_name,
-                                    'MyCore.can_send_data = True\r\n')
+                                # MyUtil.wb_log(
+                                #     thread_name,
+                                #     'MyCore.can_send_data = True\r\n')
                             if buffer.endswith('}'):
                                 _start = buffer.find('{')
                                 _end = buffer.find('}')
@@ -277,9 +277,6 @@ class MyCore(object):
             if len(can_used_serial_port) > 0:
                 portx = can_used_serial_port[0].device
             else:
-                # MyUtil.wb_log("choose_serial")
-                # MyUtil.set_serial_error('未发现可用串口！')
-                # sys.exit()
                 MyCore._serial_thread_error_collection_exit(
                     "choose_serial", '未发现可用串口！')
             return portx
