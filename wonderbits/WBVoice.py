@@ -50,13 +50,13 @@ class Voice(WBits):
         self._set_command(command)
 
     
-    def get_recognize_command(self):
+    def get_result(self):
         """
         
         :rtype: str
         """
 
-        command = 'voice{}.get_recognize_command()'.format(self.index)
+        command = 'voice{}.get_result()'.format(self.index)
         value = self._get_command(command)
         return value
         
@@ -74,13 +74,13 @@ class Voice(WBits):
         self._set_command(command)
 
     
-    def clear_recognize_command(self):
+    def clear_result(self):
         """
         
 
         """
 
-        command = 'voice{}.clear_recognize_command()'.format(self.index)
+        command = 'voice{}.clear_result()'.format(self.index)
         self._set_command(command)
 
     
