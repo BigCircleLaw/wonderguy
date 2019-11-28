@@ -30,5 +30,7 @@ from .WBRtc import Rtc
 from .WBSlider import Slider
 from .WBTransmitter import Transmitter
 from .WBVoice import Voice
+from .WBMultimeter import Multimeter
+from .WBPressurePad import PressurePad
 from .Tool import wb_tool
 from .event import Event
