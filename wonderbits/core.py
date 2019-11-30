@@ -32,5 +32,6 @@ from .WBTransmitter import Transmitter
 from .WBVoice import Voice
 from .WBMultimeter import Multimeter
 from .WBPressurePad import PressurePad
+from .WBWonder import wonder
 from .Tool import wb_tool
 from .event import Event
