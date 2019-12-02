@@ -33,7 +33,7 @@ class WBits(object):
         try:
             self._wb_serial.write_command(command)
             self._timeout_get_command()
-            MyUtil.wb_log(MyCore.return_value, '\r\n')
+            # MyUtil.wb_log(MyCore.return_value, '\r\n')
         finally:
             _lock.release()
 

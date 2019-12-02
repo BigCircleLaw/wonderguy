@@ -6,8 +6,13 @@ import sys
 import time
 from .MyUtil import MyUtil
 from .event_handle import parse_buffer
+from .WBError import wonderbitsError
 
 import textwrap
+
+from .public import DEVICE_TYPE
+
+modules_name_list = DEVICE_TYPE.keys()
 
 
 class MyCore(object):
@@ -47,12 +52,13 @@ class MyCore(object):
             MyCore.__delete_run_py_flag = False
             MyUtil.serial_error_clear()
             self.__init_property()
-            threading.Thread(
-                target=self._try_connect_serial_thread,
-                args=('_try_connect_serial_thread', ),
-                daemon=True).start()
+            self._try_connect_serial('_try_connect_serial')
+            # threading.Thread(
+            #     target=self._try_connect_serial_thread,
+            #     args=('_try_connect_serial_thread', ),
+            #     daemon=True).start()
 
-    def _try_connect_serial_thread(self, thread_name):
+    def _try_connect_serial(self, thread_name):
         '''
         try to connect serial
         '''
@@ -65,9 +71,7 @@ class MyCore(object):
                     return
                 time.sleep(.5)
         except OSError as e:
-            # MyUtil.set_serial_error('连接异常', e)
-            # sys.exit()
-            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
+            MyCore._serial_error_exception_exit(thread_name, '连接异常')
 
     def _init_connect(self):
         '''
@@ -89,65 +93,14 @@ class MyCore(object):
             # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
             # self._ser.write(b'\x04')
             # MyCore.current_time = time.time()
-            threading.Thread(
-                target=self._prepare_communication,
-                args=('_prepare_communication', ),
-                daemon=True).start()
+            threading.Thread(target=self._communication, daemon=True).start()
 
-            # assume reboot board successfully in 2 second;
-            time.sleep(2)
-            # first step: enter raw repl mode
-            self._start_raw_repl()
         except serial.serialutil.SerialException as e:
-            MyUtil.wb_error_log('串口异常{}', format(e))
+            MyUtil.wb_error_log('串口异常{}'.format(e))
             self.__init_property()
         except Exception as e:
             MyUtil.wb_error_log("通用异常：{}".format(e))
             self.__init_property()
-
-    def _prepare_communication(self, thread_name):
-        '''
-        brefore communication
-        do enter raw repl
-        and delete main.py
-        and soft reboot
-        '''
-        try:
-            buffer = ''
-            while True:
-                oneByte = self._ser.read(1)
-                try:
-                    oneChar = MyUtil.wb_decode(oneByte)
-                except:
-                    MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
-                    continue
-                if oneChar:
-                    buffer += oneChar
-                    MyUtil.wb_log(oneChar)
-                    if buffer[-2:] == '\x04>':
-                        self._ser.write(b'\x04')
-                    if oneByte == b'>':
-                        if 'raw REPL; CTRL-B to exit\r\n>' == buffer[-27:]:
-                            # second step: delete run py
-                            if not MyCore.__delete_run_py_flag:
-                                self._delete_run_py_repl()
-                            else:
-                                MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!',
-                                              '\r\n')
-                                MyCore.can_send_data = True
-                                # MyUtil.wb_log(
-                                #     thread_name,
-                                #     'MyCore.can_send_data = True\r\n')
-                                threading.Thread(
-                                    target=self._normal_communication,
-                                    args=('_normal_communication_thread', ),
-                                    daemon=True).start()
-                                break
-                        buffer = ''
-        except OSError as e:
-            # MyUtil.set_serial_error('连接异常', e)
-            # sys.exit()
-            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
 
     def _start_raw_repl(self):
         '''
@@ -182,6 +135,47 @@ class MyCore(object):
             self._ser.write(delete_run_py_end_command)
             MyUtil.wb_log(delete_run_py_command, delete_run_py_end_command)
 
+    def _prepare_communication(self, thread_name):
+        '''
+        brefore communication
+        do enter raw repl
+        and delete main.py
+        and soft reboot
+        '''
+        try:
+            # assume reboot board successfully in 2 second;
+            time.sleep(2)
+            # first step: enter raw repl mode
+            self._start_raw_repl()
+            buffer = ''
+            while True:
+                oneByte = self._ser.read(1)
+                try:
+                    oneChar = MyUtil.wb_decode(oneByte)
+                except:
+                    MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
+                    continue
+                if oneChar:
+                    buffer += oneChar
+                    MyUtil.wb_log(oneChar)
+                    if buffer[-2:] == '\x04>':
+                        self._ser.write(b'\x04')
+                    if oneByte == b'>':
+                        if 'raw REPL; CTRL-B to exit\r\n>' == buffer[-27:]:
+                            # second step: delete run py
+                            if not MyCore.__delete_run_py_flag:
+                                self._delete_run_py_repl()
+                            else:
+                                MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!',
+                                              '\r\n')
+                                MyCore.can_send_data = True
+                                break
+                        buffer = ''
+        except OSError as e:
+            # MyUtil.set_serial_error('连接异常', e)
+            # sys.exit()
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
+
     def _normal_communication(self, thread_name):
         '''
         handle communication data
@@ -212,12 +206,13 @@ class MyCore(object):
                                     buffer)
                                 # output error msg
                                 if not buffer.endswith('\x04\x04>'):
-                                    MyUtil.wb_error_log(
-                                        get_command_return_value)
-                                # else:
-                                #     MyUtil.wb_log(buffer, '\r\n')
-
-                                MyCore.return_value = get_command_return_value
+                                    # MyUtil.wb_error_log(
+                                    #     get_command_return_value)
+                                    MyCore.return_value = 'None'
+                                    MyCore._serial_thread_error_collection_exit(
+                                        thread_name, get_command_return_value)
+                                else:
+                                    MyCore.return_value = get_command_return_value
                                 buffer = b''
                                 buffer = ''
                                 MyCore.can_send_data = True
@@ -238,13 +233,13 @@ class MyCore(object):
                                     buffer = _bytes_buf
                 time.sleep(0.003)
         except OSError as e:
-            # MyUtil.set_serial_error('连接异常', e)
-            # sys.exit()
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
         except serial.SerialException as e:
-            # MyUtil.set_serial_error('连接异常', e)
-            # sys.exit()
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
+
+    def _communication(self):
+        self._prepare_communication('_prepare_communication_thread')
+        self._normal_communication('_normal_communication_thread')
 
     def write_command(self, command):
         MyUtil.serial_error_check()
@@ -277,8 +272,8 @@ class MyCore(object):
             if len(can_used_serial_port) > 0:
                 portx = can_used_serial_port[0].device
             else:
-                MyCore._serial_thread_error_collection_exit(
-                    "choose_serial", '未发现可用串口！')
+                MyCore._serial_error_exception_exit("choose_serial",
+                                                    '未发现可用串口！')
             return portx
         return MyCore.designation_serial_port
 
@@ -288,6 +283,12 @@ class MyCore(object):
         MyUtil.wb_log(thread_name, '\r\n')
         MyUtil.set_serial_error(*err_params)
         sys.exit()
+
+    @staticmethod
+    def _serial_error_exception_exit(log_output, *err_params):
+        MyUtil.wb_log(log_output, '\r\n')
+        err_str = ' '.join(err_params)
+        raise wonderbitsError(err_str)
 
 
 # _wb_serial = MyCore()
