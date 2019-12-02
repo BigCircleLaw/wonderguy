@@ -50,7 +50,7 @@ class WBits(object):
             cmd = 'print({})'.format(command)
             self._wb_serial.write_command(cmd)
             self._timeout_get_command()
-            MyUtil.wb_log(MyCore.return_value, '\r\n')
+            # MyUtil.wb_log(MyCore.return_value, '\r\n')
             # _lock.release()
             return MyCore.return_value
         # except wonderbitsError as err:

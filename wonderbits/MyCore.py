@@ -53,10 +53,6 @@ class MyCore(object):
             MyUtil.serial_error_clear()
             self.__init_property()
             self._try_connect_serial('_try_connect_serial')
-            # threading.Thread(
-            #     target=self._try_connect_serial_thread,
-            #     args=('_try_connect_serial_thread', ),
-            #     daemon=True).start()
 
     def _try_connect_serial(self, thread_name):
         '''
@@ -149,32 +145,36 @@ class MyCore(object):
             self._start_raw_repl()
             buffer = ''
             while True:
-                oneByte = self._ser.read(1)
-                try:
-                    oneChar = MyUtil.wb_decode(oneByte)
-                except:
-                    MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
-                    continue
-                if oneChar:
-                    buffer += oneChar
-                    MyUtil.wb_log(oneChar)
-                    if buffer[-2:] == '\x04>':
-                        self._ser.write(b'\x04')
-                    if oneByte == b'>':
-                        if 'raw REPL; CTRL-B to exit\r\n>' == buffer[-27:]:
-                            # second step: delete run py
-                            if not MyCore.__delete_run_py_flag:
-                                self._delete_run_py_repl()
-                            else:
-                                MyUtil.wb_log('已成功切换到raw repl mode: 可以正常通信了!',
-                                              '\r\n')
-                                MyCore.can_send_data = True
-                                break
-                        buffer = ''
+                read_len = self._ser.inWaiting()
+                if read_len > 0:
+                    bufferByte = self._ser.read(read_len)
+                    try:
+                        bufferChar = MyUtil.wb_decode(bufferByte)
+                    except:
+                        MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
+                        continue
+                    for oneChar in bufferChar:
+                        buffer += oneChar
+                        # MyUtil.wb_log(oneChar)
+                        if buffer[-2:] == '\x04>':
+                            self._ser.write(b'\x04')
+                        if oneChar == '>':
+                            if 'raw REPL; CTRL-B to exit\r\n>' == buffer[-27:]:
+                                # second step: delete run py
+                                if not MyCore.__delete_run_py_flag:
+                                    self._delete_run_py_repl()
+                                else:
+                                    MyUtil.wb_log(
+                                        '已成功切换到raw repl mode: 可以正常通信了!',
+                                        '\r\n')
+                                    MyCore.can_send_data = True
+                                    return
+                            buffer = ''
+                time.sleep(0.003)
         except OSError as e:
-            # MyUtil.set_serial_error('连接异常', e)
-            # sys.exit()
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
+        except Exception as e:
+            MyCore._serial_thread_error_collection_exit(thread_name, '解析异常')
 
     def _normal_communication(self, thread_name):
         '''
@@ -216,9 +216,6 @@ class MyCore(object):
                                 buffer = b''
                                 buffer = ''
                                 MyCore.can_send_data = True
-                                # MyUtil.wb_log(
-                                #     thread_name,
-                                #     'MyCore.can_send_data = True\r\n')
                             if buffer.endswith('}'):
                                 _start = buffer.find('{')
                                 _end = buffer.find('}')

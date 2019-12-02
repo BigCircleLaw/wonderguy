@@ -21,18 +21,15 @@ class MyUtil(object):
             return
         for param in params:
             MyUtil._buffer = MyUtil._buffer + str(param)
-            if MyUtil._buffer.endswith('\n'):
-                print('###wb-log: ', end="")
-                print(MyUtil._buffer, end="", flush=True)
-                MyUtil._buffer = ''
             if MyUtil._buffer.endswith('>'):
-                print('###wb-log: ', end="")
                 print(MyUtil._buffer, flush=True)
-                MyUtil._buffer = ''
-            if MyUtil._buffer.endswith('}'):
-                print('###wb-log: ', end="")
+                MyUtil._buffer = '###wb-log: '
+            elif MyUtil._buffer.endswith('}'):
                 print(MyUtil._buffer, end="", flush=True)
-                MyUtil._buffer = ''
+                MyUtil._buffer = '###wb-log: '
+            elif MyUtil._buffer.endswith('\n'):
+                print(MyUtil._buffer, end="", flush=True)
+                MyUtil._buffer = '###wb-log: '
 
     @staticmethod
     def wb_error_log(*params):
