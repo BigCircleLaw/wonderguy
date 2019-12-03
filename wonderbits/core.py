@@ -35,3 +35,4 @@ from .WBPressurePad import PressurePad
 from .WBWonder import wonder
 from .Tool import wb_tool
 from .event import Event
+from .WBError import wonderbitsError

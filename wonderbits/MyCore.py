@@ -10,10 +10,6 @@ from .WBError import wonderbitsError
 
 import textwrap
 
-from .public import DEVICE_TYPE
-
-modules_name_list = DEVICE_TYPE.keys()
-
 
 class MyCore(object):
     '''
@@ -209,8 +205,10 @@ class MyCore(object):
                                     # MyUtil.wb_error_log(
                                     #     get_command_return_value)
                                     MyCore.return_value = 'None'
+                                    err_output = MyUtil.mp_error_parse(
+                                        get_command_return_value)
                                     MyCore._serial_thread_error_collection_exit(
-                                        thread_name, get_command_return_value)
+                                        thread_name, err_output)
                                 else:
                                     MyCore.return_value = get_command_return_value
                                 buffer = b''

@@ -1,4 +1,8 @@
 from .WBError import wonderbitsError
+import re
+from .public import DEVICE_TYPE
+
+modules_name_list = DEVICE_TYPE.keys()
 
 
 class MyUtil(object):
@@ -53,6 +57,26 @@ class MyUtil(object):
         return raw_str.encode('gbk')
 
     @staticmethod
+    def set_serial_error(*params):
+        MyUtil._is_serial_error = True
+        for err in params:
+            if type(err) is str:
+                MyUtil._serial_error_content += err
+            else:
+                MyUtil._serial_error_content += repr(err)
+            MyUtil._serial_error_content += '\n'
+
+    @staticmethod
+    def serial_error_clear():
+        MyUtil._is_serial_error = False
+        MyUtil._serial_error_content = ''
+
+    @staticmethod
+    def serial_error_check():
+        if MyUtil._is_serial_error:
+            raise wonderbitsError(MyUtil._serial_error_content[:-1])
+
+    @staticmethod
     def parse_data_from_raw_repl(buffer):
         OK = 'OK'
         beginIndex = buffer.find(OK) + len(OK)
@@ -66,21 +90,26 @@ class MyUtil(object):
         return buffer[beginIndex:endIndex]
 
     @staticmethod
-    def set_serial_error(*params):
-        MyUtil._is_serial_error = True
-        for err in params:
-            MyUtil._serial_error_content += '\n'
-            if type(err) is str:
-                MyUtil._serial_error_content += err
+    def mp_error_parse(error_info):
+        # print(error_info.encode('gbk'))
+        try:
+            err_parse_list = error_info.split('\r\n')
+            print(err_parse_list[-1])
+            re_obj = re.compile("'(.+)([0-9]+)'")
+            print(re_obj)
+            result = re_obj.search(err_parse_list[-1])
+            # print(result.group())
+            print(result.group(1))
+            print(result.group(2))
+            err_ret = result.group(1)
+            print(err_ret)
+            if err_ret in modules_name_list:
+                err_ret = err_ret[0].upper() + err_ret[1:] + '({})'.format(
+                    result.group(2))
+                return "{} isn't defined".format(err_ret)
             else:
-                MyUtil._serial_error_content += repr(err)
-
-    @staticmethod
-    def serial_error_clear():
-        MyUtil._is_serial_error = False
-        MyUtil._serial_error_content = ''
-
-    @staticmethod
-    def serial_error_check():
-        if MyUtil._is_serial_error:
-            raise wonderbitsError(MyUtil._serial_error_content)
+                return error_info
+        except Exception as e:
+            print('-----------------------except-----------------------')
+            print(e)
+            return error_info
