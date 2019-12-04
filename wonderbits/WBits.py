@@ -33,9 +33,9 @@ class WBits(object):
         try:
             self._wb_serial.write_command(command)
             self._timeout_get_command()
-            # MyUtil.wb_log(MyCore.return_value, '\r\n')
         finally:
             _lock.release()
+            # MyUtil.wb_log(MyCore.return_value, '\r\n')
 
         # return MyCore.return_value
 
@@ -50,14 +50,12 @@ class WBits(object):
             cmd = 'print({})'.format(command)
             self._wb_serial.write_command(cmd)
             self._timeout_get_command()
-            # MyUtil.wb_log(MyCore.return_value, '\r\n')
-            # _lock.release()
+        finally:
+            _lock.release()
             return MyCore.return_value
         # except wonderbitsError as err:
         #     _lock.release()
         #     raise err
-        finally:
-            _lock.release()
 
     @staticmethod
     def _timeout_get_command(timeout=3):
@@ -71,7 +69,7 @@ class WBits(object):
         while count > 0:
             MyUtil.serial_error_check()
             if MyCore.return_value:
-                break
+                return
             time.sleep(time_interval)
             count = count - 1
             MyCore.can_send_data = True

@@ -38,8 +38,8 @@ class MyUtil(object):
     @staticmethod
     def wb_error_log(*params):
         '''
-        接受不定个数的参数, 并print出来
-        '''
+            接受不定个数的参数, 并print出来
+            '''
 
         print('*' * 50)
         print('###wb-error-log: ')
