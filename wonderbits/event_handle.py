@@ -3,8 +3,6 @@ import json
 
 _event_info = list()
 
-_wb_serial = None
-
 
 def parse_value(str_val):
     if 'True' == str_val:

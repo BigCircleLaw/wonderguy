@@ -52,6 +52,7 @@ class WBits(object):
             self._timeout_get_command()
         finally:
             _lock.release()
+            # MyUtil.wb_log('_get_command' + MyCore.return_value)
             return MyCore.return_value
         # except wonderbitsError as err:
         #     _lock.release()
@@ -63,12 +64,12 @@ class WBits(object):
         max time when execute command,
         if exceed max time, ignore current command.
         '''
-        MyCore.return_value = None
+        MyCore.return_value = 'None'
         time_interval = 0.001
         count = timeout // time_interval
         while count > 0:
             MyUtil.serial_error_check()
-            if MyCore.return_value:
+            if MyCore.return_value != 'None':
                 return
             time.sleep(time_interval)
             count = count - 1
