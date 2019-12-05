@@ -136,11 +136,11 @@ class MyCore(object):
 
     def _prepare_communication(self, thread_name):
         '''
-        brefore communication
-        do enter raw repl
-        and delete main.py
-        and soft reboot
-        '''
+            brefore communication
+            do enter raw repl
+            and delete main.py
+            and soft reboot
+            '''
         try:
             # assume reboot board successfully in 2 second;
             time.sleep(2)
@@ -190,8 +190,8 @@ class MyCore(object):
 
     def _normal_communication(self, thread_name):
         '''
-        handle communication data
-        '''
+            handle communication data
+            '''
         try:
             byte_buffer = b''
             buffer = ''
@@ -304,9 +304,19 @@ class MyCore(object):
 
     @staticmethod
     def _serial_error_exception_exit(log_output, *err_params):
+        MyCore.__init_flag = False
         MyUtil.wb_log(log_output, '\r\n')
         err_str = ' '.join(err_params)
         raise wonderbitsError(err_str)
+
+    @staticmethod
+    def put_MyCore_flag():
+        print('MyCore.__init_flag = {}'.format(MyCore.__init_flag))
+        print('MyCore.can_send_data = {}'.format(MyCore.can_send_data))
+        print('MyCore.__start_raw_repl_flag = {}'.format(
+            MyCore.__start_raw_repl_flag))
+        print('MyCore.__delete_run_py_flag = {}'.format(
+            MyCore.__delete_run_py_flag))
 
 
 # _wb_serial = MyCore()

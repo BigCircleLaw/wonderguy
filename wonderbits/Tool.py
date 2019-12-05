@@ -1,5 +1,6 @@
 from .WBUpload import WBUpload
 from .MyUtil import MyUtil
+from .MyCore import MyCore
 
 
 class wb_tool(object):
@@ -21,3 +22,11 @@ class wb_tool(object):
         隐藏控制台输出（默认）
         '''
         MyUtil.is_show_console = False
+
+    @staticmethod
+    def put_all_flag():
+        '''
+        隐藏控制台输出（默认）
+        '''
+        print('MyUtil.is_show_console = {}'.format(MyUtil.is_show_console))
+        MyCore.put_MyCore_flag()
