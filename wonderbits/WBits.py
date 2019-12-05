@@ -53,7 +53,7 @@ class WBits(object):
         finally:
             _lock.release()
             # MyUtil.wb_log('_get_command' + MyCore.return_value)
-            return MyCore.return_value
+        return MyCore.return_value
         # except wonderbitsError as err:
         #     _lock.release()
         #     raise err
