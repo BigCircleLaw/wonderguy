@@ -94,15 +94,15 @@ class MyUtil(object):
         # print(error_info.encode('gbk'))
         try:
             err_parse_list = error_info.split('\r\n')
-            print(err_parse_list[-1])
+            # print(err_parse_list[-1])
             re_obj = re.compile("'(.+)([0-9]+)'")
-            print(re_obj)
+            # print(re_obj)
             result = re_obj.search(err_parse_list[-1])
             # print(result.group())
-            print(result.group(1))
-            print(result.group(2))
+            # print(result.group(1))
+            # print(result.group(2))
             err_ret = result.group(1)
-            print(err_ret)
+            # print(err_ret)
             if err_ret in modules_name_list:
                 err_ret = err_ret[0].upper() + err_ret[1:] + '({})'.format(
                     result.group(2))
@@ -110,6 +110,6 @@ class MyUtil(object):
             else:
                 return error_info
         except Exception as e:
-            print('-----------------------except-----------------------')
-            print(e)
+            # print('-----------------------except-----------------------')
+            # print(e)
             return error_info
