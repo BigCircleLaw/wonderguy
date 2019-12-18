@@ -1,4 +1,4 @@
-from .MyCore import MyCore
+from .MyCore import MyCore, wb_core
 from .MyUtil import MyUtil
 import time
 import threading
@@ -14,14 +14,8 @@ class WBits(object):
     # singleton flag
     __init_flag = False
 
-    _wb_serial = None
-
     def __init__(self):
-        if WBits._wb_serial is None:
-            MyUtil.wb_log('wonderbits初始化', '\r\n')
-            WBits._wb_serial = MyCore()
-        else:
-            WBits._wb_serial.serial_init()
+        wb_core.serial_init()
 
     def _set_command(self, command):
         '''
@@ -31,7 +25,7 @@ class WBits(object):
         '''
         _lock.acquire()
         try:
-            self._wb_serial.write_command(command)
+            wb_core.write_command(command)
             self._timeout_get_command()
         finally:
             _lock.release()
@@ -48,22 +42,18 @@ class WBits(object):
         _lock.acquire()
         try:
             cmd = 'print({})'.format(command)
-            self._wb_serial.write_command(cmd)
+            wb_core.write_command(cmd)
             self._timeout_get_command()
         finally:
             _lock.release()
-            # MyUtil.wb_log('_get_command' + MyCore.return_value)
         return MyCore.return_value
-        # except wonderbitsError as err:
-        #     _lock.release()
-        #     raise err
 
     @staticmethod
     def _timeout_get_command(timeout=3):
         '''
-        max time when execute command,
-        if exceed max time, ignore current command.
-        '''
+            max time when execute command,
+            if exceed max time, ignore current command.
+            '''
         MyCore.return_value = 'None'
         time_interval = 0.001
         count = timeout // time_interval

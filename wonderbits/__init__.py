@@ -1,8 +1,10 @@
 from .core import *
+from .Tool import wb_tool
+from .event import Event
 
 import click
 
-from .MyCore import MyCore
+from .MyCore import MyCore, wb_core
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -28,6 +30,13 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 def cli(port, version):
     # print(ctx.invoked_subcommand)
     MyCore.designation_serial_port = port
+
+    # print(wb_core.state())
+    # wb_core.put_MyCore_flag()
+    if wb_core.state():
+        wb_core.close()
+    # print(wb_core.state())
+    # wb_core.put_MyCore_flag()
 
     if version:
         from .__version__ import __version__
@@ -248,10 +257,11 @@ def reset():
     wb_tool.upload.direct_command('reset')
 
 
+# print(__name__)
 if __name__ == "__main__":
     cli()
-else:
-    pass
+elif __name__ == "wonderbits":
     # print('-----------------WonderBits---------------------')
+    pass
 
 # del MyCore

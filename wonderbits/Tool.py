@@ -19,14 +19,14 @@ class wb_tool(object):
     @staticmethod
     def hide_console():
         '''
-        隐藏控制台输出（默认）
-        '''
+            隐藏控制台输出（默认）
+            '''
         MyUtil.is_show_console = False
 
     @staticmethod
     def put_all_flag():
         '''
-        隐藏控制台输出（默认）
-        '''
+            隐藏控制台输出（默认）
+            '''
         print('MyUtil.is_show_console = {}'.format(MyUtil.is_show_console))
         MyCore.put_MyCore_flag()

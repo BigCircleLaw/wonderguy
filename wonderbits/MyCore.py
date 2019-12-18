@@ -1,7 +1,6 @@
 import serial
 import serial.tools.list_ports
 import threading
-import os
 import sys
 import time
 from .MyUtil import MyUtil
@@ -38,15 +37,21 @@ class MyCore(object):
         self.portx = None
 
     def __init__(self):
-        self.serial_init()
+        self._ser = None
+        self.portx = None
 
     def _serial_flag_clear(self):
+        '''
+            @description: 用在线程中，当发现主控复位时需要清掉的flag
+            @param {} 
+            @return: None
+            '''
         MyCore.can_send_data = False
         MyCore.__start_raw_repl_flag = False
-        pass
 
     def serial_init(self):
         if not MyCore.__init_flag:
+            MyUtil.wb_log('wonderbits 串口初始化', '\r\n')
             MyCore.__init_flag = True
             self._serial_flag_clear()
             MyCore.__delete_run_py_flag = False
@@ -60,29 +65,20 @@ class MyCore(object):
         '''
         try:
             while True:
-                self._init_connect()
                 if self._ser == None:
                     self._connect_serial()
                 else:
                     return
-                time.sleep(.5)
+                time.sleep(.1)
         except OSError as e:
-            MyCore._serial_error_exception_exit(thread_name, '连接异常')
-
-    def _init_connect(self):
-        '''
-        get serial ports info
-        '''
-        if self._ser != None:
-            return
-        self.__init_property()
-        self.portx = MyCore.choose_serial()
+            MyCore._serial_error_exit(thread_name, '连接异常')
 
     def _connect_serial(self):
         '''
-        connect serial
-        '''
+            connect serial
+            '''
         try:
+            self.portx = MyCore.choose_serial()
             bps = 115200
             timex = 1
             self._ser = serial.Serial(self.portx, bps, timeout=timex)
@@ -92,20 +88,14 @@ class MyCore(object):
             threading.Thread(target=self._communication, daemon=True).start()
 
         except serial.serialutil.SerialException as e:
-            # MyUtil.wb_error_log('串口异常{}'.format(e))
-            # self.__init_property()
-            MyCore._serial_error_exception_exit('_connect_serial',
-                                                '串口异常：{}'.format(e))
+            MyCore._serial_error_exit('_connect_serial', '串口异常：{}'.format(e))
         except Exception as e:
-            # MyUtil.wb_error_log("通用异常：{}".format(e))
-            # self.__init_property()
-            MyCore._serial_error_exception_exit('_connect_serial',
-                                                '通用异常：{}'.format(e))
+            MyCore._serial_error_exit('_connect_serial', '通用异常：{}'.format(e))
 
     def _start_raw_repl(self):
         '''
-        start enter raw repl mode
-        '''
+            start enter raw repl mode
+            '''
         if not MyCore.__start_raw_repl_flag:
             MyUtil.wb_log('开始进入raw repl mode', '\r\n')
             MyCore.__start_raw_repl_flag = True
@@ -116,8 +106,8 @@ class MyCore(object):
 
     def _delete_run_py_repl(self):
         '''
-        delete main.py
-        '''
+            delete main.py
+            '''
         if not MyCore.__delete_run_py_flag:
             MyUtil.wb_log('开始删除main.py', '\r\n')
             # note: empty_char must be (lenth=1) empty char;
@@ -155,7 +145,7 @@ class MyCore(object):
                     try:
                         bufferChar = MyUtil.wb_decode(bufferByte)
                     except:
-                        MyUtil.wb_log('解析数据失败 {}'.format(oneByte))
+                        MyUtil.wb_log('解析数据失败 {}'.format(bufferByte))
                         continue
                     for oneChar in bufferChar:
                         buffer += oneChar
@@ -271,6 +261,13 @@ class MyCore(object):
             self._ser.write(cmd)
             MyCore.can_send_data = False
 
+    def state(self):
+        return self._ser.isOpen()
+
+    def close(self):
+        self._ser.close()
+        MyCore.__init_flag = False
+
     @staticmethod
     def choose_serial():
         if MyCore.designation_serial_port == None:
@@ -290,8 +287,7 @@ class MyCore(object):
             if len(can_used_serial_port) > 0:
                 portx = can_used_serial_port[0].device
             else:
-                MyCore._serial_error_exception_exit("choose_serial",
-                                                    '未发现可用串口！')
+                MyCore._serial_error_exit("choose_serial", '未发现可用串口！')
             return portx
         return MyCore.designation_serial_port
 
@@ -303,7 +299,7 @@ class MyCore(object):
         sys.exit()
 
     @staticmethod
-    def _serial_error_exception_exit(log_output, *err_params):
+    def _serial_error_exit(log_output, *err_params):
         MyCore.__init_flag = False
         MyUtil.wb_log(log_output, '\r\n')
         err_str = ' '.join(err_params)
@@ -327,3 +323,4 @@ class MyCore(object):
 #     for i in range(10):
 #         wbits._send_command('display1.print(1,1,{})'.format(i))
 #         value = wbits._get_command('control1.get_sw4()')
+wb_core = MyCore()
