@@ -250,6 +250,7 @@ class MyCore(object):
             self._normal_communication('_normal_communication_thread')
 
     def write_command(self, command):
+        self.serial_init()
         MyUtil.serial_error_check()
         cmd = MyUtil.wb_encode(command) + b'\x04'
         while not MyCore.can_send_data:
