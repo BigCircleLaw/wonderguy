@@ -9,13 +9,13 @@ def _format_str_type(x):
     return x
 
 
-class Wonder(WBits):
+class Pi(WBits):
     def __init__(self, index=1):
         WBits.__init__(self)
         self.index = ''
 
     def set_onboard_rgb(self, rgb):
-        command = 'wonder{}.set_onboard_rgb({})'.format(self.index, rgb)
+        command = 'Pi{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
 
     def print(self, row, column, text):
@@ -33,7 +33,7 @@ class Wonder(WBits):
         args.append(str(row))
         args.append(str(column))
         args.append(str(text))
-        command = 'wonder{}.print({})'.format(self.index, ",".join(args))
+        command = 'Pi{}.print({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     def clear(self):
@@ -42,55 +42,25 @@ class Wonder(WBits):
 
         """
 
-        command = 'wonder{}.clear()'.format(self.index)
+        command = 'Pi{}.clear()'.format(self.index)
         self._set_command(command)
 
-    def set_rgb1(self, r, g, b):
+    def set_rgb(self, index, r, g, b):
         """
-        
+        0表示控制全部灯
 
+        :param index: 选择灯的序号：0~3  0表示控制全部灯
         :param r: 红色：0~255
         :param g: 绿色：0~255
         :param b: 蓝色：0~255
         """
 
         args = []
+        args.append(str(index))
         args.append(str(r))
         args.append(str(g))
         args.append(str(b))
-        command = 'wonder{}.set_rgb1({})'.format(self.index, ",".join(args))
-        self._set_command(command)
-
-    def set_rgb2(self, r, g, b):
-        """
-        
-
-        :param r: 红色：0~255
-        :param g: 绿色：0~255
-        :param b: 蓝色：0~255
-        """
-
-        args = []
-        args.append(str(r))
-        args.append(str(g))
-        args.append(str(b))
-        command = 'wonder{}.set_rgb2({})'.format(self.index, ",".join(args))
-        self._set_command(command)
-
-    def set_rgb3(self, r, g, b):
-        """
-        
-
-        :param r: 红色：0~255
-        :param g: 绿色：0~255
-        :param b: 蓝色：0~255
-        """
-
-        args = []
-        args.append(str(r))
-        args.append(str(g))
-        args.append(str(b))
-        command = 'wonder{}.set_rgb3({})'.format(self.index, ",".join(args))
+        command = 'Pi{}.set_rgb({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     def set_buzzer(self, frequency):
@@ -102,7 +72,7 @@ class Wonder(WBits):
 
         args = []
         args.append(str(frequency))
-        command = 'wonder{}.set_buzzer({})'.format(self.index, ",".join(args))
+        command = 'Pi{}.set_buzzer({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     def play_a_note(self, frequency, time, block=None):
@@ -119,7 +89,7 @@ class Wonder(WBits):
         args.append(str(time))
         if block != None:
             args.append(str(block))
-        command = 'wonder{}.play_a_note({})'.format(self.index, ",".join(args))
+        command = 'Pi{}.play_a_note({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
     def is_a_pressed(self):
@@ -128,7 +98,7 @@ class Wonder(WBits):
         :rtype: bool
         """
 
-        command = 'wonder{}.is_a_pressed()'.format(self.index)
+        command = 'Pi{}.is_a_pressed()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
 
@@ -138,7 +108,7 @@ class Wonder(WBits):
         :rtype: bool
         """
 
-        command = 'wonder{}.is_b_pressed()'.format(self.index)
+        command = 'Pi{}.is_b_pressed()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
 
@@ -152,7 +122,7 @@ class Wonder(WBits):
 
         args = []
         args.append(str(pad))
-        command = 'wonder{}.is_touched({})'.format(self.index, ",".join(args))
+        command = 'Pi{}.is_touched({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
 
@@ -162,7 +132,7 @@ class Wonder(WBits):
         :rtype: float
         """
 
-        command = 'wonder{}.get_volume()'.format(self.index)
+        command = 'Pi{}.get_volume()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
 
@@ -172,69 +142,39 @@ class Wonder(WBits):
         :rtype: int
         """
 
-        command = 'wonder{}.get_light()'.format(self.index)
+        command = 'Pi{}.get_light()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
 
-    def get_x_angle(self):
+    def get_angle(self, axis):
         """
-        获取x轴倾斜角，单位°
+        获取某轴倾斜角，单位°
         :rtype: float
         """
 
-        command = 'wonder{}.get_x_angle()'.format(self.index)
+        axis = _format_str_type(axis)
+
+        args = []
+        args.append(str(axis))
+        command = 'Pi{}.get_angle({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
 
-    def get_y_angle(self):
+    def get_acceleration(self, axis=None):
         """
-        获取y轴倾斜角，单位°
+        获取某轴加速度值，单位g
         :rtype: float
         """
 
-        command = 'wonder{}.get_y_angle()'.format(self.index)
-        value = self._get_command(command)
-        return eval(value)
+        axis = _format_str_type(axis)
 
-    def get_acceleration(self):
-        """
-        获取合轴加速度值，单位g
-        :rtype: float
-        """
-
-        command = 'wonder{}.get_acceleration()'.format(self.index)
-        value = self._get_command(command)
-        return eval(value)
-
-    def get_x_acceleration(self):
-        """
-        获取x轴轴加速度值，单位g
-        :rtype: float
-        """
-
-        command = 'wonder{}.get_x_acceleration()'.format(self.index)
-        value = self._get_command(command)
-        return eval(value)
-
-    def get_y_acceleration(self):
-        """
-        获取y轴轴加速度值，单位g
-        :rtype: float
-        """
-
-        command = 'wonder{}.get_y_acceleration()'.format(self.index)
-        value = self._get_command(command)
-        return eval(value)
-
-    def get_z_acceleration(self):
-        """
-        获取z轴轴加速度值，单位g
-        :rtype: float
-        """
-
-        command = 'wonder{}.get_z_acceleration()'.format(self.index)
+        args = []
+        if axis != None:
+            args.append(str(axis))
+        command = 'Pi{}.get_acceleration({})'.format(self.index,
+                                                     ",".join(args))
         value = self._get_command(command)
         return eval(value)
 
 
-wonder = Wonder()
+pi = Pi()

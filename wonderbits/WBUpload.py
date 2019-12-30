@@ -101,8 +101,6 @@ class WBUpload(object):
             print('更新固件结束！')
             os.system('wb_ampy -d 2 -p {} version'.format(port))
 
-        except OSError as error:
-            print('更新固件出错：', error)
         except Exception as error:
             print('更新固件出错：', error)
 

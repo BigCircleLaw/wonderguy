@@ -263,6 +263,8 @@ class MyCore(object):
             MyCore.can_send_data = False
 
     def state(self):
+        if self._ser is None:
+            return False
         return self._ser.isOpen()
 
     def close(self):
