@@ -150,7 +150,8 @@ def upgrade(ls, version):
     board_files = files.Files(_board)
     version_val = board_files.version()
     if '-' in version_val:
-        print(version_val.split('-')[0])
+        hardware_str = version_val.split('-')[0]
+        print(hardware_str)
     else:
         if ls:
             wb_tool.upload.version_ls()
