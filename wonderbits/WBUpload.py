@@ -80,15 +80,16 @@ class WBUpload(object):
             print('参数不可以为空!')
         return is_empty
 
-    def update_bin(self, version=''):
+    def update_bin(self, folder, version=''):
         '''
         param:version:: 
         '''
         try:
             print('开始更新固件。。。')
-            download_url = 'http://wonderbits.cn:3939/lib/wonderbits-{}.bin'.format(
-                version)
+            download_url = 'http://wonderbits.cn:3939/board/{}?version={}'.format(
+                folder, version)
             des_bin_file = './wb.bin'
+            print(download_url)
             urllib.request.urlretrieve(download_url, des_bin_file)
             # print(download_url)
             print('上传固件。。。')
@@ -104,7 +105,7 @@ class WBUpload(object):
         except Exception as error:
             print('更新固件出错：', error)
 
-    def version_ls(self):
+    def version_ls(self, folder):
         def bytes_to_list(bytes_list):
             transform_flag = False
             # record = ''
@@ -123,7 +124,9 @@ class WBUpload(object):
 
             return version_list
 
-        with urllib.request.urlopen('http://wonderbits.cn:3939/versions') as f:
+        print('http://wonderbits.cn:3939/versions/' + folder)
+        with urllib.request.urlopen('http://wonderbits.cn:3939/versions/' +
+                                    folder) as f:
             text = f.read()
             # print(text)
             # print(bytes_to_list(text))

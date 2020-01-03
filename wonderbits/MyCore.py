@@ -37,8 +37,9 @@ class MyCore(object):
         self.portx = None
 
     def __init__(self):
-        self._ser = None
-        self.portx = None
+        # self._ser = None
+        # self.portx = None
+        self.__init_property()
 
     def _serial_flag_clear(self):
         '''
@@ -172,8 +173,8 @@ class MyCore(object):
                             # time.sleep(0.5)
                             # self._ser.read()
                             # self._serial_flag_clear()
-                            _serial_thread_error_collection_exit(
-                                thread_name, '主控复位')
+                            MyCore._serial_thread_error_collection_exit(
+                                thread_name, '主控复位，程序停止')
                 time.sleep(0.003)
         except OSError as e:
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
@@ -242,8 +243,8 @@ class MyCore(object):
                                 # self._ser.read()
                                 # self._serial_flag_clear()
                                 # return
-                                _serial_thread_error_collection_exit(
-                                    thread_name, '主控复位')
+                                MyCore._serial_thread_error_collection_exit(
+                                    thread_name, '主控复位，程序停止')
 
                 time.sleep(0.003)
         except Exception as e:
@@ -273,7 +274,10 @@ class MyCore(object):
         return self._ser.isOpen()
 
     def close(self):
-        self._ser.close()
+        try:
+            self._ser.close()
+        except:
+            pass
         MyCore.__init_flag = False
 
     @staticmethod

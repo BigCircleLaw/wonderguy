@@ -113,7 +113,7 @@ setup(
     # py_modules=['wonderbits'],
 
     entry_points={
-        'console_scripts': ['wonderbits=wonderbits:cli'],
+        'console_scripts': ['wonderbits=wonderbits.cli:cli'],
     },
     install_requires=REQUIRED,
     extras_require=EXTRAS,

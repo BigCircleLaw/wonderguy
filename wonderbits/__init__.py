@@ -1,7 +1,7 @@
 from .core import *
 from .Tool import wb_tool
 from .event import Event
-from .cli import cli
+# from .cli import cli
 
 # print(__name__)
 # if __name__ == "__main__":
