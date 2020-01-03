@@ -2,6 +2,7 @@ import click
 
 from .Tool import wb_tool
 from .MyCore import MyCore, wb_core
+from .MyUtil import MyUtil
 
 from ampy import pyboard, files
 
@@ -23,10 +24,8 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 )
 @click.option(
     "--version", "-v", is_flag=True, help="Get version for sdk, firmware")
-# @click.pass_context
-# def cli(ctx, file, port):
-# def cli(ctx, port):
-def cli(port, version):
+@click.option("--log", "-L", is_flag=True, help="print log information")
+def cli(port, version, log):
     MyCore.designation_serial_port = port
 
     if wb_core.state():
@@ -39,6 +38,8 @@ def cli(port, version):
     # if ctx.invoked_subcommand is None:
     #     from .__version__ import VERSION
     #     print(__version__.VERSION)
+    if log:
+        wb_tool.show_console()
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
@@ -85,7 +86,7 @@ def put(local, remote):
       wonderbits put adafruit_library /lib/adafruit_library
     """
     # Use the local filename if no remote filename is provided.
-    print(local, remote)
+    MyUtil.wb_log(local, remote)
     wb_tool.upload.put(local, remote)
 
 
@@ -154,7 +155,7 @@ def upgrade(ls, version):
         hardware_str = version_val.split('-')[0]
     else:
         hardware_str = 'wonderbits'
-    print(hardware_str)
+    MyUtil.wb_log(hardware_str, '\n')
     if ls:
         wb_tool.upload.version_ls(hardware_str)
     else:

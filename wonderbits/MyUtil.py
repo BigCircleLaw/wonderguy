@@ -11,7 +11,7 @@ class MyUtil(object):
     '''
     # decide if show console
     is_show_console = False
-    _buffer = ''
+    _buffer = '###wb-log: '
 
     _is_serial_error = False
     _serial_error_content = ''

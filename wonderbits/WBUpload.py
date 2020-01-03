@@ -89,7 +89,7 @@ class WBUpload(object):
             download_url = 'http://wonderbits.cn:3939/board/{}?version={}'.format(
                 folder, version)
             des_bin_file = './wb.bin'
-            print(download_url)
+            util.wb_log(download_url, '\n')
             urllib.request.urlretrieve(download_url, des_bin_file)
             # print(download_url)
             print('上传固件。。。')
@@ -124,7 +124,7 @@ class WBUpload(object):
 
             return version_list
 
-        print('http://wonderbits.cn:3939/versions/' + folder)
+        util.wb_log('http://wonderbits.cn:3939/versions/' + folder, '\n')
         with urllib.request.urlopen('http://wonderbits.cn:3939/versions/' +
                                     folder) as f:
             text = f.read()
