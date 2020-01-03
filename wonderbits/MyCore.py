@@ -168,10 +168,12 @@ class MyCore(object):
                         if buffer.endswith(
                                 'Type "help()" for more information.'):
                             MyUtil.wb_log('micropyton reset\n')
-                            buffer = ''
-                            time.sleep(0.5)
-                            self._ser.read()
-                            self._serial_flag_clear()
+                            # buffer = ''
+                            # time.sleep(0.5)
+                            # self._ser.read()
+                            # self._serial_flag_clear()
+                            _serial_thread_error_collection_exit(
+                                thread_name, '主控复位')
                 time.sleep(0.003)
         except OSError as e:
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
@@ -235,11 +237,14 @@ class MyCore(object):
                             if buffer.endswith(
                                     'Type "help()" for more information.'):
                                 MyUtil.wb_log('micropyton reset\n')
-                                buffer = ''
-                                time.sleep(0.5)
-                                self._ser.read()
-                                self._serial_flag_clear()
-                                return
+                                # buffer = ''
+                                # time.sleep(0.5)
+                                # self._ser.read()
+                                # self._serial_flag_clear()
+                                # return
+                                _serial_thread_error_collection_exit(
+                                    thread_name, '主控复位')
+
                 time.sleep(0.003)
         except Exception as e:
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
