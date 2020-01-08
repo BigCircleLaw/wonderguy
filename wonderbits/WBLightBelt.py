@@ -59,6 +59,34 @@ class LightBelt(WBits):
         self._set_command(command)
 
     
+    def start_rolling(self, start, end, speed):
+        """
+        滚动区间的起点start可以大于区间终点end滚动方向是start–>end当start大于end时也遵循此规则
+
+        :param start: 滚动区间起点：1~100
+        :param end: 滚动区间终点：1~100
+        :param speed: 滚动速度：1~100
+        """
+
+        
+        args = []
+        args.append(str(start))
+        args.append(str(end))
+        args.append(str(speed))
+        command = 'lightBelt{}.start_rolling({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def stop_rolling(self):
+        """
+        
+
+        """
+
+        command = 'lightBelt{}.stop_rolling()'.format(self.index)
+        self._set_command(command)
+
+    
 
     
 

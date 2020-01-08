@@ -1,10 +1,10 @@
 import click
 
+from ampy import pyboard, files
+
 from .Tool import wb_tool
 from .MyCore import MyCore, wb_core
 from .MyUtil import MyUtil
-
-from ampy import pyboard, files
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
