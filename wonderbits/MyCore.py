@@ -49,13 +49,13 @@ class MyCore(object):
             '''
         MyCore.can_send_data = False
         MyCore.__start_raw_repl_flag = False
+        MyCore.__delete_run_py_flag = False
 
     def serial_init(self):
         if not MyCore.__init_flag:
             MyUtil.wb_log('wonderbits 串口初始化', '\r\n')
             MyCore.__init_flag = True
             self._serial_flag_clear()
-            MyCore.__delete_run_py_flag = False
             MyUtil.serial_error_clear()
             self.__init_property()
             self._try_connect_serial('_try_connect_serial')
@@ -136,6 +136,7 @@ class MyCore(object):
         try:
             # assume reboot board successfully in 2 second;
             # time.sleep(2)
+            # self._ser.write(b'reset()\n')
             count = 0
             MyUtil.wb_log('抛弃开始\n')
             while (count < 20):
@@ -180,12 +181,12 @@ class MyCore(object):
                         if buffer.endswith(
                                 'Type "help()" for more information.'):
                             MyUtil.wb_log('micropyton reset\n')
-                            # buffer = ''
-                            # time.sleep(0.5)
-                            # self._ser.rgit ead()
-                            # self._serial_flag_clear()
-                            MyCore._serial_thread_error_collection_exit(
-                                thread_name, '主控复位，程序停止')
+                            buffer = ''
+                            time.sleep(0.5)
+                            self._ser.read()
+                            self._serial_flag_clear()
+                            # MyCore._serial_thread_error_collection_exit(
+                            #     thread_name, '主控复位，程序停止')
                 time.sleep(0.003)
         except OSError as e:
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
