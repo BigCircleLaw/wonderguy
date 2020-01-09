@@ -100,7 +100,7 @@ class MyCore(object):
         if not MyCore.__start_raw_repl_flag:
             MyUtil.wb_log('开始进入raw repl mode', '\r\n')
             MyCore.__start_raw_repl_flag = True
-            self._ser.read()
+
             first_command_list = [b'\r\x03', b'\x03', b'\x03', b'\r\x01']
             for command in first_command_list:
                 self._ser.write(command)
@@ -135,12 +135,22 @@ class MyCore(object):
             '''
         try:
             # assume reboot board successfully in 2 second;
-            time.sleep(2)
+            # time.sleep(2)
+            count = 0
+            MyUtil.wb_log('抛弃开始\n')
+            while (count < 20):
+                count += 1
+                read_len = self._ser.inWaiting()
+                if read_len > 0:
+                    buffer = self._ser.read(read_len)
+                    MyUtil.wb_log('抛弃输出 {}\n'.format(buffer))
+                    count = 15
+                time.sleep(0.1)
+            del count
+            MyUtil.wb_log('抛弃结束\n')
             buffer = ''
             while True:
-                if not MyCore.__start_raw_repl_flag:
-                    # first step: enter raw repl mode
-                    self._start_raw_repl()
+                self._start_raw_repl()
                 read_len = self._ser.inWaiting()
                 if read_len > 0:
                     bufferByte = self._ser.read(read_len)
@@ -151,7 +161,7 @@ class MyCore(object):
                         continue
                     for oneChar in bufferChar:
                         buffer += oneChar
-                        # MyUtil.wb_log(oneChar)
+                        MyUtil.wb_log(oneChar)
                         if buffer[-2:] == '\x04>':
                             MyCore.__delete_run_py_flag = True
                             self._ser.write(b'\x04')
