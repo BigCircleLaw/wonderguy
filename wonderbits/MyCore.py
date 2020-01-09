@@ -100,6 +100,7 @@ class MyCore(object):
         if not MyCore.__start_raw_repl_flag:
             MyUtil.wb_log('开始进入raw repl mode', '\r\n')
             MyCore.__start_raw_repl_flag = True
+            self._ser.read()
             first_command_list = [b'\r\x03', b'\x03', b'\x03', b'\r\x01']
             for command in first_command_list:
                 self._ser.write(command)
@@ -171,7 +172,7 @@ class MyCore(object):
                             MyUtil.wb_log('micropyton reset\n')
                             # buffer = ''
                             # time.sleep(0.5)
-                            # self._ser.read()
+                            # self._ser.rgit ead()
                             # self._serial_flag_clear()
                             MyCore._serial_thread_error_collection_exit(
                                 thread_name, '主控复位，程序停止')

@@ -4,6 +4,7 @@ import time
 from .event_handle import _add_event
 from .WBits import WBits
 from .MyUtil import MyUtil
+from .MyCore import wb_core
 
 
 def _value_comparison(newValue, oldValue, varyValue):
@@ -58,7 +59,7 @@ class Event:
             send_info += ',' + ','.join(map(str, source[2]))
         send_info += ')'
         MyUtil.wb_log(send_info, '\r\n')
-        WBits._wb_serial.write_command(send_info)
+        wb_core.write_command(send_info)
         WBits._timeout_get_command()
         # print(send_info)
 
