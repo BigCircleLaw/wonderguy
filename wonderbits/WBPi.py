@@ -143,13 +143,17 @@ class Pi(WBits):
         value = self._get_command(command)
         return eval(value)
         
-    def get_light(self):
+    def get_light(self, index):
         """
         亮度值代表相对强度，值越大代表亮度越强
         :rtype: int
         """
 
-        command = 'Pi{}.get_light()'.format(self.index)
+        index = _format_str_type(index)
+        
+        args = []
+        args.append(str(index))
+        command = 'Pi{}.get_light({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
         
