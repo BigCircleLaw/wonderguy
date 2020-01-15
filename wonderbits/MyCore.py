@@ -274,11 +274,12 @@ class MyCore(object):
         while not MyCore.can_send_data:
             # MyUtil.wb_log('MyCore.write_command\r\n')
             MyUtil.serial_error_check()
-            time.sleep(.001)
+            time.sleep(.01)
         if MyCore.can_send_data:
             MyUtil.wb_log(cmd, '\r\n')
             self._ser.write(cmd)
             MyCore.can_send_data = False
+        MyUtil.wb_log('发送命令成功\n')
 
     def state(self):
         if self._ser is None:
