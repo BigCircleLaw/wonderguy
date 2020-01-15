@@ -89,5 +89,4 @@ class Transmitter(WBits):
     def when_key_released(self):
         return Event(self.source_press_time, Event.TRIGGER_UPDATE)
 
-
     

@@ -109,5 +109,4 @@ class Voice(WBits):
         trigger = 'x=={}'.format(repr(command))
         return Event(self.source_command, trigger)
 
-
     

@@ -17,23 +17,23 @@ class Nebulier(WBits):
         self._set_command(command)
 
     
-    def trun_on(self):
+    def turn_on(self):
         """
         开启雾化器
 
         """
 
-        command = 'nebulier{}.trun_on()'.format(self.index)
+        command = 'nebulier{}.turn_on()'.format(self.index)
         self._set_command(command)
 
     
-    def trun_off(self):
+    def turn_off(self):
         """
         关闭雾化器
 
         """
 
-        command = 'nebulier{}.trun_off()'.format(self.index)
+        command = 'nebulier{}.turn_off()'.format(self.index)
         self._set_command(command)
 
     
