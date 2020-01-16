@@ -37,4 +37,5 @@ class Slider(WBits):
     def when_position_moved(self, val = 1):
         return Event(self.source_position, Event.TRIGGER_CHANGED, val)
 
+
     

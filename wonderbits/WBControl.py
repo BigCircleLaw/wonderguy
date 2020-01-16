@@ -150,14 +150,18 @@ class Control(WBits):
     def when_sw1_pressed(self):
         return Event(self.source_sw1, Event.TRIGGER_FALSE_TO_TRUE)
 
+
     def when_sw2_pressed(self):
         return Event(self.source_sw2, Event.TRIGGER_FALSE_TO_TRUE)
+
 
     def when_sw3_set_to_1(self):
         return Event(self.source_sw3, Event.TRIGGER_FALSE_TO_TRUE)
 
+
     def when_sw4_changed(self, val = 1):
         return Event(self.source_sw4, Event.TRIGGER_CHANGED, val)
+
 
     def when_m1_pressed(self):
         return Event(self.source_m1, Event.TRIGGER_FALSE_TO_TRUE)

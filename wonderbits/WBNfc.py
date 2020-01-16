@@ -67,4 +67,5 @@ class Nfc(WBits):
     def when_card_found(self):
         return Event(self.source_card_found, Event.TRIGGER_FALSE_TO_TRUE)
 
+
     

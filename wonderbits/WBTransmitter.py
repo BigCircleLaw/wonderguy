@@ -86,7 +86,9 @@ class Transmitter(WBits):
     def when_msg_decoded(self):
         return Event(self.source_msg, Event.TRIGGER_UPDATE)
 
+
     def when_key_released(self):
         return Event(self.source_press_time, Event.TRIGGER_UPDATE)
+
 
     

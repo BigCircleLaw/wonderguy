@@ -80,4 +80,5 @@ class Observer(WBits):
         trigger = 'x>' + str(val)
         return Event(self.source_volume, trigger, val)
 
+
     

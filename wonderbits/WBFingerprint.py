@@ -95,7 +95,9 @@ class Fingerprint(WBits):
     def when_touched(self):
         return Event(self.source_touch, Event.TRIGGER_FALSE_TO_TRUE)
 
+
     def when_verification_finished(self):
         return Event(self.source_verified_id, Event.TRIGGER_FALSE_TO_TRUE)
+
 
     

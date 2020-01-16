@@ -61,4 +61,5 @@ class Pulse(WBits):
     def when_values_received(self):
         return Event(self.source_values, Event.TRIGGER_UPDATE, None)
 
+
     

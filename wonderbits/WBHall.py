@@ -53,4 +53,5 @@ class Hall(WBits):
         trigger = 'abs(x)>' + str(val)
         return Event(self.source_magnetic, trigger, val)
 
+
     
