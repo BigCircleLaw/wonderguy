@@ -83,8 +83,6 @@ class MyCore(object):
             bps = 115200
             timex = 1
             self._ser = serial.Serial(self.portx, bps, timeout=timex)
-            # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
-            # self._ser.write(b'\x04')
             # MyCore.current_time = time.time()
             threading.Thread(target=self._communication, daemon=True).start()
 
@@ -136,7 +134,6 @@ class MyCore(object):
         try:
             # assume reboot board successfully in 2 second;
             # time.sleep(2)
-            # self._ser.write(b'reset()\n')
             count = 0
             MyUtil.wb_log('抛弃开始\n')
             while (count < 20):
@@ -232,7 +229,6 @@ class MyCore(object):
                                         thread_name, err_output)
                                 else:
                                     MyCore.return_value = get_command_return_value
-                                buffer = b''
                                 buffer = ''
                                 MyCore.can_send_data = True
                             if buffer.endswith('}'):

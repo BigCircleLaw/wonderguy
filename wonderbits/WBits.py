@@ -15,7 +15,6 @@ class WBits(object):
     __init_flag = False
 
     def __init__(self):
-        # wb_core.serial_init()
         pass
 
     def _set_command(self, command):
