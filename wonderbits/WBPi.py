@@ -157,6 +157,36 @@ class Pi(WBits):
         value = self._get_command(command)
         return eval(value)
         
+    def get_temperature(self):
+        """
+        获取温度值（°C）
+        :rtype: int
+        """
+
+        command = 'Pi{}.get_temperature()'.format(self.index)
+        value = self._get_command(command)
+        return eval(value)
+        
+    def get_humidity(self):
+        """
+        获取湿度值(%RH）
+        :rtype: int
+        """
+
+        command = 'Pi{}.get_humidity()'.format(self.index)
+        value = self._get_command(command)
+        return eval(value)
+        
+    def get_pressure(self):
+        """
+        获取气压值(Pa）
+        :rtype: int
+        """
+
+        command = 'Pi{}.get_pressure()'.format(self.index)
+        value = self._get_command(command)
+        return eval(value)
+        
     def get_angle(self, axis):
         """
         获取某轴倾斜角，单位°
