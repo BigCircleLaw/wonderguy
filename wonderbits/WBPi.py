@@ -177,13 +177,13 @@ class Pi(WBits):
         value = self._get_command(command)
         return eval(value)
         
-    def get_pressure(self):
+    def get_air_pressure(self):
         """
         获取气压值(Pa）
         :rtype: int
         """
 
-        command = 'Pi{}.get_pressure()'.format(self.index)
+        command = 'Pi{}.get_air_pressure()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
         
