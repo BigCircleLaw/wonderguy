@@ -36,6 +36,42 @@ class Pi(WBits):
         self._set_command(command)
 
     
+    def draw_dot(self, x, y):
+        """
+        
+
+        :param x: X轴坐标：1~128
+        :param y: Y轴坐标：1~64
+        """
+
+        
+        args = []
+        args.append(str(x))
+        args.append(str(y))
+        command = 'Pi{}.draw_dot({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def draw_line(self, head_x, head_y, tail_x, tail_y):
+        """
+        在画线的页使用print函数会导致已经画过的线消失切换到不同的页码在回到画线的页码也会导致已经画过的线消失
+
+        :param head_x: 起始点X轴坐标：1~128
+        :param head_y: 起始点Y轴坐标：1~64
+        :param tail_x: 终止点X轴坐标：1~128
+        :param tail_y: 终止点Y轴坐标：1~64
+        """
+
+        
+        args = []
+        args.append(str(head_x))
+        args.append(str(head_y))
+        args.append(str(tail_x))
+        args.append(str(tail_y))
+        command = 'Pi{}.draw_line({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
     def clear(self):
         """
         
