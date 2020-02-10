@@ -36,6 +36,22 @@ class Pi(WBits):
         self._set_command(command)
 
     
+    def draw_chart(self, x, y):
+        """
+        以上次传入的坐标为起点，本次坐标为终点画线段。如果是首次使用，则只画单个点
+
+        :param x: X轴坐标：1~128
+        :param y: Y轴坐标：1~64
+        """
+
+        
+        args = []
+        args.append(str(x))
+        args.append(str(y))
+        command = 'Pi{}.draw_chart({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
     def draw_dot(self, x, y):
         """
         
