@@ -54,7 +54,7 @@ class MyUtil(object):
 
     @staticmethod
     def wb_encode(raw_str=''):
-        return raw_str.encode('gbk')
+        return raw_str.encode('utf-8')
 
     @staticmethod
     def set_serial_error(*params):

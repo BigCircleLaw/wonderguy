@@ -36,7 +36,7 @@ class Pi(WBits):
         self._set_command(command)
 
     
-    def draw_chart(self, x, y):
+    def draw_chart(self, x, y = None):
         """
         以上次传入的坐标为起点，本次坐标为终点画线段。如果是首次使用，则只画单个点
 
@@ -47,7 +47,8 @@ class Pi(WBits):
         
         args = []
         args.append(str(x))
-        args.append(str(y))
+        if y != None:
+            args.append(str(y))
         command = 'Pi{}.draw_chart({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
@@ -171,7 +172,7 @@ class Pi(WBits):
         value = self._get_command(command)
         return eval(value)
         
-    def is_touched(self, pad):
+    def is_touched(self, pad = None):
         """
         获取某通道是否被触摸
         :rtype: bool
@@ -180,7 +181,8 @@ class Pi(WBits):
         pad = _format_str_type(pad)
         
         args = []
-        args.append(str(pad))
+        if pad != None:
+            args.append(str(pad))
         command = 'Pi{}.is_touched({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
@@ -195,7 +197,7 @@ class Pi(WBits):
         value = self._get_command(command)
         return eval(value)
         
-    def get_light(self, index):
+    def get_light(self, index = None):
         """
         亮度值代表相对强度，值越大代表亮度越强
         :rtype: int
@@ -204,7 +206,8 @@ class Pi(WBits):
         index = _format_str_type(index)
         
         args = []
-        args.append(str(index))
+        if index != None:
+            args.append(str(index))
         command = 'Pi{}.get_light({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
@@ -239,7 +242,7 @@ class Pi(WBits):
         value = self._get_command(command)
         return eval(value)
         
-    def get_angle(self, axis):
+    def get_angle(self, axis = None):
         """
         获取某轴倾斜角，单位°
         :rtype: float
@@ -248,7 +251,8 @@ class Pi(WBits):
         axis = _format_str_type(axis)
         
         args = []
-        args.append(str(axis))
+        if axis != None:
+            args.append(str(axis))
         command = 'Pi{}.get_angle({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
