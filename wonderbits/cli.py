@@ -6,6 +6,7 @@ from ampy import pyboard, files
 from .Tool import wb_tool
 from .MyCore import MyCore, wb_core
 from .MyUtil import MyUtil
+from .WBError import wonderbitsError
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -32,13 +33,16 @@ def cli(port, version, log):
     if wb_core.state():
         wb_core.close()
 
-    if version:
-        from .__version__ import __version__
-        print('Python SDK version is', __version__)
-        wb_tool.upload.direct_command('version')
-    # if ctx.invoked_subcommand is None:
-    #     from .__version__ import VERSION
-    #     print(__version__.VERSION)
+    try:
+        if version:
+            from .__version__ import __version__
+            print('Python SDK version is', __version__)
+            wb_tool.upload.direct_command('version')
+    except wonderbitsError as e:
+        print('未连接豌豆拼设备!')
+    except Exception as e:
+        raise e
+
     if log:
         wb_tool.show_console()
 
