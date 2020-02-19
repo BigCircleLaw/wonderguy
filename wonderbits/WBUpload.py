@@ -85,12 +85,17 @@ class WBUpload(object):
         param:version:: 
         '''
         try:
-            print('开始更新固件。。。')
-            download_url = 'http://wonderbits.cn:3939/board/{}?version={}'.format(
-                folder, version)
-            des_bin_file = './wb.bin'
-            util.wb_log(download_url, '\n')
-            urllib.request.urlretrieve(download_url, des_bin_file)
+            if folder is None:
+                des_bin_file = version
+            else:
+                print('开始更新固件。。。')
+                download_url = 'http://wonderbits.cn:3939/board/{}?version={}'.format(
+                    folder, version)
+                des_bin_file = './wb.bin'
+                util.wb_log(download_url, '\n')
+                urllib.request.urlretrieve(download_url, des_bin_file)
+                pass
+
             # print(download_url)
             print('上传固件。。。')
             port = MyCore.choose_serial()
@@ -101,7 +106,8 @@ class WBUpload(object):
 
             print('更新固件结束！')
             os.system('wb_ampy -d 2 -p {} version'.format(port))
-            os.remove(des_bin_file)
+            if not folder is None:
+                os.remove(des_bin_file)
 
         except Exception as error:
             print('更新固件出错：', error)

@@ -1,4 +1,5 @@
 import click
+import os
 
 from ampy import pyboard, files
 
@@ -146,23 +147,26 @@ def upgrade(ls, version):
     """Write a binary blob to flash.
 
     """
-    _board = pyboard.Pyboard(
-        MyCore.choose_serial(), baudrate=115200, rawdelay=2)
-    board_files = files.Files(_board)
-    version_val = board_files.version()
-    _board.close()
-    if '-' in version_val:
-        hardware_str = version_val.split('-')[0]
+    if os.path.isfile(version):
+        wb_tool.upload.update_bin(None, version)
     else:
-        hardware_str = 'wonderbits'
-    MyUtil.wb_log(hardware_str, '\n')
-    if ls:
-        wb_tool.upload.version_ls(hardware_str)
-    else:
-        if version == None:
-            wb_tool.upload.update_bin(hardware_str)
+        _board = pyboard.Pyboard(
+            MyCore.choose_serial(), baudrate=115200, rawdelay=2)
+        board_files = files.Files(_board)
+        version_val = board_files.version()
+        _board.close()
+        if '-' in version_val:
+            hardware_str = version_val.split('-')[0]
         else:
-            wb_tool.upload.update_bin(hardware_str, version)
+            hardware_str = 'wonderbits'
+        MyUtil.wb_log(hardware_str, '\n')
+        if ls:
+            wb_tool.upload.version_ls(hardware_str)
+        else:
+            if version == None:
+                wb_tool.upload.update_bin(hardware_str)
+            else:
+                wb_tool.upload.update_bin(hardware_str, version)
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
