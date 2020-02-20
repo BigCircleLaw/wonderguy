@@ -7,11 +7,13 @@ import urllib.request
 
 
 class WBUpload(object):
-    def direct_command(self, command):
+    def direct_command(self, command, info=None):
         '''
         direct append to last of the wb_ampy
         '''
         port = MyCore.choose_serial()
+        if not info is None:
+            print(info)
         if port != None:
             os.system('wb_ampy -d 2 -p {} {}'.format(port, command))
 

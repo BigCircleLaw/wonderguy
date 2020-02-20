@@ -37,7 +37,7 @@ def cli(port, version, log):
         if version:
             from .__version__ import __version__
             print('Python SDK version is', __version__)
-            wb_tool.upload.direct_command('version')
+            wb_tool.upload.direct_command('version', '正在获取固件版本，请稍后...')
     except wonderbitsError as e:
         print('未连接豌豆拼设备!')
     except Exception as e:
