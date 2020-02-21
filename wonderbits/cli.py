@@ -146,13 +146,15 @@ def rm(file):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
     '--ls', '-l', is_flag=True, help="Get the version allowed to be updated.")
+@click.option(
+    "--file", "-f", required=False, type=click.STRING, help="下载本地文件。")
 @click.argument('version', required=False)
-def upgrade(ls, version):
+def upgrade(ls, version, file):
     """Write a binary blob to flash.
 
     """
-    if os.path.isfile(version):
-        wb_tool.upload.update_bin(None, version)
+    if not file is None:
+        wb_tool.upload.update_bin(None, file)
     else:
         _board = pyboard.Pyboard(
             MyCore.choose_serial(), baudrate=115200, rawdelay=2)
