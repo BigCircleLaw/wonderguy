@@ -1,14 +1,16 @@
 from .WBits import WBits
 from .event import Event
 
+
 def _format_str_type(x):
     if isinstance(x, str):
-       x = str(x).replace('"', '\\"')
-       x = "\"" + x + "\""
+        x = str(x).replace('"', '\\"')
+        x = "\"" + x + "\""
     return x
 
+
 class Pi(WBits):
-    def __init__(self, index = 1):
+    def __init__(self, index=1):
         WBits.__init__(self)
         self.index = ''
 
@@ -42,7 +44,6 @@ class Pi(WBits):
         :param y: Y轴坐标：1~64
         """
 
-        
         args = []
         args.append(str(x))
         if y != None:
@@ -50,7 +51,6 @@ class Pi(WBits):
         command = 'Pi{}.draw_chart({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    
     def draw_dot(self, x, y):
         """
         
@@ -59,14 +59,12 @@ class Pi(WBits):
         :param y: Y轴坐标：1~64
         """
 
-        
         args = []
         args.append(str(x))
         args.append(str(y))
         command = 'Pi{}.draw_dot({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    
     def draw_line(self, head_x, head_y, tail_x, tail_y):
         """
         在画线的页使用print函数会导致已经画过的线消失切换到不同的页码在回到画线的页码也会导致已经画过的线消失
@@ -77,7 +75,6 @@ class Pi(WBits):
         :param tail_y: 终止点Y轴坐标：1~64
         """
 
-        
         args = []
         args.append(str(head_x))
         args.append(str(head_y))
@@ -86,7 +83,6 @@ class Pi(WBits):
         command = 'Pi{}.draw_line({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    
     def clear(self):
         """
         
@@ -96,7 +92,6 @@ class Pi(WBits):
         command = 'Pi{}.clear()'.format(self.index)
         self._set_command(command)
 
-    
     def set_rgb(self, index, r, g, b):
         """
         0表示控制全部灯
@@ -107,7 +102,6 @@ class Pi(WBits):
         :param b: 蓝色：0~255
         """
 
-        
         args = []
         args.append(str(index))
         args.append(str(r))
@@ -116,7 +110,6 @@ class Pi(WBits):
         command = 'Pi{}.set_rgb({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    
     def set_buzzer(self, frequency):
         """
         设置蜂鸣器声音频率（Hz）设置频率为0表示关闭蜂鸣器
@@ -124,14 +117,12 @@ class Pi(WBits):
         :param frequency: 频率：0~20000 Hz
         """
 
-        
         args = []
         args.append(str(frequency))
         command = 'Pi{}.set_buzzer({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    
-    def play_a_note(self, frequency, time, block = None):
+    def play_a_note(self, frequency, time, block=None):
         """
         控制蜂鸣器发出一个音调，并持续一段时间
 
@@ -140,7 +131,6 @@ class Pi(WBits):
         :param block: 阻塞参数：  False: 不阻塞 True: 阻塞 默认为True
         """
 
-        
         args = []
         args.append(str(frequency))
         args.append(str(time))
@@ -149,7 +139,6 @@ class Pi(WBits):
         command = 'Pi{}.play_a_note({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    
     def is_a_pressed(self):
         """
         判断按键A是否被按下
@@ -159,7 +148,7 @@ class Pi(WBits):
         command = 'Pi{}.is_a_pressed()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
-        
+
     def is_b_pressed(self):
         """
         判断按键B是否被按下
@@ -169,22 +158,22 @@ class Pi(WBits):
         command = 'Pi{}.is_b_pressed()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
-        
-    def is_touched(self, pad = None):
+
+    def is_touched(self, pad=None):
         """
         获取某通道是否被触摸
         :rtype: bool
         """
 
         pad = _format_str_type(pad)
-        
+
         args = []
         if pad != None:
             args.append(str(pad))
         command = 'Pi{}.is_touched({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value)
-        
+        return self.val_process(value)
+
     def get_volume(self):
         """
         声音强度值代表相对强度，值越大代表声音越响
@@ -194,22 +183,22 @@ class Pi(WBits):
         command = 'Pi{}.get_volume()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
-        
-    def get_light(self, index = None):
+
+    def get_light(self, index=None):
         """
         亮度值代表相对强度，值越大代表亮度越强
         :rtype: int
         """
 
         index = _format_str_type(index)
-        
+
         args = []
         if index != None:
             args.append(str(index))
         command = 'Pi{}.get_light({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
-        
+
     def get_temperature(self):
         """
         获取温度值（°C）
@@ -219,7 +208,7 @@ class Pi(WBits):
         command = 'Pi{}.get_temperature()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
-        
+
     def get_humidity(self):
         """
         获取湿度值(%RH）
@@ -229,7 +218,7 @@ class Pi(WBits):
         command = 'Pi{}.get_humidity()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
-        
+
     def get_air_pressure(self):
         """
         获取气压值(Pa）
@@ -239,37 +228,38 @@ class Pi(WBits):
         command = 'Pi{}.get_air_pressure()'.format(self.index)
         value = self._get_command(command)
         return eval(value)
-        
-    def get_angle(self, axis = None):
+
+    def get_angle(self, axis=None):
         """
         获取某轴倾斜角，单位°
         :rtype: float
         """
 
         axis = _format_str_type(axis)
-        
+
         args = []
         if axis != None:
             args.append(str(axis))
         command = 'Pi{}.get_angle({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
         return eval(value)
-        
-    def get_acceleration(self, axis = None):
+
+    def get_acceleration(self, axis=None):
         """
         获取某轴加速度值，单位g
         :rtype: float
         """
 
         axis = _format_str_type(axis)
-        
+
         args = []
         if axis != None:
             args.append(str(axis))
-        command = 'Pi{}.get_acceleration({})'.format(self.index, ",".join(args))
+        command = 'Pi{}.get_acceleration({})'.format(self.index,
+                                                     ",".join(args))
         value = self._get_command(command)
         return eval(value)
-        
+
     def reset(self):
         """
         
@@ -279,9 +269,5 @@ class Pi(WBits):
         command = 'Pi{}.reset()'.format(self.index)
         self._set_command(command)
 
-    
 
-    
-
-    
 pi = Pi()

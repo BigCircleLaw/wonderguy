@@ -64,3 +64,9 @@ class WBits(object):
             count = count - 1
         MyUtil.wb_log('命令执行超时退出！！！\n')
         # MyCore.can_send_data = True
+
+    def val_process(self, val_str):
+        try:
+            return eval(val_str)
+        except:
+            return val_str
