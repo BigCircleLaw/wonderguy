@@ -134,21 +134,21 @@ class MyCore(object):
         try:
             # assume reboot board successfully in 2 second;
             # time.sleep(2)
-            count = 0
-            MyUtil.wb_log('抛弃开始\n')
-            while (count < 20):
-                count += 1
-                read_len = self._ser.inWaiting()
-                if read_len > 0:
-                    buffer = self._ser.read(read_len)
-                    MyUtil.wb_log('抛弃输出 {}\n'.format(buffer))
-                    count = 15
-                time.sleep(0.1)
-            del count
-            MyUtil.wb_log('抛弃结束\n')
+            # count = 0
+            # MyUtil.wb_log('抛弃开始\n')
+            # while (count < 20):
+            #     count += 1
+            #     read_len = self._ser.inWaiting()
+            #     if read_len > 0:
+            #         buffer = self._ser.read(read_len)
+            #         MyUtil.wb_log('抛弃输出 {}\n'.format(buffer))
+            #         count = 15
+            #     time.sleep(0.1)
+            # del count
+            # MyUtil.wb_log('抛弃结束\n')
             buffer = ''
+            self._start_raw_repl()
             while True:
-                self._start_raw_repl()
                 read_len = self._ser.inWaiting()
                 if read_len > 0:
                     bufferByte = self._ser.read(read_len)
