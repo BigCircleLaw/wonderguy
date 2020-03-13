@@ -287,7 +287,7 @@ class Pi(WBits):
         """
         可填写参数设置通信信道，默认为1
 
-        :param channel: 信道参数: 1~13  默认为1
+        :param channel: 信道参数: 1~13，默认为1
         """
 
         
@@ -315,7 +315,7 @@ class Pi(WBits):
     
     def radio_receive(self):
         """
-        接收设置为相同信道的豌豆派发送的字符串若是没有收到新的字符串则会返回None
+        接收设置为相同信道的豌豆派发送的字符串若是没有收到新的字符串则会返回空字符串
         :rtype: str
         """
 

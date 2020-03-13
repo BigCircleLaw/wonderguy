@@ -100,7 +100,23 @@ class MyCore(object):
             MyCore.__start_raw_repl_flag = True
 
             first_command_list = [b'\r\x03', b'\x03', b'\x03', b'\r\x01']
-            for command in first_command_list:
+            for command in first_command_list[:3]:
+                self._ser.write(command)
+                time.sleep(0.01)
+
+            count = 0
+            MyUtil.wb_log('抛弃开始\n')
+            while (count < 20):
+                count += 1
+                read_len = self._ser.inWaiting()
+                if read_len > 0:
+                    buffer = self._ser.read(read_len)
+                    MyUtil.wb_log('抛弃输出 {}\n'.format(buffer))
+                    count = 10
+                time.sleep(0.1)
+            del count
+            MyUtil.wb_log('抛弃结束\n')
+            for command in first_command_list[3:]:
                 self._ser.write(command)
                 time.sleep(0.01)
 
@@ -134,18 +150,6 @@ class MyCore(object):
         try:
             # assume reboot board successfully in 2 second;
             # time.sleep(2)
-            # count = 0
-            # MyUtil.wb_log('抛弃开始\n')
-            # while (count < 20):
-            #     count += 1
-            #     read_len = self._ser.inWaiting()
-            #     if read_len > 0:
-            #         buffer = self._ser.read(read_len)
-            #         MyUtil.wb_log('抛弃输出 {}\n'.format(buffer))
-            #         count = 15
-            #     time.sleep(0.1)
-            # del count
-            # MyUtil.wb_log('抛弃结束\n')
             buffer = ''
             self._start_raw_repl()
             while True:
@@ -184,7 +188,7 @@ class MyCore(object):
                             self._serial_flag_clear()
                             # MyCore._serial_thread_error_collection_exit(
                             #     thread_name, '主控复位，程序停止')
-                time.sleep(0.003)
+                time.sleep(0.01)
         except OSError as e:
             MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
         except Exception as e:
