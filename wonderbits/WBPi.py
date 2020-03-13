@@ -38,7 +38,7 @@ class Pi(WBits):
 
     def draw_chart(self, x, y=None):
         """
-        以上次传入的坐标为起点，本次坐标为终点画线段。如果是首次使用，则只画单个点
+        传入(x,y)坐标以上次传入的坐标为起点，本次坐标为终点画线段。如果是首次使用，则只画单个点传入列表则以列表中的值为纵坐标，自动计算横坐标将折线图展示在屏幕上
 
         :param x: X轴坐标：1~128
         :param y: Y轴坐标：1~64
@@ -147,7 +147,7 @@ class Pi(WBits):
 
         command = 'Pi{}.is_a_pressed()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def is_b_pressed(self):
         """
@@ -157,11 +157,11 @@ class Pi(WBits):
 
         command = 'Pi{}.is_b_pressed()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def is_touched(self, pad=None):
         """
-        获取某通道是否被触摸
+        获取某通道是否被触摸不填写通道参数可以支持检测多个通道，无通道被触摸返回False，有通道被触摸返回以该通道字母组成的字符串
         :rtype: bool
         """
 
@@ -182,7 +182,7 @@ class Pi(WBits):
 
         command = 'Pi{}.get_volume()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def get_light(self, index=None):
         """
@@ -197,7 +197,7 @@ class Pi(WBits):
             args.append(str(index))
         command = 'Pi{}.get_light({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def get_temperature(self):
         """
@@ -207,7 +207,7 @@ class Pi(WBits):
 
         command = 'Pi{}.get_temperature()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def get_humidity(self):
         """
@@ -217,7 +217,7 @@ class Pi(WBits):
 
         command = 'Pi{}.get_humidity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def get_air_pressure(self):
         """
@@ -227,7 +227,7 @@ class Pi(WBits):
 
         command = 'Pi{}.get_air_pressure()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def get_angle(self, axis=None):
         """
@@ -242,7 +242,7 @@ class Pi(WBits):
             args.append(str(axis))
         command = 'Pi{}.get_angle({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def get_acceleration(self, axis=None):
         """
@@ -258,7 +258,7 @@ class Pi(WBits):
         command = 'Pi{}.get_acceleration({})'.format(self.index,
                                                      ",".join(args))
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
 
     def reset(self):
         """
