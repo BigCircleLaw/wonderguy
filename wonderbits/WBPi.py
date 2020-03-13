@@ -16,25 +16,28 @@ class Pi(WBits):
         command = 'Pi{}.set_onboard_rgb({})'.format(self.index, rgb)
         self._set_command(command)
 
+    
     def print(self, row, column, *text):
         """
         在某个位置显示内容，位置坐标以像素点为单位
 
         :param row: 显示行数：1~64
         :param column: 显示列数：1~128
-        :param text: 显示内容，可以是字符串，整数，小数
+        :param *text: 显示内容，可以是字符串，整数，小数
         """
 
+        
         args = []
         args.append(str(row))
         args.append(str(column))
-        for i in text:
-            i = _format_str_type(i)
-            args.append(str(i))
+        for _text in text:
+            _text = _format_str_type(_text)
+            args.append(str(_text))
         command = 'Pi{}.print({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
-    def draw_chart(self, x, y=None):
+    
+    def draw_chart(self, x, y = None):
         """
         传入(x,y)坐标以上次传入的坐标为起点，本次坐标为终点画线段。如果是首次使用，则只画单个点传入列表则以列表中的值为纵坐标，自动计算横坐标将折线图展示在屏幕上
 
@@ -282,7 +285,7 @@ class Pi(WBits):
     
     def radio_on(self, channel = None):
         """
-        默认为1
+        可填写参数设置通信信道，默认为1
 
         :param channel: 信道参数: 1~13  默认为1
         """
