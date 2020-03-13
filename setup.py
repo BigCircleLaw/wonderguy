@@ -26,7 +26,7 @@ REQUIRED = [
     'requests',
     'pyserial',
     'Click',
-    'wonderbits-ampy>=1.1.3',
+    'wonderbits-ampy>=1.1.4',
     'esptool'
 ]
 
