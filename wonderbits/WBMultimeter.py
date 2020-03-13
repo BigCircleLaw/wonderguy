@@ -25,7 +25,7 @@ class Multimeter(WBits):
 
         command = 'multimeter{}.get_resistance()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_voltage(self):
         """
@@ -35,7 +35,7 @@ class Multimeter(WBits):
 
         command = 'multimeter{}.get_voltage()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def turn_on_display(self):
         """

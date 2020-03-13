@@ -40,7 +40,7 @@ class Fingerprint(WBits):
 
         command = 'fingerprint{}.get_verified_id()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def is_touched(self):
         """
@@ -50,7 +50,7 @@ class Fingerprint(WBits):
 
         command = 'fingerprint{}.is_touched()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_user_num(self):
         """
@@ -60,7 +60,7 @@ class Fingerprint(WBits):
 
         command = 'fingerprint{}.get_user_num()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def delete(self, id = None):
         """

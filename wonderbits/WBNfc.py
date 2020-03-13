@@ -25,7 +25,7 @@ class Nfc(WBits):
 
         command = 'nfc{}.is_card_found()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def write(self, zone, msg):
         """

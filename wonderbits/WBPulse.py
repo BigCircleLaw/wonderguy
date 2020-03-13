@@ -25,7 +25,7 @@ class Pulse(WBits):
 
         command = 'pulse{}.get_heart_rate()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_value(self):
         """
@@ -35,7 +35,7 @@ class Pulse(WBits):
 
         command = 'pulse{}.get_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_value_count(self):
         """
@@ -45,7 +45,7 @@ class Pulse(WBits):
 
         command = 'pulse{}.get_value_count()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

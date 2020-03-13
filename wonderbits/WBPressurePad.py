@@ -25,7 +25,7 @@ class PressurePad(WBits):
 
         command = 'pressurePad{}.get_pressure()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

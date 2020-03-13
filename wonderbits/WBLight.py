@@ -25,7 +25,7 @@ class Light(WBits):
 
         command = 'light{}.get_light()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

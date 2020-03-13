@@ -25,7 +25,7 @@ class Observer(WBits):
 
         command = 'observer{}.get_temperature()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_humidity(self):
         """
@@ -35,7 +35,7 @@ class Observer(WBits):
 
         command = 'observer{}.get_humidity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_light(self):
         """
@@ -45,7 +45,7 @@ class Observer(WBits):
 
         command = 'observer{}.get_light()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_volume(self):
         """
@@ -55,7 +55,7 @@ class Observer(WBits):
 
         command = 'observer{}.get_volume()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

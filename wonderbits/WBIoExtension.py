@@ -44,7 +44,7 @@ class IoExtension(WBits):
         args.append(str(port))
         command = 'ioExtension{}.read({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

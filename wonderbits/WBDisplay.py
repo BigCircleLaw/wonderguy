@@ -111,7 +111,7 @@ class Display(WBits):
 
         command = 'display{}.get_button_state()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def set_page_turning(self, state = None):
         """

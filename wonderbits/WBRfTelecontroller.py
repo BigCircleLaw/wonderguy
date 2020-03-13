@@ -55,7 +55,7 @@ class RfTelecontroller(WBits):
 
         command = 'rfTelecontroller{}.get_msg()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def clear_msg(self):
         """
@@ -75,7 +75,7 @@ class RfTelecontroller(WBits):
 
         command = 'rfTelecontroller{}.get_unread_msg_count()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def read(self):
         """
@@ -85,7 +85,7 @@ class RfTelecontroller(WBits):
 
         command = 'rfTelecontroller{}.read()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

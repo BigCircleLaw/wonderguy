@@ -101,7 +101,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_distance()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def is_line_detected(self, t = None):
         """
@@ -115,7 +115,7 @@ class Buggy(WBits):
             args.append(str(t))
         command = 'buggy{}.is_line_detected({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_light_s1(self):
         """
@@ -125,7 +125,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_light_s1()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_light_s2(self):
         """
@@ -135,7 +135,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_light_s2()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def set_servo(self, angle):
         """
@@ -179,7 +179,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_battery_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_tracking_status(self):
         """
@@ -189,7 +189,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_tracking_status()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_tracking_values(self):
         """
@@ -199,7 +199,7 @@ class Buggy(WBits):
 
         command = 'buggy{}.get_tracking_values()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def set_tracking_rate(self, value):
         """

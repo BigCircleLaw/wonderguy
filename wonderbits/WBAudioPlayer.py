@@ -109,7 +109,7 @@ class AudioPlayer(WBits):
 
         command = 'audioPlayer{}.get_progress()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def replay(self):
         """

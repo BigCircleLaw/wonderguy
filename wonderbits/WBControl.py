@@ -25,7 +25,7 @@ class Control(WBits):
 
         command = 'control{}.is_sw1_pressed()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def is_sw2_pressed(self):
         """
@@ -35,7 +35,7 @@ class Control(WBits):
 
         command = 'control{}.is_sw2_pressed()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def is_sw3_at_1(self):
         """
@@ -45,7 +45,7 @@ class Control(WBits):
 
         command = 'control{}.is_sw3_at_1()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_sw4(self):
         """
@@ -55,7 +55,7 @@ class Control(WBits):
 
         command = 'control{}.get_sw4()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def is_m1_touched(self):
         """
@@ -65,7 +65,7 @@ class Control(WBits):
 
         command = 'control{}.is_m1_touched()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def is_m2_touched(self):
         """
@@ -75,7 +75,7 @@ class Control(WBits):
 
         command = 'control{}.is_m2_touched()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def set_m1_m2_sensitivity(self, limit = None):
         """
@@ -100,7 +100,7 @@ class Control(WBits):
 
         command = 'control{}.get_m1_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_m2_value(self):
         """
@@ -110,7 +110,7 @@ class Control(WBits):
 
         command = 'control{}.get_m2_value()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

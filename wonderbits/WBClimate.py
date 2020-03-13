@@ -25,7 +25,7 @@ class Climate(WBits):
 
         command = 'climate{}.get_temperature()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_humidity(self):
         """
@@ -35,7 +35,7 @@ class Climate(WBits):
 
         command = 'climate{}.get_humidity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

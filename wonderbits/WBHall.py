@@ -25,7 +25,7 @@ class Hall(WBits):
 
         command = 'hall{}.get_magnetic()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def calibrate(self, block = None):
         """

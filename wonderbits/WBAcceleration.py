@@ -25,7 +25,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_x_angle()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_y_angle(self):
         """
@@ -35,7 +35,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_y_angle()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def calibrate(self, block = None):
         """
@@ -60,7 +60,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_x_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_y_acceleration(self):
         """
@@ -70,7 +70,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_y_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_z_acceleration(self):
         """
@@ -80,7 +80,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_z_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_acceleration(self):
         """
@@ -90,7 +90,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_acceleration()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_x_angular_velocity(self):
         """
@@ -100,7 +100,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_x_angular_velocity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_y_angular_velocity(self):
         """
@@ -110,7 +110,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_y_angular_velocity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
     def get_z_angular_velocity(self):
         """
@@ -120,7 +120,7 @@ class Acceleration(WBits):
 
         command = 'acceleration{}.get_z_angular_velocity()'.format(self.index)
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     

@@ -28,7 +28,7 @@ class MakeyMakey(WBits):
         args.append(str(pad))
         command = 'makeyMakey{}.is_touched({})'.format(self.index, ",".join(args))
         value = self._get_command(command)
-        return eval(value)
+        return self.val_process(value)
         
 
     def source_state(self, pad):
