@@ -21,12 +21,10 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
     "-p",
     required=False,
     type=click.STRING,
-    help="Name of serial port for connected board.",
-    metavar="PORT",
-)
-@click.option(
-    "--version", "-v", is_flag=True, help="Get version for sdk, firmware")
-@click.option("--log", "-L", is_flag=True, help="print log information")
+    help="连接豌豆派的串口名称。",
+    metavar="PORT")
+@click.option("--version", "-v", is_flag=True, help="得到SDK版本；连接豌豆派时可以获得固件版本。")
+@click.option("--log", "-L", is_flag=True, help="加入这个参数可以得到运行时的log输出。")
 def cli(port, version, log):
     MyCore.designation_serial_port = port
 
@@ -50,7 +48,16 @@ def cli(port, version, log):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument('file', required=True)
 def upload(file):
-    """ Put file to board as main.py.
+    """ 
+    上传文件作为main.py.
+
+    \b
+    FILE是你要选择上传的本地文件，它可以不命名为main.py
+    main.py会在豌豆派开机时执行
+
+    使用示例：
+
+      wonderbits upload test.py
 
     """
     wb_tool.upload.upload(file)
@@ -60,35 +67,31 @@ def upload(file):
 @click.argument("local", type=click.Path(exists=True))
 @click.argument("remote", required=False)
 def put(local, remote):
-    """Put a file or folder and its contents on the board.
+    """
+    将文件或文件夹的内容传到豌豆派中.
 
-    Put will upload a local file or folder  to the board.  If the file already
-    exists on the board it will be overwritten with no warning!  You must pass
-    at least one argument which is the path to the local file/folder to
-    upload.  If the item to upload is a folder then it will be copied to the
-    board recursively with its entire child structure.  You can pass a second
-    optional argument which is the path and name of the file/folder to put to
-    on the connected board.
+    \b
+    将把本地文件或文件夹上载到板上。如果文件已经存在于开发板上，它将直接被覆盖！
+    您需要传递至少一个参数，该参数是要上传的本地文件/文件夹的路径。
+    如果要上载的项目是文件夹，则它将以其整个子结构递归复制到板上。
+    您可以传递第二个可选参数，该参数是要放在连接的板上的文件/文件夹的路径和名称。
 
-    For example to upload a main.py from the current directory to the board's
-    root run:
+
+    上传main.py到豌豆派的根目录：
 
       wonderbits put main.py
 
-    Or to upload a board_boot.py from a ./foo subdirectory and save it as boot.py
-    in the board's root run:
+    或者从test文件夹中把test_boot.py上传到豌豆拼作为boot.py：
 
-      wonderbits put ./foo/board_boot.py boot.py
+      wonderbits put ./test/test_boot.py boot.py
 
-    To upload a local folder adafruit_library and all of its child files/folders
-    as an item under the board's root run:
+    上传test文件夹及其子文件到豌豆派的根目录下：
 
-      wonderbits put adafruit_library
+      wonderbits put test
 
-    Or to put a local folder adafruit_library on the board under the path
-    /lib/adafruit_library on the board run:
+    获奖test文件夹上传到lib/test路径下：
 
-      wonderbits put adafruit_library /lib/adafruit_library
+      wonderbits put test /lib/test
     """
     # Use the local filename if no remote filename is provided.
     MyUtil.wb_log(local, remote)
@@ -100,20 +103,17 @@ def put(local, remote):
 @click.argument("local_file", required=False)
 def get(remote_file, local_file):
     """
-    Retrieve a file from the board.
+    从豌豆派读取一个文件.
 
-    Get will download a file from the board and print its contents or save it
-    locally.  You must pass at least one argument which is the path to the file
-    to download from the board.  If you don't specify a second argument then
-    the file contents will be printed to standard output.  However if you pass
-    a file name as the second argument then the contents of the downloaded file
-    will be saved to that file (overwriting anything inside it!).
+    get命令将从豌豆派上读取一个文件内容，将其打印或者保存到本地文件。
+    该命令需要至少一个参数，第一个参数是板子上的文件路径，如果没有第二个参数则将会吧内容打印出来。
+    如果存在第二个参数，将会作为文件名。豌豆派文件的内容将保存到对应文件中（如果文件已存在则覆盖其中的任何内容！）。
 
-    For example to retrieve the boot.py and print it out run:
+    例如打印boot.py：
 
       wonderbits get boot.py
 
-    Or to get main.py and save it as main.py locally run:
+    或者读取main.py到本地的main.py
 
       wonderbits get main.py main.py
     """
@@ -128,14 +128,14 @@ def get(remote_file, local_file):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument('file', required=True)
 def rm(file):
-    """Remove a file from the board.
+    """
+    删除豌豆派上的一个文件.
 
-    Remove the specified file from the board's filesystem.  Must specify one
-    argument which is the path to the file to delete.  Note that this can't
-    delete directories which have files inside them, but can delete empty
-    directories.
+    \b
+    从豌豆派上删除一个文件。有且只有一个参数，该参数用于指定将要删除的文件路径。
+    注意：这不能删除包含文件的文件夹，但可以删除空文件夹。
 
-    For example to delete main.py from the root of a board run:
+    删除根目录下的main.py文件:
 
       wonderbits rm main.py
     """
@@ -144,13 +144,28 @@ def rm(file):
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
-@click.option(
-    '--ls', '-l', is_flag=True, help="Get the version allowed to be updated.")
+@click.option('--ls', '-l', is_flag=True, help="获取可更新的固件列表.")
 @click.option(
     "--file", "-f", required=False, type=click.STRING, help="下载本地文件。")
 @click.argument('version', required=False)
 def upgrade(ls, version, file):
-    """Write a binary blob to flash.
+    """
+    更新豌豆派固件.
+
+    VERSION是用于指定更新固件的版本。
+    如果不填写该参数测默认更新最新的固件版本。
+    
+    更新最新的豌豆派固件：
+
+      wonderbits upgrade
+    
+    如果想查询可更新的固件列表，可使用--ls或-l：
+
+      wonderbits upgrade -l
+    
+    需要更新本地文件可以使用--file或-f：
+
+      wonderbits upgrade -f my_firmware.bin
 
     """
     if not file is None:
@@ -181,33 +196,31 @@ def upgrade(ls, version, file):
     "--long_format",
     "-l",
     is_flag=True,
-    help=
-    "Print long format info including size of files.  Note the size of directories is not supported and will show 0 values.",
+    help="打印文件大小。注意：不计算文件夹大小，显示0字节。",
 )
 @click.option(
     "--recursive",
     "-r",
     is_flag=True,
-    help="recursively list all files and (empty) directories.",
+    help="递归查询所有文件和文件夹。",
 )
 def ls(directory, long_format, recursive):
-    """List contents of a directory on the board.
+    """
+    查询豌豆派的文件目录.
 
-    Can pass an optional argument which is the path to the directory.  The
-    default is to list the contents of the root, /, path.
+    传递一个参数作为查询的文件夹，默认值是根目录文件夹。
 
-    For example to list the contents of the root run:
+    查询根目录:
 
       wonderbits ls
 
-    Or to list the contents of the /foo/bar directory on the board run:
+    查询lib文件夹的文件目录:
 
-      wonderbits ls /foo/bar
+      wonderbits ls /lib
 
-    Add the -l or --long_format flag to print the size of files (however note
-    MicroPython does not calculate the size of folders and will show 0 bytes):
+    添加--long_format或-l可以打印文件大小（注意：不计算文件夹大小，显示0字节）：
 
-      wonderbits ls -l /foo/bar
+      wonderbits ls -l /liab
     """
     # List each file/directory on a separate line.
     command = 'ls ' + directory
@@ -225,16 +238,15 @@ def ls(directory, long_format, recursive):
 @click.argument('directory', required=False)
 def mkdir(directory):
     """
-    Create a directory on the board.
+    在豌豆派上创建一个文件夹.
 
-    Mkdir will create the specified directory on the board.  One argument is
-    required, the full path of the directory to create.
+    创建一个指定文件夹。需要一个参数作为完整的路径。
 
-    Note that you cannot recursively create a hierarchy of directories with one
-    mkdir command, instead you must create each parent directory with separate
-    mkdir command calls.
+    /b
+    注意：不能递归的创建一个文件夹。
+    列如：需要创建/test1/test2，或test1不存在，你只能先创建test1再去创建test2.
 
-    For example to make a directory under the root called 'code':
+    创建一个名为'code'的文件夹:
 
       wonderbits mkdir /code
     """
@@ -245,16 +257,16 @@ def mkdir(directory):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("remote_folder")
 def rmdir(remote_folder):
-    """Forcefully remove a folder and all its children from the board.
+    """
+    删除豌豆派上的文件夹及其所有子项.
 
-    Remove the specified folder from the board's filesystem.  Must specify one
-    argument which is the path to the folder to delete.  This will delete the
-    directory and ALL of its children recursively, use with caution!
+    \b
+    从豌豆派的文件系统中产出指定文件夹。需要一个参数作为要删除的文件夹路径。
+    注意：使用该命令递归删除所有子项，请谨慎使用。
 
-    For example to delete everything under /adafruit_library from the root of a
-    board run:
+    删除lib文件夹下所有内容：
 
-      wonderbits rmdir adafruit_library
+      wonderbits rmdir lib
     """
     # Delete the provided file/directory on the board.
     wb_tool.upload.direct_command('rmdir {}'.format(remote_folder))
@@ -262,11 +274,13 @@ def rmdir(remote_folder):
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 def reset():
-    """Perform soft reset/reboot of the board.
+    """
+    复位豌豆派.
 
-    Will connect to the board and perform a reset.  Depending on the board
-    and firmware, several different types of reset may be supported.
+    将连接豌豆派并执行复位。
 
+    复位豌豆派:
+    
       wonderbits reset
     """
     wb_tool.upload.direct_command('reset')
