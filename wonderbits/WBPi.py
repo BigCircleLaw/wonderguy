@@ -333,6 +333,72 @@ class Pi(WBits):
         self._set_command(command)
 
     
+    def ble_on(self, name = None):
+        """
+        可填写参数设置蓝牙名字，默认为’Pi-mfe’
+
+        :param name: 蓝牙名字: 默认为’Pi-mfe’
+        """
+
+        name = _format_str_type(name)
+        
+        args = []
+        if name != None:
+            args.append(str(name))
+        command = 'Pi{}.ble_on({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def ble_is_connected(self):
+        """
+        True:蓝牙已连接False:按键没有被按下
+        :rtype: bool
+        """
+
+        command = 'Pi{}.ble_is_connected()'.format(self.index)
+        value = self._get_command(command)
+        return self.val_process(value)
+        
+    def ble_send(self, s):
+        """
+        已连接豌豆派蓝牙的手机客户端会收到消息。
+
+        :param s: 需要发送的字符串
+        """
+
+        s = _format_str_type(s)
+        
+        args = []
+        args.append(str(s))
+        command = 'Pi{}.ble_send({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def ble_receive(self, s):
+        """
+        已连接豌豆派蓝牙的手机客户端会收到消息。
+
+        :param s: 需要发送的字符串
+        """
+
+        s = _format_str_type(s)
+        
+        args = []
+        args.append(str(s))
+        command = 'Pi{}.ble_receive({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def ble_off(self):
+        """
+        
+
+        """
+
+        command = 'Pi{}.ble_off()'.format(self.index)
+        self._set_command(command)
+
+    
 
     
 
