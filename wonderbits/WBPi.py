@@ -374,21 +374,16 @@ class Pi(WBits):
         self._set_command(command)
 
     
-    def ble_receive(self, s):
+    def ble_receive(self):
         """
         已连接豌豆派蓝牙的手机客户端会收到消息。
-
-        :param s: 需要发送的字符串
+        :rtype: str
         """
 
-        s = _format_str_type(s)
+        command = 'Pi{}.ble_receive()'.format(self.index)
+        value = self._get_command(command)
+        return value
         
-        args = []
-        args.append(str(s))
-        command = 'Pi{}.ble_receive({})'.format(self.index, ",".join(args))
-        self._set_command(command)
-
-    
     def ble_off(self):
         """
         
