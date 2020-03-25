@@ -5,6 +5,8 @@ from .Tool import wb_tool
 from .event import Event
 # from .cli import cli
 
+from cloudvar import Cloudv
+
 # print(__name__)
 # if __name__ == "__main__":
 #     cli()

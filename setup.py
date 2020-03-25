@@ -27,7 +27,8 @@ REQUIRED = [
     'pyserial',
     'Click',
     'wonderbits-ampy>=1.1.5',
-    'esptool'
+    'esptool',
+    'cloudvar'
 ]
 
 # What packages are optional?
