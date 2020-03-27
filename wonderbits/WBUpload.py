@@ -42,10 +42,11 @@ class WBUpload(object):
                         ser = MySerial()
                         # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
                         ser.write(b'\x04')
-                        MyUtil.wb_log('@rec@ ',
-                                      ser.read_and_compare('wb init end.\r\n'))
+                        MyUtil.wb_log(
+                            '@rec@ ',
+                            ser.read_and_compare('wb init end.\r\n', 5, False))
                         print('开始运行，按Ctrl+C结束')
-                        print('_______________________________________')
+                        # print('_______________________________________')
                         while True:
                             buffer = ser.read()
                             print(buffer, end='')
@@ -53,11 +54,11 @@ class WBUpload(object):
                 except KeyboardInterrupt as err:
                     for i in range(3):
                         ser.write(b'\x03')
+                    print('运行结束')
 
                 except Exception as e:
                     print('读出输出失败', e)
                 finally:
-                    print('运行结束')
                     ser.close()
 
             except OSError as e:

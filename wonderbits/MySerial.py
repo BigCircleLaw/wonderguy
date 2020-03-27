@@ -1,7 +1,7 @@
 '''
 @Author: bigcircle
 @Date: 2020-03-26 10:30:13
-@LastEditTime: 2020-03-27 14:48:14
+@LastEditTime: 2020-03-27 16:57:29
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \wonderbits-py\wonderbits\MySerial.py
@@ -10,6 +10,7 @@ import serial
 import serial.tools.list_ports
 from .MyUtil import MyUtil
 from .WBError import wonderbitsError
+import time
 
 
 class MySerial(object):
@@ -34,13 +35,14 @@ class MySerial(object):
             return rec_str.decode('utf-8')
         return ''
 
-    def read_and_compare(self, compare_s):
+    def read_and_compare(self, compare_s, timeout=10, is_exit=True):
         '''
         @description: 读取串口数据直到检测到参数才返回内容，有阻塞效果
                       加入复位处理
         @param str
         @return: 所有收到的内容
         '''
+        start_time = time.time()
         try:
             compare_s = compare_s.encode('utf-8')
         except AttributeError as err:
@@ -56,8 +58,15 @@ class MySerial(object):
                     return b_buf.decode('utf-8')
                 if b_buf.endswith(b'Type "help()" for more information.'):
                     MyUtil.wb_log('wonderPi reset\n')
-                    MyUtil.thread_error_collection_exit(
-                        'MySerial.read_and_compare', '主控复位，程序停止')
+                    MySerial._serial_error_exit('MySerial.read_and_compare',
+                                                '主控复位，程序停止')
+            if time.time() - start_time > timeout:
+                if is_exit:
+                    # MyUtil.wb_log('MySerial.read_and_compare, timeout')
+                    MySerial._serial_error_exit('MySerial.read_and_compare',
+                                                '等待超时')
+                else:
+                    return b_buf.decode('utf-8')
 
     def state(self):
         if self._ser is None:
