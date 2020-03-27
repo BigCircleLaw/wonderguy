@@ -1,6 +1,6 @@
 import os
 import serial
-from .MyUtil import MyUtil as util
+from .MyUtil import MyUtil
 from .MySerial import MySerial
 import shutil
 import urllib.request
@@ -35,10 +35,29 @@ class WBUpload(object):
                     os.system('wb_ampy -d 2 -p {}  put {} main.py'.format(
                         port, source_file_path))
                     # print('_____________________________________')
-                    ser = serial.Serial(port, 115200, timeout=1)
-                    # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
-                    ser.write(b'\x04')
+
                     print('下载结束')
+                try:
+                    if port != None:
+                        ser = MySerial()
+                        # reset pyboard manully in windows, because windows system do not reset automatically in first connection.
+                        ser.write(b'\x04')
+                        MyUtil.wb_log('@rec@ ',
+                                      ser.read_and_compare('wb init end.\r\n'))
+                        print('开始运行，按Ctrl+C结束')
+                        print('_______________________________________')
+                        while True:
+                            buffer = ser.read()
+                            print(buffer, end='')
+                            time.sleep(0.01)
+                except KeyboardInterrupt as err:
+                    for i in range(3):
+                        ser.write(b'\x03')
+
+                except Exception as e:
+                    print('读出输出失败', e)
+                finally:
+                    print('运行结束')
                     ser.close()
 
             except OSError as e:
@@ -95,7 +114,7 @@ class WBUpload(object):
                 download_url = 'http://wonderbits.cn:3939/board/{}?version={}'.format(
                     folder, version)
                 des_bin_file = './wb.bin'
-                util.wb_log(download_url, '\n')
+                MyUtil.wb_log(download_url, '\n')
                 urllib.request.urlretrieve(download_url, des_bin_file)
                 pass
 
@@ -134,7 +153,7 @@ class WBUpload(object):
 
             return version_list
 
-        util.wb_log('http://wonderbits.cn:3939/versions/' + folder, '\n')
+        MyUtil.wb_log('http://wonderbits.cn:3939/versions/' + folder, '\n')
         with urllib.request.urlopen('http://wonderbits.cn:3939/versions/' +
                                     folder) as f:
             text = f.read()

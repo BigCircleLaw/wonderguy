@@ -2,7 +2,7 @@ import threading
 import time
 from .MyUtil import MyUtil
 from .MySerial import MySerial
-from .event_handle import parse_buffer
+from .event_handle import event_parse_buffer
 
 import textwrap
 
@@ -116,7 +116,7 @@ class MyCore(object):
             delete_run_py_end_command = b'\x04'
             self._ser.write(MyUtil.wb_encode(delete_run_py_command))
             self._ser.write(delete_run_py_end_command)
-            MyUtil.wb_log(delete_run_py_command, delete_run_py_end_command)
+            MyUtil.wb_log('@send@ ', delete_run_py_command)
 
     def _prepare_communication(self, thread_name):
         '''
@@ -128,37 +128,21 @@ class MyCore(object):
         try:
             # assume reboot board successfully in 2 second;
             # time.sleep(2)
-            buffer = ''
             self._start_raw_repl()
-            while True:
-                bufferChar = self._ser.read()
-                if bufferChar:
-                    for oneChar in bufferChar:
-                        buffer += oneChar
-                        MyUtil.wb_log(oneChar)
-                        if buffer[-2:] == '\x04>':
-                            MyCore.__delete_run_py_flag = True
-                            self._ser.write(b'\x04')
-                        if oneChar == '>':
-                            if 'raw REPL; CTRL-B to exit\r\n>' == buffer[-27:]:
-                                # second step: delete run py
-                                if not MyCore.__delete_run_py_flag:
-                                    self._delete_run_py_repl()
-                                else:
-                                    MyUtil.wb_log(
-                                        '已成功切换到raw repl mode: 可以正常通信了!',
-                                        '\r\n')
-                                    MyCore.can_send_data = True
-                                    return
-                            buffer = ''
-                        if buffer.endswith(
-                                'Type "help()" for more information.'):
-                            MyUtil.wb_log('micropyton reset\n')
-                            buffer = ''
-                            time.sleep(0.5)
-                            self._ser.read()
-                            self._serial_flag_clear()
-                time.sleep(0.01)
+            MyUtil.wb_log(
+                '@rec@ ',
+                self._ser.read_and_compare('raw REPL; CTRL-B to exit\r\n>'))
+            self._delete_run_py_repl()
+            MyUtil.wb_log('@rec@ ', self._ser.read_and_compare('\x04>'))
+            MyCore.__delete_run_py_flag = True
+            MyUtil.wb_log('send soft reset\n')
+            self._ser.write('\x04')
+            MyUtil.wb_log(
+                '@rec@ ',
+                self._ser.read_and_compare('raw REPL; CTRL-B to exit\r\n>'))
+            MyUtil.wb_log('已成功切换到raw repl mode!', '\r\n')
+            MyCore.can_send_data = True
+
         except OSError as e:
             MyUtil.thread_error_collection_exit(thread_name, '连接异常')
         except Exception as e:
@@ -173,11 +157,12 @@ class MyCore(object):
             while True:
                 bufferChar = self._ser.read()
                 for oneChar in bufferChar:
-                    buffer += oneChar
+                    if not buffer:
+                        MyUtil.wb_log('@rec@ ')
                     MyUtil.wb_log(oneChar)
+                    buffer += oneChar
 
-                    if (buffer.startswith('OK') or buffer.startswith('>OK')
-                        ) and buffer.endswith('\x04>'):
+                    if buffer.endswith('\x04>'):
                         # parse get_command_return_value
                         get_command_return_value = MyUtil.parse_data_from_raw_repl(
                             buffer)
@@ -201,20 +186,15 @@ class MyCore(object):
                             # print(buffer)
                             str_buffer = buffer[_start:_end + 1]
                             # print(str_buffer)
-                            parse_buffer(str_buffer)
+                            event_parse_buffer(str_buffer)
                             _bytes_buf = buffer[:_start] + buffer[_end + 1:]
                             buffer = _bytes_buf
                     if buffer.endswith('Type "help()" for more information.'):
-                        MyUtil.wb_log('micropyton reset\n')
-                        # buffer = ''
-                        # time.sleep(0.5)
-                        # self._ser.read()
-                        # self._serial_flag_clear()
-                        # return
+                        MyUtil.wb_log('wonderPi reset\n')
                         MyUtil.thread_error_collection_exit(
                             thread_name, '主控复位，程序停止')
 
-                time.sleep(0.003)
+                time.sleep(0.007)
         except Exception as e:
             print(e)
             MyUtil.thread_error_collection_exit(thread_name, '连接异常')
@@ -227,13 +207,13 @@ class MyCore(object):
     def write_command(self, command):
         self.serial_init()
         MyUtil.serial_error_check()
-        cmd = MyUtil.wb_encode(command) + b'\x04'
+        cmd = command + '\x04'
         while not MyCore.can_send_data:
             # MyUtil.wb_log('MyCore.write_command\r\n')
             MyUtil.serial_error_check()
             time.sleep(.01)
         if MyCore.can_send_data:
-            MyUtil.wb_log(cmd, '\r\n')
+            MyUtil.wb_log('@send@ ', cmd, '\r\n')
             self._ser.write(cmd)
             MyCore.can_send_data = False
         MyUtil.wb_log('发送命令成功\n')
@@ -241,20 +221,13 @@ class MyCore(object):
     def state(self):
         if self._ser is None:
             return False
-        return self._ser.isOpen()
+        return self._ser.state()
 
     def close(self):
         if self._ser:
             self._ser.close()
             self._ser = None
         MyCore.__init_flag = False
-
-    @staticmethod
-    def _serial_error_exit(log_output, *err_params):
-        MyCore.__init_flag = False
-        MyUtil.wb_log(log_output, '\r\n')
-        err_str = ' '.join(err_params)
-        raise wonderbitsError(err_str)
 
     @staticmethod
     def put_MyCore_flag():

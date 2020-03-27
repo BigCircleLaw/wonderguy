@@ -1,7 +1,7 @@
 '''
 @Author: bigcircle
 @Date: 2020-03-26 10:30:13
-@LastEditTime: 2020-03-27 10:23:26
+@LastEditTime: 2020-03-27 14:48:14
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \wonderbits-py\wonderbits\MySerial.py
@@ -33,6 +33,31 @@ class MySerial(object):
             rec_str = self._ser.read(n)
             return rec_str.decode('utf-8')
         return ''
+
+    def read_and_compare(self, compare_s):
+        '''
+        @description: 读取串口数据直到检测到参数才返回内容，有阻塞效果
+                      加入复位处理
+        @param str
+        @return: 所有收到的内容
+        '''
+        try:
+            compare_s = compare_s.encode('utf-8')
+        except AttributeError as err:
+            compare_s = compare_s
+        b_buf = b''
+        # compare_len = len(compare_s)
+        # reset_len = len(b'Type "help()" for more information.')
+        while True:
+            if self._ser.inWaiting() > 0:
+                rec_byte = self._ser.read(1)
+                b_buf += rec_byte
+                if b_buf.endswith(compare_s):
+                    return b_buf.decode('utf-8')
+                if b_buf.endswith(b'Type "help()" for more information.'):
+                    MyUtil.wb_log('wonderPi reset\n')
+                    MyUtil.thread_error_collection_exit(
+                        'MySerial.read_and_compare', '主控复位，程序停止')
 
     def state(self):
         if self._ser is None:

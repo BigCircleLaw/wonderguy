@@ -15,7 +15,7 @@ def parse_value(str_val):
         return int(str_val)
 
 
-def parse_buffer(json_str):
+def event_parse_buffer(json_str):
     d = json.loads(json_str)
     # print(d)
     if 'valuetype' in d:
