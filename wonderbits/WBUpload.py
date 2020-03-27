@@ -1,9 +1,10 @@
 import os
 import serial
 from .MyUtil import MyUtil as util
-from .MyCore import MyCore
+from .MySerial import MySerial
 import shutil
 import urllib.request
+import time
 
 
 class WBUpload(object):
@@ -11,7 +12,7 @@ class WBUpload(object):
         '''
         direct append to last of the wb_ampy
         '''
-        port = MyCore.choose_serial()
+        port = MySerial.choose_serial()
         if not info is None:
             print(info)
         if port != None:
@@ -23,7 +24,7 @@ class WBUpload(object):
         '''
         if not self._is_empty(file_path):
             try:
-                port = MyCore.choose_serial()
+                port = MySerial.choose_serial()
                 if port != None:
                     currentDir = os.getcwd()
                     source_file_path = file_path
@@ -48,7 +49,7 @@ class WBUpload(object):
     def put(self, source_file_path, designation_file_path):
         if not self._is_empty(source_file_path):
             try:
-                port = MyCore.choose_serial()
+                port = MySerial.choose_serial()
                 if port != None:
                     currentDir = os.getcwd()
                     # source_file_path = file_path
@@ -100,7 +101,7 @@ class WBUpload(object):
 
             # print(download_url)
             print('上传固件。。。')
-            port = MyCore.choose_serial()
+            port = MySerial.choose_serial()
             if port != None:
                 # os.system('esptool.py --port ' + port + ' erase_flash')
                 os.system('esptool.py --chip esp32 --port ' + port +

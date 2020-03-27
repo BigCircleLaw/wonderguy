@@ -1,6 +1,7 @@
 from .WBError import wonderbitsError
 import re
 from .public import DEVICE_TYPE
+import sys
 
 modules_name_list = DEVICE_TYPE.keys()
 
@@ -113,3 +114,9 @@ class MyUtil(object):
             # print('-----------------------except-----------------------')
             # print(e)
             return error_info
+
+    @staticmethod
+    def thread_error_collection_exit(thread_name, *err_params):
+        MyUtil.wb_log(thread_name, '\r\n')
+        MyUtil.set_serial_error(*err_params)
+        sys.exit()
