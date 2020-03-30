@@ -144,9 +144,9 @@ class MyCore(object):
             MyCore.can_send_data = True
 
         except OSError as e:
-            MyUtil.thread_error_collection_exit(thread_name, '连接异常')
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
         except Exception as e:
-            MyUtil.thread_error_collection_exit(thread_name, '解析异常')
+            MyCore._serial_thread_error_collection_exit(thread_name, '解析异常')
 
     def _normal_communication(self, thread_name):
         '''
@@ -173,7 +173,7 @@ class MyCore(object):
                             MyCore.return_value = 'None'
                             err_output = MyUtil.mp_error_parse(
                                 get_command_return_value)
-                            MyUtil.thread_error_collection_exit(
+                            MyCore._serial_thread_error_collection_exit(
                                 thread_name, err_output)
                         else:
                             MyCore.return_value = get_command_return_value
@@ -191,13 +191,13 @@ class MyCore(object):
                             buffer = _bytes_buf
                     if buffer.endswith('Type "help()" for more information.'):
                         MyUtil.wb_log('wonderPi reset\n')
-                        MyUtil.thread_error_collection_exit(
+                        MyCore._serial_thread_error_collection_exit(
                             thread_name, '主控复位，程序停止')
 
                 time.sleep(0.007)
         except Exception as e:
             print(e)
-            MyUtil.thread_error_collection_exit(thread_name, '连接异常')
+            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
 
     def _communication(self):
         while True:
@@ -227,6 +227,11 @@ class MyCore(object):
         if self._ser:
             self._ser.close()
             self._ser = None
+        MyCore.__init_flag = False
+
+    @staticmethod
+    def _serial_thread_error_collection_exit(thread_name, *err_params):
+        MyCore._serial_thread_error_collection_exit(thread_name, *err_params)
         MyCore.__init_flag = False
 
     @staticmethod
