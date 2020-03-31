@@ -229,8 +229,8 @@ class MyCore(object):
 
     @staticmethod
     def _serial_thread_error_collection_exit(thread_name, *err_params):
-        MyCore._serial_thread_error_collection_exit(thread_name, *err_params)
         MyCore.__init_flag = False
+        MyUtil.thread_error_collection_exit(thread_name, *err_params)
 
     @staticmethod
     def put_MyCore_flag():

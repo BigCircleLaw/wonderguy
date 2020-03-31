@@ -335,7 +335,7 @@ class Pi(WBits):
     
     def ble_on(self, name = None):
         """
-        可填写参数设置蓝牙名字，默认为’Pi-mfe’
+        可填写参数设置蓝牙名字，默认为’Pi-mfe’手机端连接蓝牙的示例APP请参考：蓝牙app。
 
         :param name: 蓝牙名字: 默认为’Pi-mfe’
         """
@@ -351,7 +351,7 @@ class Pi(WBits):
     
     def ble_is_connected(self):
         """
-        True:蓝牙已连接False:按键没有被按下
+        True:蓝牙已连接False:蓝牙未连接
         :rtype: bool
         """
 
@@ -394,6 +394,54 @@ class Pi(WBits):
         self._set_command(command)
 
     
+    def wifi_connect(self, ssid, password):
+        """
+        
+
+        :param ssid: wifi名称
+        :param password: WiFi密码
+        """
+
+        ssid = _format_str_type(ssid)
+        password = _format_str_type(password)
+        
+        args = []
+        args.append(str(ssid))
+        args.append(str(password))
+        command = 'Pi{}.wifi_connect({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
+    def wifi_disconnect(self):
+        """
+        
+
+        """
+
+        command = 'Pi{}.wifi_disconnect()'.format(self.index)
+        self._set_command(command)
+
+    
+    def wifi_is_connected(self):
+        """
+        True:wifi已连接False:wifi未连接
+        :rtype: bool
+        """
+
+        command = 'Pi{}.wifi_is_connected()'.format(self.index)
+        value = self._get_command(command)
+        return self.val_process(value)
+        
+    def wifi_ifconfig(self):
+        """
+        
+        :rtype: list
+        """
+
+        command = 'Pi{}.wifi_ifconfig()'.format(self.index)
+        value = self._get_command(command)
+        return self.val_process(value)
+        
 
     
 
