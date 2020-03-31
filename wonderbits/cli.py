@@ -4,7 +4,8 @@ import os
 from ampy import pyboard, files
 
 from .Tool import wb_tool
-from .MyCore import MyCore, wb_core
+from .MyCore import wb_core
+from .MySerial import MySerial
 from .MyUtil import MyUtil
 from .WBError import wonderbitsError
 
@@ -26,7 +27,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option("--version", "-v", is_flag=True, help="得到SDK版本；连接豌豆派时可以获得固件版本。")
 @click.option("--log", "-L", is_flag=True, help="加入这个参数可以得到运行时的log输出。")
 def cli(port, version, log):
-    MyCore.designation_serial_port = port
+    MySerial.designation_serial_port = port
 
     if wb_core.state():
         wb_core.close()
@@ -172,7 +173,7 @@ def upgrade(ls, version, file):
         wb_tool.upload.update_bin(None, file)
     else:
         _board = pyboard.Pyboard(
-            MyCore.choose_serial(), baudrate=115200, rawdelay=2)
+            MySerial.choose_serial(), baudrate=115200, rawdelay=2)
         board_files = files.Files(_board)
         version_val = board_files.version()
         _board.close()

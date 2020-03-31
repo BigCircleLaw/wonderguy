@@ -23,8 +23,6 @@ class MyCore(object):
 
     can_send_data = False
 
-    designation_serial_port = None
-
     # current_time = None
     def __init_property(self):
         '''
