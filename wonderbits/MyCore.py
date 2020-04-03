@@ -24,15 +24,15 @@ class MyCore(object):
     can_send_data = False
 
     # current_time = None
-    def __init_property(self):
+    def reset_MyCore(self):
         '''
         init MyCore property
         '''
-        self._ser = None
+        MyCore.__init_flag = False
 
     def __init__(self):
         # self._ser = None
-        self.__init_property()
+        self.reset_MyCore()
 
     def _serial_flag_clear(self):
         '''
@@ -50,23 +50,24 @@ class MyCore(object):
             MyCore.__init_flag = True
             self._serial_flag_clear()
             MyUtil.serial_error_clear()
-            self.__init_property()
+            self._ser = None
             self._try_connect_serial('_try_connect_serial')
 
     def _try_connect_serial(self, thread_name):
         '''
         try to connect serial
         '''
-        while True:
-            if self._ser == None:
-                self._ser = MySerial()
-                threading.Thread(
-                    target=self._communication, daemon=True).start()
-            else:
-                return
-            time.sleep(.1)
-
-        # MyCore.current_time = time.time()
+        try:
+            while True:
+                if self._ser == None:
+                    self._ser = MySerial()
+                    threading.Thread(
+                        target=self._communication, daemon=True).start()
+                else:
+                    return
+        except Exception as err:
+            self.reset_MyCore()
+            raise e
 
     def _start_raw_repl(self):
         '''
@@ -142,9 +143,9 @@ class MyCore(object):
             MyCore.can_send_data = True
 
         except OSError as e:
-            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
+            self._serial_thread_error_collection_exit(thread_name, '连接异常')
         except Exception as e:
-            MyCore._serial_thread_error_collection_exit(thread_name, '解析异常')
+            self._serial_thread_error_collection_exit(thread_name, '解析异常')
 
     def _normal_communication(self, thread_name):
         '''
@@ -171,7 +172,7 @@ class MyCore(object):
                             MyCore.return_value = 'None'
                             err_output = MyUtil.mp_error_parse(
                                 get_command_return_value)
-                            MyCore._serial_thread_error_collection_exit(
+                            self._serial_thread_error_collection_exit(
                                 thread_name, err_output)
                         else:
                             MyCore.return_value = get_command_return_value
@@ -189,13 +190,13 @@ class MyCore(object):
                             buffer = _bytes_buf
                     if buffer.endswith('Type "help()" for more information.'):
                         MyUtil.wb_log('wonderPi reset\n')
-                        MyCore._serial_thread_error_collection_exit(
+                        self._serial_thread_error_collection_exit(
                             thread_name, '主控复位，程序停止')
 
                 time.sleep(0.007)
         except Exception as e:
             print(e)
-            MyCore._serial_thread_error_collection_exit(thread_name, '连接异常')
+            self._serial_thread_error_collection_exit(thread_name, '连接异常')
 
     def _communication(self):
         while True:
@@ -225,11 +226,10 @@ class MyCore(object):
         if self._ser:
             self._ser.close()
             self._ser = None
-        MyCore.__init_flag = False
+        self.reset_MyCore()
 
-    @staticmethod
-    def _serial_thread_error_collection_exit(thread_name, *err_params):
-        MyCore.__init_flag = False
+    def _serial_thread_error_collection_exit(self, thread_name, *err_params):
+        self.reset_MyCore()
         MyUtil.thread_error_collection_exit(thread_name, *err_params)
 
     @staticmethod
