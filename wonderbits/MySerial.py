@@ -1,7 +1,7 @@
 '''
 @Author: bigcircle
 @Date: 2020-03-26 10:30:13
-@LastEditTime: 2020-03-27 16:57:29
+@LastEditTime: 2020-04-03 17:30:35
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \wonderbits-py\wonderbits\MySerial.py
@@ -76,6 +76,7 @@ class MySerial(object):
     def close(self):
         if self._ser:
             self._ser.close()
+            del self._ser
             self._ser = None
 
     def _connect_serial(self):

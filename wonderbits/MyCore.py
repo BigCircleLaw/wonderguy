@@ -29,10 +29,11 @@ class MyCore(object):
         init MyCore property
         '''
         MyCore.__init_flag = False
+        self.close()
 
     def __init__(self):
-        # self._ser = None
-        self.reset_MyCore()
+        MyCore.__init_flag = False
+        self._ser = None
 
     def _serial_flag_clear(self):
         '''
@@ -50,7 +51,7 @@ class MyCore(object):
             MyCore.__init_flag = True
             self._serial_flag_clear()
             MyUtil.serial_error_clear()
-            self._ser = None
+            # self._ser = None
             self._try_connect_serial('_try_connect_serial')
 
     def _try_connect_serial(self, thread_name):
@@ -59,7 +60,7 @@ class MyCore(object):
         '''
         try:
             while True:
-                if self._ser == None:
+                if self._ser is None:
                     self._ser = MySerial()
                     threading.Thread(
                         target=self._communication, daemon=True).start()
@@ -67,7 +68,7 @@ class MyCore(object):
                     return
         except Exception as err:
             self.reset_MyCore()
-            raise e
+            raise err
 
     def _start_raw_repl(self):
         '''
@@ -226,7 +227,6 @@ class MyCore(object):
         if self._ser:
             self._ser.close()
             self._ser = None
-        self.reset_MyCore()
 
     def _serial_thread_error_collection_exit(self, thread_name, *err_params):
         self.reset_MyCore()
