@@ -1,7 +1,7 @@
 '''
 @Author: bigcircle
 @Date: 2020-03-26 10:30:13
-@LastEditTime: 2020-04-10 17:23:08
+@LastEditTime: 2020-04-10 18:11:19
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \wonderbits-py\wonderbits\MySerial.py
@@ -63,7 +63,7 @@ class MySerial(object):
                         ret = self.rec_str[:position]
                         self.rec_str = self.rec_str[position:]
                         break
-        return ret
+        return ret.decode('utf-8')
 
     def read(self):
         # n = self._ser.inWaiting()
@@ -72,7 +72,7 @@ class MySerial(object):
         #     return rec_str.decode('utf-8')
         # return ''
         rec_str = self.read_handle()
-        return rec_str.decode('utf-8')
+        return rec_str
 
     def read_and_compare(self, compare_s, timeout=10, is_exit=True):
         '''
@@ -91,7 +91,7 @@ class MySerial(object):
         # compare_len = len(compare_s)
         # reset_len = len(b'Type "help()" for more information.')
         while True:
-            temp_buf = self.read_handle().decode('utf-8')
+            temp_buf = self.read_handle()
             for rec_byte in temp_buf:
                 # rec_byte = self._ser.read(1)
                 b_buf += rec_byte

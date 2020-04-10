@@ -122,7 +122,7 @@ class Pi(WBits):
     
     def set_buzzer(self, frequency):
         """
-        设置蜂鸣器声音频率（Hz）设置频率为0表示关闭蜂鸣器
+        设置蜂鸣器声音频率（Hz），小于20HZ不会发出声音设置频率为0~19表示关闭蜂鸣器
 
         :param frequency: 频率：0~20000 Hz
         """
