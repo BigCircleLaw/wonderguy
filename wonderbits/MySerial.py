@@ -1,7 +1,7 @@
 '''
 @Author: bigcircle
 @Date: 2020-03-26 10:30:13
-@LastEditTime: 2020-04-03 17:30:35
+@LastEditTime: 2020-04-10 17:23:08
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \wonderbits-py\wonderbits\MySerial.py
@@ -13,13 +13,25 @@ from .WBError import wonderbitsError
 import time
 
 
+def high_bit_1_count(n):
+    c = 0
+    while (n & 0x80) != 0:
+        c += 1
+        n <<= 1
+    return c
+
+
 class MySerial(object):
     designation_serial_port = None
-    _ser = None
+
+    # _ser = None
 
     def __init__(self):
-        if not self._ser:
-            self._connect_serial()
+        self.rec_str = b''
+        self._ser = None
+        # if not self._ser:
+        #     self._connect_serial()
+        self._connect_serial()
 
     def write(self, s):
         try:
@@ -28,12 +40,39 @@ class MySerial(object):
             send_content = s
         self._ser.write(send_content)
 
-    def read(self):
+    def read_handle(self):
+        ret = b''
         n = self._ser.inWaiting()
         if n > 0:
-            rec_str = self._ser.read(n)
-            return rec_str.decode('utf-8')
-        return ''
+            self.rec_str += self._ser.read(n)
+            if high_bit_1_count(self.rec_str[-1]) == 0:
+                ret = self.rec_str
+                self.rec_str = b''
+            else:
+                position = -1
+                count = 0
+                while True:
+                    if high_bit_1_count(self.rec_str[position]) == 1:
+                        count += 1
+                        position -= 1
+                    elif high_bit_1_count(self.rec_str[position]) == count:
+                        ret = self.rec_str
+                        self.rec_str = b''
+                        break
+                    else:
+                        ret = self.rec_str[:position]
+                        self.rec_str = self.rec_str[position:]
+                        break
+        return ret
+
+    def read(self):
+        # n = self._ser.inWaiting()
+        # if n > 0:
+        #     rec_str = self._ser.read(n)
+        #     return rec_str.decode('utf-8')
+        # return ''
+        rec_str = self.read_handle()
+        return rec_str.decode('utf-8')
 
     def read_and_compare(self, compare_s, timeout=10, is_exit=True):
         '''
@@ -44,19 +83,21 @@ class MySerial(object):
         '''
         start_time = time.time()
         try:
-            compare_s = compare_s.encode('utf-8')
+            compare_s = compare_s.decode('utf-8')
         except AttributeError as err:
             compare_s = compare_s
-        b_buf = b''
+        b_buf = ''
+        temp_buf = b''
         # compare_len = len(compare_s)
         # reset_len = len(b'Type "help()" for more information.')
         while True:
-            if self._ser.inWaiting() > 0:
-                rec_byte = self._ser.read(1)
+            temp_buf = self.read_handle().decode('utf-8')
+            for rec_byte in temp_buf:
+                # rec_byte = self._ser.read(1)
                 b_buf += rec_byte
                 if b_buf.endswith(compare_s):
-                    return b_buf.decode('utf-8')
-                if b_buf.endswith(b'Type "help()" for more information.'):
+                    return b_buf
+                if b_buf.endswith('Type "help()" for more information.'):
                     MyUtil.wb_log('wonderPi reset\n')
                     MySerial._serial_error_exit('MySerial.read_and_compare',
                                                 '主控复位，程序停止')
@@ -66,7 +107,7 @@ class MySerial(object):
                     MySerial._serial_error_exit('MySerial.read_and_compare',
                                                 '等待超时')
                 else:
-                    return b_buf.decode('utf-8')
+                    return b_buf
 
     def state(self):
         if self._ser is None:

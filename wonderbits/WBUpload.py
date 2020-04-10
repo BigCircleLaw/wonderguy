@@ -5,6 +5,7 @@ from .MySerial import MySerial
 import shutil
 import urllib.request
 import time
+from .WBError import wonderbitsError
 
 
 class WBUpload(object):
@@ -57,14 +58,18 @@ class WBUpload(object):
                     print('运行结束')
 
                 except Exception as e:
-                    print('读出输出失败', e)
+                    raise wonderbitsError('读出输出失败:{}'.format(e))
                 finally:
                     ser.close()
 
-            except OSError as e:
-                print('下载失败', e)
+            except wonderbitsError as e:
+                raise e
+            # except OSError as e:
+            #     raise wonderbitsError('下载失败:{}'.format(e))
+            #     # print('下载失败', e)
             except Exception as e:
-                print('下载失败', e)
+                raise wonderbitsError('下载失败:{}'.format(e))
+                # print('下载失败', e)
 
     def put(self, source_file_path, designation_file_path):
         if not self._is_empty(source_file_path):
