@@ -148,29 +148,43 @@ def rm(file):
 @click.option('--ls', '-l', is_flag=True, help="获取可更新的固件列表.")
 @click.option(
     "--file", "-f", required=False, type=click.STRING, help="下载本地文件。")
+@click.option(
+    "--designation",
+    "-d",
+    required=False,
+    type=click.STRING,
+    help="指定板子类型[wonderbits, mPython, wb_mPython]。")
 @click.argument('version', required=False)
-def upgrade(ls, version, file):
+def upgrade(ls, version, file, designation):
     """
-    更新豌豆派固件.
+        更新豌豆派固件.
 
-    VERSION是用于指定更新固件的版本。
-    如果不填写该参数测默认更新最新的固件版本。
-    
-    更新最新的豌豆派固件：
+        VERSION是用于指定更新固件的版本。
+        如果不填写该参数测默认更新最新的固件版本。
+        
+        更新最新的豌豆派固件：
 
-      wonderbits upgrade
-    
-    如果想查询可更新的固件列表，可使用--ls或-l：
+        wonderbits upgrade
+        
+        如果想查询可更新的固件列表，可使用--ls或-l：
 
-      wonderbits upgrade -l
-    
-    需要更新本地文件可以使用--file或-f：
+        wonderbits upgrade -l
+        
+        需要更新本地文件可以使用--file或-f：
 
-      wonderbits upgrade -f my_firmware.bin
+        wonderbits upgrade -f my_firmware.bin
 
-    """
-    if not file is None:
+        """
+    if ls:
+        wb_tool.upload.version_ls(hardware_str)
+    elif file:
         wb_tool.upload.update_bin(None, file)
+    elif designation:
+        MyUtil.wb_log(designation, version, '\r\n')
+        if version:
+            wb_tool.upload.update_bin(designation, version)
+        else:
+            wb_tool.upload.update_bin(designation)
     else:
         _board = pyboard.Pyboard(
             MySerial.choose_serial(), baudrate=115200, rawdelay=2)
@@ -182,13 +196,11 @@ def upgrade(ls, version, file):
         else:
             hardware_str = 'wonderbits'
         MyUtil.wb_log(hardware_str, '\n')
-        if ls:
-            wb_tool.upload.version_ls(hardware_str)
+
+        if version is None:
+            wb_tool.upload.update_bin(hardware_str)
         else:
-            if version == None:
-                wb_tool.upload.update_bin(hardware_str)
-            else:
-                wb_tool.upload.update_bin(hardware_str, version)
+            wb_tool.upload.update_bin(hardware_str, version)
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
