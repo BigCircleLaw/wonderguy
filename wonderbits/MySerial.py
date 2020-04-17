@@ -1,7 +1,7 @@
 '''
 @Author: bigcircle
 @Date: 2020-03-26 10:30:13
-@LastEditTime: 2020-04-10 18:11:19
+@LastEditTime: 2020-04-16 15:39:19
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: \wonderbits-py\wonderbits\MySerial.py
@@ -50,7 +50,7 @@ class MySerial(object):
                 self.rec_str = b''
             else:
                 position = -1
-                count = 0
+                count = 1
                 while True:
                     if high_bit_1_count(self.rec_str[position]) == 1:
                         count += 1
