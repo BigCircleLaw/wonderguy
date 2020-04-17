@@ -11,8 +11,6 @@ class WBits(object):
     '''
     wonderbits parent class
     '''
-    # singleton flag
-    __init_flag = False
 
     def __init__(self):
         pass
