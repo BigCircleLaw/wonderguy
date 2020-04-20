@@ -28,7 +28,7 @@ REQUIRED = [
     'Click',
     'wonderbits-ampy>=1.1.5',
     'esptool',
-    'cloudvar'
+    'wondserbitscloud>=1.0.0'
 ]
 
 # What packages are optional?

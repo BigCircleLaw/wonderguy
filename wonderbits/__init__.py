@@ -5,7 +5,7 @@ from .Tool import wb_tool
 from .event import Event
 # from .cli import cli
 
-from cloudvar import Cloudv
+from wondserbitscloud import Var
 
 # print(__name__)
 # if __name__ == "__main__":
