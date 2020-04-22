@@ -442,6 +442,39 @@ class Pi(WBits):
         value = self._get_command(command)
         return self.val_process(value)
         
+    def info_get(self, k = None):
+        """
+        可以通过参数获取指定信息，如：’name’,’wifi_ssid’,’wifi_password’等如果填写了wifi或ble相关参数，开机默认连接wifi，打开蓝牙不填写参数返回全部信息
+        :rtype: str
+        """
+
+        k = _format_str_type(k)
+        
+        args = []
+        if k != None:
+            args.append(str(k))
+        command = 'Pi{}.info_get({})'.format(self.index, ",".join(args))
+        value = self._get_command(command)
+        return value
+        
+    def info_set(self, k, val):
+        """
+        可以通过参数k指定设置信息，如：’name’,’wifi_ssid’,’wifi_password’等被设置信息值将改为val
+
+        :param k: 设置指定信息
+        :param val: 被写入的内容  可以不是字符串
+        """
+
+        k = _format_str_type(k)
+        val = _format_str_type(val)
+        
+        args = []
+        args.append(str(k))
+        args.append(str(val))
+        command = 'Pi{}.info_set({})'.format(self.index, ",".join(args))
+        self._set_command(command)
+
+    
 
     
 

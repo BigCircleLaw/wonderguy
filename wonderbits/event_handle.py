@@ -16,23 +16,27 @@ def parse_value(str_val):
 
 
 def event_parse_buffer(json_str):
-    d = json.loads(json_str)
-    # print(d)
-    if 'valuetype' in d:
-        if d['valuetype'] == 'list':
-            str_list = d['value'].split(',')
-            val = list()
-            for v in str_list:
-                val.append(parse_value(v))
-        elif d['valuetype'] == 'string':
-            val = d['value']
-        elif d['valuetype'] == 'bool':
-            val = ((d['value'] == 'True') or (d['value'] == 'true'))
+    try:
+        d = json.loads(json_str)
+        # print(d)
+        if 'valuetype' in d:
+            if d['valuetype'] == 'list':
+                str_list = d['value'].split(',')
+                val = list()
+                for v in str_list:
+                    val.append(parse_value(v))
+            elif d['valuetype'] == 'string':
+                val = d['value']
+            elif d['valuetype'] == 'bool':
+                val = ((d['value'] == 'True') or (d['value'] == 'true'))
+            else:
+                val = parse_value(d['value'])
         else:
             val = parse_value(d['value'])
-    else:
-        val = parse_value(d['value'])
-    _event_info[d['target']]._set_originalValue(val)
+        _event_info[d['target']]._set_originalValue(val)
+        return True
+    except Exception:
+        return False
 
 
 # def _return_event_start(modulue_name,

@@ -186,9 +186,10 @@ class MyCore(object):
                             # print(buffer)
                             str_buffer = buffer[_start:_end + 1]
                             # print(str_buffer)
-                            event_parse_buffer(str_buffer)
-                            _bytes_buf = buffer[:_start] + buffer[_end + 1:]
-                            buffer = _bytes_buf
+                            if event_parse_buffer(str_buffer):
+                                _bytes_buf = buffer[:_start] + buffer[_end +
+                                                                      1:]
+                                buffer = _bytes_buf
                     if buffer.endswith('Type "help()" for more information.'):
                         MyUtil.wb_log('wonderPi reset\n')
                         self._serial_thread_error_collection_exit(
