@@ -170,7 +170,7 @@ class MyCore(object):
                         if not buffer.endswith('\x04\x04>'):
                             # MyUtil.wb_error_log(
                             #     get_command_return_value)
-                            MyCore.return_value = 'None'
+                            # MyCore.return_value = 'None'
                             err_output = MyUtil.mp_error_parse(
                                 get_command_return_value)
                             self._serial_thread_error_collection_exit(
