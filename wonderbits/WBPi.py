@@ -333,11 +333,12 @@ class Pi(WBits):
         self._set_command(command)
 
     
-    def ble_on(self, name = None):
+    def ble_on(self, name = None, hide = None):
         """
         可填写参数设置蓝牙名字，默认为’Pi-mfe’手机端连接蓝牙的示例APP请参考：蓝牙app。
 
-        :param name: 蓝牙名字: 默认为’Pi-mfe’
+        :param name: 蓝牙名字: 不填写该参数则从配置信息中查找蓝牙名字
+        :param hide: True: 隐藏屏幕显示  False: 开启屏幕显示 默认为False
         """
 
         name = _format_str_type(name)
@@ -345,6 +346,8 @@ class Pi(WBits):
         args = []
         if name != None:
             args.append(str(name))
+        if hide != None:
+            args.append(str(hide))
         command = 'Pi{}.ble_on({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
@@ -394,20 +397,25 @@ class Pi(WBits):
         self._set_command(command)
 
     
-    def wifi_connect(self, ssid, password):
+    def wifi_connect(self, ssid = None, password = None, hide = None):
         """
-        
+        False:开启屏幕显示默认为False
 
-        :param ssid: wifi名称
-        :param password: WiFi密码
+        :param ssid: wifi名称：不填写该参数则从配置信息中查找wifi名字和密码
+        :param password: WiFi密码：与wifi名称一起填写或不填
+        :param hide: True: 隐藏屏幕显示  False: 开启屏幕显示 默认为False
         """
 
         ssid = _format_str_type(ssid)
         password = _format_str_type(password)
         
         args = []
-        args.append(str(ssid))
-        args.append(str(password))
+        if ssid != None:
+            args.append(str(ssid))
+        if password != None:
+            args.append(str(password))
+        if hide != None:
+            args.append(str(hide))
         command = 'Pi{}.wifi_connect({})'.format(self.index, ",".join(args))
         self._set_command(command)
 
@@ -444,7 +452,7 @@ class Pi(WBits):
         
     def info_get(self, k = None):
         """
-        可以通过参数获取指定信息，如：’name’,’wifi_ssid’,’wifi_password’等如果填写了wifi或ble相关参数，开机默认连接wifi，打开蓝牙不填写参数返回全部信息
+        可以通过参数获取指定信息，如：’name’,’wifi_ssid’,’wifi_password’等不填写参数返回全部信息
         :rtype: str
         """
 
@@ -459,10 +467,10 @@ class Pi(WBits):
         
     def info_set(self, k, val):
         """
-        可以通过参数k指定设置信息，如：’name’,’wifi_ssid’,’wifi_password’等被设置信息值将改为val
+        可以通过参数k指定设置信息，如：’name’,’wifi_ssid’,’wifi_password’等如果填写了wifi或ble相关参数，相当于设置默认连接wifi和ble，在调用wifi和ble功能时可以不填写参数‘hide’用于控制开机连接wifi，打开蓝牙是否在屏幕上显示被设置信息值将改为val
 
         :param k: 设置指定信息
-        :param val: 被写入的内容  可以不是字符串
+        :param val: 被写入的内容，可以是任意类型
         """
 
         k = _format_str_type(k)
